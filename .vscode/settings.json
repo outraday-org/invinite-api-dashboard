@@ -1,0 +1,51 @@
+{
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "[javascript][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "workbench.iconTheme": "vs-seti",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "db.mojcpuwusvoemanqoxev.supabase.co",
+      "driver": "PostgreSQL",
+      "name": "Remote Dev",
+      "connectString": "postgresql://postgres:aqPbbSvwFeLcWCfqIxuWHzeV@db.mojcpuwusvoemanqoxev.supabase.co:5432/postgres"
+    }
+  ],
+  "deno.enable": true,
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": true,
+  // This tells ESLint to ignore the supabase folder so it doesn't conflict
+  "eslint.workingDirectories": [
+    {
+      "directory": ".",
+      "changeProcessCWD": true
+    }
+  ],
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true,
+    "https://esm.sh": true
+  }
+}
