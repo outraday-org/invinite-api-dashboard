@@ -487,6 +487,118 @@
         "x-tier": "starter"
       }
     },
+    "/v1/company/search": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "description": "Search companies by ticker or name.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "description": "Search text to match against ticker (prefix) or name (contains)"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "description": "Maximum number of companies to return"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "description": "Pagination offset"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "count",
+                    "companies",
+                    "has_more"
+                  ],
+                  "properties": {
+                    "count": {
+                      "type": "number",
+                      "description": "Total matched companies (may be limited by pagination)"
+                    },
+                    "companies": {
+                      "type": "array",
+                      "description": "Matched companies ordered by ticker",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "cik",
+                          "ticker",
+                          "name"
+                        ],
+                        "properties": {
+                          "cik": {
+                            "type": "string",
+                            "description": "CIK with or without leading zeros"
+                          },
+                          "ticker": {
+                            "type": "string",
+                            "description": "Ticker symbol"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Company name"
+                          }
+                        }
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean",
+                      "description": "True if additional companies are available beyond this page"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "x-tier": "starter"
+      }
+    },
     "/v1/company/details": {
       "get": {
         "tags": [

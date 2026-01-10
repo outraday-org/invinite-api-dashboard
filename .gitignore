@@ -1,4 +1,7 @@
 node_modules
+.pnpm-store
+.pnpm-state.yaml
+pnpm-debug.log
 .DS_Store
 dist
 dist-ssr
