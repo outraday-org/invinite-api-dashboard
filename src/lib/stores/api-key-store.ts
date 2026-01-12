@@ -30,8 +30,14 @@ export const useApiKeyStore = create<ApiKeyState>()(
                     apiKey: null,
                     apiKeyUpdatedAt: Date.now(),
                 }),
-            hasHydrated: typeof window === "undefined",
-            markHydrated: () => set({ hasHydrated: true }),
+            // Important for SSR: server + first client render must match.
+            // We only consider the store "hydrated" once localStorage has been read in the browser.
+            hasHydrated: false,
+            markHydrated: () => {
+                if (typeof window === "undefined") return;
+
+                set({ hasHydrated: true });
+            },
             setApiKey: apiKey =>
                 set({
                     apiKey: apiKey?.trim() ? apiKey.trim() : null,
@@ -41,6 +47,8 @@ export const useApiKeyStore = create<ApiKeyState>()(
         {
             name: "invinite-api-key",
             onRehydrateStorage: () => (state) => {
+                if (typeof window === "undefined") return;
+
                 state?.markHydrated();
             },
             partialize: state => ({

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { ApiKeyInlineField } from "@/components/api-key-inline";
 import { TickerSearch } from "@/components/ticker-search";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -14,13 +15,25 @@ function IndexPage() {
             <section className="space-y-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-primary">Invinite API</p>
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                    Financial data dashboard built with TanStack Start, Tailwind, shadcn/ui, Base UI.
+                    Financial Data Dashboard
                 </h1>
                 <p className="text-muted-foreground max-w-3xl text-lg">
-                    Demo and marketing reference for the Invinite API. Enter a ticker to view company info,
+                    Demo project for using the Invinite API. Enter a ticker to view company info,
                     standardized financial statements, and SEC filings.
                 </p>
             </section>
+
+            <Card className="border-border/60">
+                <CardHeader>
+                    <CardTitle>API Key</CardTitle>
+                    <CardDescription>
+                        Set your key once and it’ll be used for all requests.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ApiKeyInlineField />
+                </CardContent>
+            </Card>
 
             <Card className="border-border/60">
                 <CardHeader>
