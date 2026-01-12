@@ -9,14 +9,12 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useApiKeyStore } from "@/lib/stores/api-key-store";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +56,7 @@ export function ApiKeyDialogButton({ className }: { className?: string }) {
             <DialogTrigger
                 render={(
                     <Button
-                        aria-label={hasKey ? "API key is set" : "Set API key"}
+                        aria-label={hasKey ? "API Key is set" : "Set API Key"}
                         className={cn("relative", className)}
                         size="icon-lg"
                         variant={hasKey ? "secondary" : "outline"}
@@ -77,14 +75,9 @@ export function ApiKeyDialogButton({ className }: { className?: string }) {
                         API Key
                         {hasKey ? <Badge variant="secondary">set</Badge> : <Badge variant="outline">not set</Badge>}
                     </DialogTitle>
-                    <DialogDescription>
-                        Stored in your browser’s local storage and sent with requests as a Bearer token.
-                        If set, it overrides the server’s env key.
-                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-2">
-                    <Label htmlFor="api-key">Key</Label>
                     <Input
                         autoComplete="off"
                         id="api-key"

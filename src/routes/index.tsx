@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ApiKeyInlineField } from "@/components/api-key-inline";
-import { TickerSearch } from "@/components/ticker-search";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
@@ -24,24 +23,8 @@ function IndexPage() {
             </section>
 
             <Card className="border-border/60">
-                <CardHeader>
-                    <CardTitle>API Key</CardTitle>
-                    <CardDescription>
-                        Set your key once and it’ll be used for all requests.
-                    </CardDescription>
-                </CardHeader>
                 <CardContent>
                     <ApiKeyInlineField />
-                </CardContent>
-            </Card>
-
-            <Card className="border-border/60">
-                <CardHeader>
-                    <CardTitle>Jump to a ticker</CardTitle>
-                    <CardDescription>Type a ticker or company name to open its dashboard.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <TickerSearch />
                 </CardContent>
             </Card>
 

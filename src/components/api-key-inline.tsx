@@ -44,7 +44,7 @@ export function ApiKeyInlineField({ className }: { className?: string }) {
         <div className={cn("space-y-2", className)}>
             <div className="flex items-center justify-between gap-3">
                 <Label className="flex items-center gap-2" htmlFor="api-key-inline">
-                    API key
+                    API Key
                     {hasHydrated
                         && (hasKey
                             ? (
@@ -83,11 +83,6 @@ export function ApiKeyInlineField({ className }: { className?: string }) {
                     Save
                 </Button>
             </form>
-
-            <p className="text-muted-foreground text-xs">
-                Stored in your browser’s local storage and sent with requests as a Bearer token. If
-                set, it overrides the server’s env key.
-            </p>
         </div>
     );
 }
