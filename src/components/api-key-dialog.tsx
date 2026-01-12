@@ -34,8 +34,14 @@ export function ApiKeyDialogButton({ className }: { className?: string }) {
     const hasKey = hasHydrated && Boolean(apiKey);
 
     React.useEffect(() => {
-        if (open) setDraft(apiKey ?? "");
-    }, [apiKey, open]);
+        if (!hasHydrated) return;
+
+        if (!open) return;
+
+        setDraft(apiKey ?? "");
+    }, [apiKey, hasHydrated, open]);
+
+    const isDirty = hasHydrated && draft.trim() !== (apiKey ?? "");
 
     function onSave() {
         setApiKey(draft);
@@ -77,7 +83,14 @@ export function ApiKeyDialogButton({ className }: { className?: string }) {
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-2">
+                <form
+                    className="space-y-2"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+
+                        onSave();
+                    }}
+                >
                     <Input
                         autoComplete="off"
                         id="api-key"
@@ -87,21 +100,21 @@ export function ApiKeyDialogButton({ className }: { className?: string }) {
                         type="password"
                         value={draft}
                     />
-                </div>
 
-                <DialogFooter className="pt-2">
-                    {hasKey && (
-                        <Button onClick={onClear} type="button" variant="destructive">
-                            Clear
+                    <DialogFooter className="pt-2">
+                        {hasKey && (
+                            <Button onClick={onClear} type="button" variant="destructive">
+                                Clear
+                            </Button>
+                        )}
+                        <DialogClose render={<Button type="button" variant="outline" />}>
+                            Cancel
+                        </DialogClose>
+                        <Button disabled={!isDirty} type="submit">
+                            Save
                         </Button>
-                    )}
-                    <DialogClose render={<Button type="button" variant="outline" />}>
-                        Cancel
-                    </DialogClose>
-                    <Button onClick={onSave} type="button">
-                        Save
-                    </Button>
-                </DialogFooter>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );
