@@ -17,7 +17,7 @@ type TickerSearchProps = {
     placeholder?: string;
 };
 
-export function TickerSearch({ defaultTicker = "", placeholder = "Search by ticker or name" }: TickerSearchProps) {
+export function TickerSearch({ defaultTicker = "", placeholder = "Search company" }: TickerSearchProps) {
     const navigate = useNavigate();
 
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
