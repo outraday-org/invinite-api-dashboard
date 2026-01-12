@@ -1,11 +1,18 @@
-import createClient from 'openapi-fetch'
+import createClient from "openapi-fetch";
 
-import type { paths } from './schema'
-import { env } from '../env'
+import type { paths } from "./schema";
 
-export const api = createClient<paths>({
-  baseUrl: env.INVINITE_API_URL,
-  headers: {
-    Authorization: `Bearer ${env.INVINITE_API_KEY}`,
-  },
-})
+import { env } from "../env";
+
+export function createApiClient(apiKey?: string) {
+    const resolvedKey = apiKey?.trim() || env.INVINITE_API_KEY;
+
+    return createClient<paths>({
+        baseUrl: env.INVINITE_API_URL,
+        headers: {
+            Authorization: `Bearer ${resolvedKey}`,
+        },
+    });
+}
+
+export const api = createApiClient();

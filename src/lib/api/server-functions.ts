@@ -1,113 +1,145 @@
-import { createServerFn } from '@tanstack/react-start'
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 
-import { api } from './client.server'
+import type {
+    CompanyDetailsResponse,
+    CompanySearchResponse,
+    FilingsResponse,
+    StandardizedFinancialsResponse,
+} from "./types";
 
-type StatementKind = 'standardized' | 'as-reported'
-type StatementType = 'income-statement' | 'balance-sheet' | 'cash-flow-statement' | 'snapshot'
-type StatementView = 'base' | 'detailed' | 'presentation'
+import { createApiClient } from "./client.server";
 
-type FiscalPeriodType = 'quarterly' | 'annual' | 'ytd' | 'ttm'
-type SortDirection = 'asc' | 'desc'
+const apiKeySchema = z
+    .string()
+    .transform(val => val.trim())
+    .pipe(z.string().min(1))
+    .optional();
 
-const buildStatementPath = (
-  kind: StatementKind,
-  statement: StatementType,
-  view: StatementView,
-) => {
-  const suffix = view === 'base' ? '' : `/${view}`
-  return `/v1/${kind}/${statement}${suffix}` as const
-}
+const searchSchema = z.object({
+    apiKey: apiKeySchema,
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    query: z.string(),
+});
 
-export const searchCompanies = createServerFn({ method: 'GET' }).handler(
-  async ({ data }: { data: { query: string; limit?: number; offset?: number } }) => {
-    const { query, limit = 10, offset = 0 } = data
-    const { data: res, error } = await api.GET('/v1/company/search', {
-      params: { query: { query, limit, offset } },
-    })
-    if (error) throw error
-    return res
-  },
-)
+export const searchCompanies = createServerFn({ method: "GET" })
+    .inputValidator(searchSchema)
+    .handler(async ({ data }): Promise<CompanySearchResponse> => {
+        const { apiKey, limit = 10, offset = 0, query } = data;
 
-export const getCompanyDetails = createServerFn({ method: 'GET' }).handler(
-  async ({ data }: { data: { identifier: string } }) => {
-    const { identifier } = data
-    const { data: res, error } = await api.GET('/v1/company/details', {
-      params: { query: { identifier } },
-    })
-    if (error) throw error
-    return res
-  },
-)
+        const api = createApiClient(apiKey);
 
-export const getFinancialStatement = createServerFn({ method: 'GET' }).handler(
-  async ({
-    data,
-  }: {
-    data: {
-      identifier: string
-      kind: StatementKind
-      statement: StatementType
-      view: StatementView
-      fiscal_period_type: FiscalPeriodType
-      sort?: SortDirection
-      limit?: number
-      offset?: number
-    }
-  }) => {
-    const {
-      identifier,
-      kind,
-      statement,
-      view,
-      fiscal_period_type,
-      sort = 'desc',
-      limit = 8,
-      offset = 0,
-    } = data
+        const { data: res, error } = await api.GET("/v1/company/search", {
+            params: { query: { limit, offset, query } },
+        });
 
-    const path = buildStatementPath(kind, statement, view)
-    const { data: res, error } = await api.GET(path, {
-      params: {
-        query: {
-          identifier,
-          fiscal_period_type,
-          sort,
-          limit,
-          offset,
-        },
-      },
-    })
-    if (error) throw error
-    return res
-  },
-)
+        if (error) throw error;
 
-export const getFilings = createServerFn({ method: 'GET' }).handler(
-  async ({
-    data,
-  }: {
-    data: {
-      identifier: string
-      form_type?: string
-      sort?: SortDirection
-      limit?: number
-      offset?: number
-    }
-  }) => {
-    const { identifier, form_type, sort = 'desc', limit = 40, offset = 0 } = data
-    const { data: res, error } = await api.GET('/v1/sec-filings/filings', {
-      params: {
-        query: {
-          identifier,
-          form_type,
-          sort,
-          limit,
-          offset,
-        },
-      },
-    })
-    if (error) throw error
-    return res
-  },
-)
+        return res;
+    });
+
+const detailsSchema = z.object({
+    apiKey: apiKeySchema,
+    identifier: z.string(),
+});
+
+export const getCompanyDetails = createServerFn({ method: "GET" })
+    .inputValidator(detailsSchema)
+    .handler(async ({ data }): Promise<CompanyDetailsResponse> => {
+        const { apiKey, identifier } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/company/details", {
+            params: { query: { identifier } },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const filingsSchema = z.object({
+    apiKey: apiKeySchema,
+    formType: z.string().optional(),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+export const getFilings = createServerFn({ method: "GET" })
+    .inputValidator(filingsSchema)
+    .handler(async ({ data }): Promise<FilingsResponse> => {
+        const {
+            apiKey,
+            formType,
+            identifier,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/sec-filings/filings", {
+            params: {
+                query: {
+                    form_type: formType,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const financialsSchema = z.object({
+    apiKey: apiKeySchema,
+    fiscalPeriodType: z.enum(["annual", "quarterly", "ttm", "ytd"]),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+    statement: z.enum(["balance-sheet", "cash-flow-statement", "income-statement"]),
+});
+
+export const getStandardizedFinancials = createServerFn({ method: "GET" })
+    .inputValidator(financialsSchema)
+    .handler(async ({ data }): Promise<StandardizedFinancialsResponse> => {
+        const {
+            apiKey,
+            fiscalPeriodType,
+            identifier,
+            limit = 8,
+            offset = 0,
+            sort = "desc",
+            statement,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const path = `/v1/standardized/${statement}` as const;
+
+        const { data: res, error } = await api.GET(path, {
+            params: {
+                query: {
+                    fiscal_period_type: fiscalPeriodType,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });

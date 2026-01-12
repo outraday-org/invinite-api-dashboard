@@ -9,38 +9,93 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TickerRouteRouteImport } from './routes/$ticker/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TickerIndexRouteImport } from './routes/$ticker/index'
+import { Route as TickerFinancialsStandardizedRouteImport } from './routes/$ticker/financials-standardized'
+import { Route as TickerFilingsRouteImport } from './routes/$ticker/filings'
 
+const TickerRouteRoute = TickerRouteRouteImport.update({
+  id: '/$ticker',
+  path: '/$ticker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TickerIndexRoute = TickerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TickerRouteRoute,
+} as any)
+const TickerFinancialsStandardizedRoute =
+  TickerFinancialsStandardizedRouteImport.update({
+    id: '/financials-standardized',
+    path: '/financials-standardized',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
+const TickerFilingsRoute = TickerFilingsRouteImport.update({
+  id: '/filings',
+  path: '/filings',
+  getParentRoute: () => TickerRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$ticker': typeof TickerRouteRouteWithChildren
+  '/$ticker/filings': typeof TickerFilingsRoute
+  '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedRoute
+  '/$ticker/': typeof TickerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$ticker/filings': typeof TickerFilingsRoute
+  '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedRoute
+  '/$ticker': typeof TickerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$ticker': typeof TickerRouteRouteWithChildren
+  '/$ticker/filings': typeof TickerFilingsRoute
+  '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedRoute
+  '/$ticker/': typeof TickerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/$ticker'
+    | '/$ticker/filings'
+    | '/$ticker/financials-standardized'
+    | '/$ticker/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/$ticker/filings' | '/$ticker/financials-standardized' | '/$ticker'
+  id:
+    | '__root__'
+    | '/'
+    | '/$ticker'
+    | '/$ticker/filings'
+    | '/$ticker/financials-standardized'
+    | '/$ticker/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TickerRouteRoute: typeof TickerRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$ticker': {
+      id: '/$ticker'
+      path: '/$ticker'
+      fullPath: '/$ticker'
+      preLoaderRoute: typeof TickerRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +103,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$ticker/': {
+      id: '/$ticker/'
+      path: '/'
+      fullPath: '/$ticker/'
+      preLoaderRoute: typeof TickerIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/financials-standardized': {
+      id: '/$ticker/financials-standardized'
+      path: '/financials-standardized'
+      fullPath: '/$ticker/financials-standardized'
+      preLoaderRoute: typeof TickerFinancialsStandardizedRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/filings': {
+      id: '/$ticker/filings'
+      path: '/filings'
+      fullPath: '/$ticker/filings'
+      preLoaderRoute: typeof TickerFilingsRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
   }
 }
 
+interface TickerRouteRouteChildren {
+  TickerFilingsRoute: typeof TickerFilingsRoute
+  TickerFinancialsStandardizedRoute: typeof TickerFinancialsStandardizedRoute
+  TickerIndexRoute: typeof TickerIndexRoute
+}
+
+const TickerRouteRouteChildren: TickerRouteRouteChildren = {
+  TickerFilingsRoute: TickerFilingsRoute,
+  TickerFinancialsStandardizedRoute: TickerFinancialsStandardizedRoute,
+  TickerIndexRoute: TickerIndexRoute,
+}
+
+const TickerRouteRouteWithChildren = TickerRouteRoute._addFileChildren(
+  TickerRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TickerRouteRoute: TickerRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
