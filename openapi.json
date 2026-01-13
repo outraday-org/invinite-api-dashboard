@@ -543,8 +543,7 @@
                   "type": "object",
                   "required": [
                     "count",
-                    "companies",
-                    "has_more"
+                    "companies"
                   ],
                   "properties": {
                     "count": {
@@ -583,9 +582,9 @@
                         }
                       }
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional companies are available beyond this page"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     }
                   }
                 }
@@ -966,8 +965,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "dividends",
-                          "has_more"
+                          "dividends"
                         ],
                         "properties": {
                           "ticker": {
@@ -1028,9 +1026,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional dividends are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -1134,8 +1132,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -1183,9 +1180,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -1289,8 +1286,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "splits",
-                          "has_more"
+                          "splits"
                         ],
                         "properties": {
                           "ticker": {
@@ -1333,9 +1329,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional splits are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -1520,16 +1516,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -1870,16 +1865,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -2065,16 +2059,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -2261,16 +2254,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -2611,16 +2603,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -2806,16 +2797,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -3002,16 +2992,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -3352,16 +3341,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -3547,16 +3535,15 @@
                               ]
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         },
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ]
                       }
                     }
@@ -4738,8 +4725,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -4800,9 +4786,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -4935,8 +4921,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -5127,9 +5112,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -5248,8 +5233,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -5308,9 +5292,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -5429,8 +5413,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -5491,9 +5474,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -5626,8 +5609,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -5818,9 +5800,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -5939,8 +5921,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -5999,9 +5980,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -6120,8 +6101,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -6182,9 +6162,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -6317,8 +6297,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -6509,9 +6488,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -6630,8 +6609,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -6690,9 +6668,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -7855,8 +7833,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -7933,9 +7910,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -8054,8 +8031,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -8132,9 +8108,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -8267,8 +8243,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -8341,9 +8316,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -8480,8 +8455,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -8575,9 +8549,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -8714,8 +8688,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "periods",
-                          "has_more"
+                          "periods"
                         ],
                         "properties": {
                           "ticker": {
@@ -8839,9 +8812,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "Whether more periods are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -8945,8 +8918,7 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "ipos",
-                    "has_more"
+                    "ipos"
                   ],
                   "properties": {
                     "ipos": {
@@ -9070,9 +9042,9 @@
                         ]
                       }
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional IPOs are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     }
                   }
                 }
@@ -9160,17 +9132,16 @@
                   "type": "object",
                   "required": [
                     "cik_institution",
-                    "holdings",
-                    "has_more"
+                    "holdings"
                   ],
                   "properties": {
                     "cik_institution": {
                       "type": "string",
                       "description": "Institution CIK"
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional holdings are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     },
                     "holdings": {
                       "type": "array",
@@ -9378,8 +9349,7 @@
                   "required": [
                     "ticker",
                     "cik",
-                    "holdings",
-                    "has_more"
+                    "holdings"
                   ],
                   "properties": {
                     "ticker": {
@@ -9390,9 +9360,9 @@
                       "type": "string",
                       "description": "Company CIK (with or without leading zeros)"
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional holdings are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     },
                     "holdings": {
                       "type": "array",
@@ -9654,13 +9624,12 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "transactions",
-                    "has_more"
+                    "transactions"
                   ],
                   "properties": {
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional transactions are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     },
                     "transactions": {
                       "type": "array",
@@ -9877,8 +9846,7 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "institutions",
-                    "has_more"
+                    "institutions"
                   ],
                   "properties": {
                     "institutions": {
@@ -9938,9 +9906,9 @@
                         }
                       }
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional institutions are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     }
                   }
                 }
@@ -10062,8 +10030,7 @@
                   "required": [
                     "ticker",
                     "cik",
-                    "transactions",
-                    "has_more"
+                    "transactions"
                   ],
                   "properties": {
                     "ticker": {
@@ -10074,9 +10041,9 @@
                       "type": "string",
                       "description": "CIK (with or without leading zeros)"
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional transactions are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     },
                     "transactions": {
                       "type": "array",
@@ -10297,8 +10264,7 @@
                         "required": [
                           "ticker",
                           "cik",
-                          "filings",
-                          "has_more"
+                          "filings"
                         ],
                         "properties": {
                           "ticker": {
@@ -10382,9 +10348,9 @@
                               }
                             }
                           },
-                          "has_more": {
-                            "type": "boolean",
-                            "description": "True if additional filings are available"
+                          "next_url": {
+                            "type": "string",
+                            "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                           }
                         }
                       }
@@ -10803,8 +10769,7 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "holidays",
-                    "has_more"
+                    "holidays"
                   ],
                   "properties": {
                     "holidays": {
@@ -10841,9 +10806,9 @@
                         }
                       }
                     },
-                    "has_more": {
-                      "type": "boolean",
-                      "description": "True if additional holidays are available"
+                    "next_url": {
+                      "type": "string",
+                      "description": "URL for the next page (includes next offset and same limit). Omitted when no next page exists."
                     }
                   }
                 }

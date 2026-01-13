@@ -142,8 +142,8 @@ export interface paths {
                                 /** @description Logo image URL */
                                 logo_url: string | null;
                             }[];
-                            /** @description True if additional companies are available beyond this page */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                         };
                     };
                 };
@@ -352,8 +352,8 @@ export interface paths {
                                      */
                                     record_date: string;
                                 }[];
-                                /** @description True if additional dividends are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -427,8 +427,8 @@ export interface paths {
                                      */
                                     period_end: string;
                                 }[];
-                                /** @description True if additional periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -500,8 +500,8 @@ export interface paths {
                                     /** @description Post-split share count */
                                     split_to: number;
                                 }[];
-                                /** @description True if additional splits are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -586,8 +586,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -728,8 +728,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -812,8 +812,8 @@ export interface paths {
                                     /** @description Financial facts in nested tree structure */
                                     facts: components["schemas"]["def-5"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -898,8 +898,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1040,8 +1040,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1124,8 +1124,8 @@ export interface paths {
                                     /** @description Financial facts in nested tree structure */
                                     facts: components["schemas"]["def-5"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1210,8 +1210,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1352,8 +1352,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1436,8 +1436,8 @@ export interface paths {
                                     /** @description Financial facts in nested tree structure */
                                     facts: components["schemas"]["def-5"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -1968,8 +1968,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description True if additional periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2098,8 +2098,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2175,8 +2175,8 @@ export interface paths {
                                     period_end: string;
                                     facts: components["schemas"]["def-4"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2255,8 +2255,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description True if additional periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2385,8 +2385,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2462,8 +2462,8 @@ export interface paths {
                                     period_end: string;
                                     facts: components["schemas"]["def-4"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2542,8 +2542,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description True if additional periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2672,8 +2672,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -2749,8 +2749,8 @@ export interface paths {
                                     period_end: string;
                                     facts: components["schemas"]["def-4"][];
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3273,8 +3273,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3361,8 +3361,8 @@ export interface paths {
                                         };
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3449,8 +3449,8 @@ export interface paths {
                                         [key: string]: number;
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3546,8 +3546,8 @@ export interface paths {
                                         }[];
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3657,8 +3657,8 @@ export interface paths {
                                         }[];
                                     };
                                 }[];
-                                /** @description Whether more periods are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -3759,8 +3759,8 @@ export interface paths {
                                 /** @description Country code */
                                 us_code: string;
                             }[];
-                            /** @description True if additional IPOs are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                         };
                     };
                 };
@@ -3812,8 +3812,8 @@ export interface paths {
                         "application/json": {
                             /** @description Institution CIK */
                             cik_institution: string;
-                            /** @description True if additional holdings are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                             /** @description Holdings positions for the institution */
                             holdings: {
                                 /** @description SEC filing accession number */
@@ -3911,8 +3911,8 @@ export interface paths {
                             ticker: string;
                             /** @description Company CIK (with or without leading zeros) */
                             cik: string;
-                            /** @description True if additional holdings are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                             /** @description Institutional holdings for the company */
                             holdings: {
                                 /** @description SEC filing accession number */
@@ -4016,8 +4016,8 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description True if additional transactions are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                             /** @description Institutional holdings transactions */
                             transactions: {
                                 /** @description Institution CIK */
@@ -4137,8 +4137,8 @@ export interface paths {
                                 /** @description Postal/ZIP code */
                                 zip_code: string | null;
                             }[];
-                            /** @description True if additional institutions are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                         };
                     };
                 };
@@ -4198,8 +4198,8 @@ export interface paths {
                             ticker: string;
                             /** @description CIK (with or without leading zeros) */
                             cik: string;
-                            /** @description True if additional transactions are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                             /** @description Insider transactions matching the query */
                             transactions: {
                                 /** @description Internal transaction ID */
@@ -4332,8 +4332,8 @@ export interface paths {
                                      */
                                     period_end: string | null;
                                 }[];
-                                /** @description True if additional filings are available */
-                                has_more: boolean;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
                             }[];
                         };
                     };
@@ -4564,8 +4564,8 @@ export interface paths {
                                 /** @description Market close time (if partial day) */
                                 end_time: string | null;
                             }[];
-                            /** @description True if additional holidays are available */
-                            has_more: boolean;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
                         };
                     };
                 };
