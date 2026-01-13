@@ -10,6 +10,14 @@ import * as pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReactRefresh from "eslint-plugin-react-refresh";
 
 export default [
+    {
+        ignores: [
+            "**/.output/**",
+            "**/.nitro/**",
+            "**/dist/**",
+            "**/node_modules/**",
+        ],
+    },
     ...tanstackConfig,
     stylistic.configs.customize({
         // the following options are the default values

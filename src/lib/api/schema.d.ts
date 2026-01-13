@@ -48,6 +48,1301 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/as-reported/balance-sheet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported balance sheet data for a company. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their as-reported financial statements */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods for the company */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    /** @description As-reported facts keyed by concept */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/balance-sheet/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed as-reported balance sheet data with html_label, formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods with detailed facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: {
+                                        [key: string]: {
+                                            value?: number;
+                                            html_label?: null | string;
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Standardized metric ID */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            accession_number?: null | string;
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/balance-sheet/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported balance sheet data in presentation format (nested tree structure based on parent_path). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with as-reported statements in presentation (tree) format */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description Periods containing presentation-formatted facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: Array<components["schemas"]["def-4"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/cash-flow-statement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported cash flow statement data for a company. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their as-reported financial statements */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods for the company */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    /** @description As-reported facts keyed by concept */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/cash-flow-statement/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed as-reported cash flow statement data with html_label, formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods with detailed facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: {
+                                        [key: string]: {
+                                            value?: number;
+                                            html_label?: null | string;
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Standardized metric ID */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            accession_number?: null | string;
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/cash-flow-statement/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported cash flow statement data in presentation format (nested tree structure based on parent_path). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with as-reported statements in presentation (tree) format */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description Periods containing presentation-formatted facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: Array<components["schemas"]["def-4"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/income-statement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported income statement data for a company. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their as-reported financial statements */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods for the company */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    /** @description As-reported facts keyed by concept */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/income-statement/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed as-reported income statement data with html_label, formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description As-reported periods with detailed facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: {
+                                        [key: string]: {
+                                            value?: number;
+                                            html_label?: null | string;
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Standardized metric ID */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            accession_number?: null | string;
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/income-statement/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch as-reported income statement data in presentation format (nested tree structure based on parent_path). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Companies with as-reported statements in presentation (tree) format */
+                            companies: Array<{
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description Periods containing presentation-formatted facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /** @description Type of fiscal period */
+                                    fiscal_period_type: string;
+                                    /** @description Period end date (YYYY-MM-DD) */
+                                    period_end: string;
+                                    facts: Array<components["schemas"]["def-4"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/snapshot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete as-reported financial statements snapshot for multiple companies. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest financial statements */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        /** @description Financial facts (concept -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        /** @description Financial facts (concept -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        /** @description Financial facts (concept -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/snapshot/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete detailed as-reported financial statements snapshot with html_label, formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest detailed financial statements */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        facts?: {
+                                            [key: string]: {
+                                                value?: number;
+                                                html_label?: null | string;
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Standardized metric ID */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                accession_number?: null | string;
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        facts?: {
+                                            [key: string]: {
+                                                value?: number;
+                                                html_label?: null | string;
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Standardized metric ID */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                accession_number?: null | string;
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        facts?: {
+                                            [key: string]: {
+                                                value?: number;
+                                                html_label?: null | string;
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Standardized metric ID */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                accession_number?: null | string;
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/as-reported/snapshot/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete as-reported financial statements snapshot in presentation format (nested tree structure based on parent_path). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest financial statements in presentation format */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-4"]>;
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-4"]>;
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-4"]>;
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/company/available-companies": {
         parameters: {
             query?: never;
@@ -75,79 +1370,17 @@ export interface paths {
                             /** @description Total number of available companies */
                             count: number;
                             /** @description List of companies that can be queried */
-                            companies: {
+                            companies: Array<{
                                 /** @description CIK with or without leading zeros */
                                 cik: string;
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description Company name */
                                 name: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
-                401: components["responses"]["UnauthorizedError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/company/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Search companies by ticker or name. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Search text to match against ticker (prefix) or name (contains) */
-                    query: string;
-                    /** @description Maximum number of companies to return */
-                    limit?: number;
-                    /** @description Pagination offset */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Total matched companies (may be limited by pagination) */
-                            count: number;
-                            /** @description Matched companies ordered by ticker */
-                            companies: {
-                                /** @description CIK with or without leading zeros */
-                                cik: string;
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description Company name */
-                                name: string;
-                                /** @description Logo image URL */
-                                logo_url: string | null;
-                            }[];
-                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                            next_url?: string;
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
                 500: components["responses"]["InternalServerError"];
             };
@@ -188,7 +1421,7 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Company details for the requested identifier */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK with or without leading zeros */
@@ -196,7 +1429,7 @@ export interface paths {
                                 /** @description Company name */
                                 name: string;
                                 /** @description Business description */
-                                description: string | null;
+                                description: null | string;
                                 /** @description High-level category */
                                 category: string;
                                 /** @description Sector classification */
@@ -210,9 +1443,9 @@ export interface paths {
                                 /** @description SIC industry name */
                                 sic_industry: string;
                                 /** @description Fama-French sector */
-                                fama_sector: string | null;
+                                fama_sector: null | string;
                                 /** @description Fama-French industry */
-                                fama_industry: string | null;
+                                fama_industry: null | string;
                                 /** @description Listing exchange */
                                 exchange: string;
                                 /** @description Reporting currency */
@@ -220,49 +1453,49 @@ export interface paths {
                                 /** @description CUSIP identifier */
                                 cusip: string;
                                 /** @description Composite FIGI */
-                                composite_figi: string | null;
+                                composite_figi: null | string;
                                 /** @description Whether the security is delisted */
                                 is_delisted: boolean;
                                 /**
                                  * Format: date
                                  * @description Listing date
                                  */
-                                list_date: string | null;
+                                list_date: null | string;
                                 /** @description Employee headcount */
-                                employees: number | null;
+                                employees: null | number;
                                 /** @description Market capitalization */
-                                market_cap: number | null;
+                                market_cap: null | number;
                                 /** @description Shares outstanding */
-                                shares_outstanding: number | null;
+                                shares_outstanding: null | number;
                                 /** @description Insider ownership percentage */
-                                insider_own_pct: number | null;
+                                insider_own_pct: null | number;
                                 /** @description Insider-owned shares */
-                                insider_own_shares: number | null;
+                                insider_own_shares: null | number;
                                 /** @description Institutional ownership percentage */
-                                inst_own_pct: number | null;
+                                inst_own_pct: null | number;
                                 /** @description Institutional-owned shares */
-                                inst_own_shares: number | null;
+                                inst_own_shares: null | number;
                                 /** @description Short float percentage */
-                                short_float_pct: number | null;
+                                short_float_pct: null | number;
                                 /** @description Short float shares */
-                                short_float_shares: number | null;
+                                short_float_shares: null | number;
                                 /** @description Company website URL */
-                                homepage_url: string | null;
+                                homepage_url: null | string;
                                 /** @description Investor relations URL */
-                                investor_relations_url: string | null;
+                                investor_relations_url: null | string;
                                 /** @description Logo image URL */
-                                logo_url: string | null;
+                                logo_url: null | string;
                                 /** @description Street address */
-                                street: string | null;
+                                street: null | string;
                                 /** @description City */
-                                city: string | null;
+                                city: null | string;
                                 /** @description State or province */
-                                state: string | null;
+                                state: null | string;
                                 /** @description Postal/ZIP code */
-                                zip_code: string | null;
+                                zip_code: null | string;
                                 /** @description ISO country code */
-                                country_code: string | null;
-                            }[];
+                                country_code: null | string;
+                            }>;
                         };
                     };
                 };
@@ -318,13 +1551,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Dividends grouped by company */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK with or without leading zeros */
                                 cik: string;
                                 /** @description Dividend records */
-                                dividends: {
+                                dividends: Array<{
                                     /**
                                      * Format: date
                                      * @description Ex-dividend date
@@ -351,10 +1584,10 @@ export interface paths {
                                      * @description Shareholder record date
                                      */
                                     record_date: string;
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -406,13 +1639,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Fiscal period lists grouped by company */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK with or without leading zeros */
                                 cik: string;
                                 /** @description Fiscal periods for the company */
-                                periods: {
+                                periods: Array<{
                                     /** @description Fiscal year */
                                     fiscal_year: number;
                                     /** @description Fiscal quarter (1-4) */
@@ -426,16 +1659,78 @@ export interface paths {
                                      * @description Period end date
                                      */
                                     period_end: string;
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
                 400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
                 404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/company/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Search companies by ticker or name. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Search text to match against ticker (prefix) or name (contains) */
+                    query: string;
+                    /** @description Maximum number of companies to return */
+                    limit?: number;
+                    /** @description Pagination offset */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Total matched companies (may be limited by pagination) */
+                            count: number;
+                            /** @description Matched companies ordered by ticker */
+                            companies: Array<{
+                                /** @description CIK with or without leading zeros */
+                                cik: string;
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description Company name */
+                                name: string;
+                                /** @description Logo image URL */
+                                logo_url: null | string;
+                            }>;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
                 500: components["responses"]["InternalServerError"];
             };
         };
@@ -481,13 +1776,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Stock split history grouped by company */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK with or without leading zeros */
                                 cik: string;
                                 /** @description Stock split records */
-                                splits: {
+                                splits: Array<{
                                     /** @description Ticker symbol */
                                     ticker: string;
                                     /**
@@ -499,2783 +1794,10 @@ export interface paths {
                                     split_from: number;
                                     /** @description Post-split share count */
                                     split_to: number;
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/income-statement": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch standardized income statement data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> value) */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/income-statement/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed income statement data with formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their detailed financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of detailed financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> detailed info) */
-                                    facts: {
-                                        [key: string]: {
-                                            /** @description Numeric value of the financial fact */
-                                            value: number;
-                                            /** @description ID of the parent metric */
-                                            parent_id?: string | null;
-                                            /** @description Calculation formula details */
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Metric identifier */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            /** @description SEC accession number */
-                                            accession_number?: string | null;
-                                            /** @description HTML tag ID for source linking */
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/income-statement/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch income statement data in presentation format (nested tree structure based on parent_id). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods in presentation format */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts in nested tree structure */
-                                    facts: components["schemas"]["def-5"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/balance-sheet": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch standardized balance sheet data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> value) */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/balance-sheet/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed balance sheet data with formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their detailed financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of detailed financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> detailed info) */
-                                    facts: {
-                                        [key: string]: {
-                                            /** @description Numeric value of the financial fact */
-                                            value: number;
-                                            /** @description ID of the parent metric */
-                                            parent_id?: string | null;
-                                            /** @description Calculation formula details */
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Metric identifier */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            /** @description SEC accession number */
-                                            accession_number?: string | null;
-                                            /** @description HTML tag ID for source linking */
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/balance-sheet/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch balance sheet data in presentation format (nested tree structure based on parent_id). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods in presentation format */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts in nested tree structure */
-                                    facts: components["schemas"]["def-5"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/cash-flow-statement": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch standardized cash flow statement data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> value) */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/cash-flow-statement/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed cash flow statement data with formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their detailed financial periods */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of detailed financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts (metric_id -> detailed info) */
-                                    facts: {
-                                        [key: string]: {
-                                            /** @description Numeric value of the financial fact */
-                                            value: number;
-                                            /** @description ID of the parent metric */
-                                            parent_id?: string | null;
-                                            /** @description Calculation formula details */
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Metric identifier */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            /** @description SEC accession number */
-                                            accession_number?: string | null;
-                                            /** @description HTML tag ID for source linking */
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/cash-flow-statement/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch cash flow statement data in presentation format (nested tree structure based on parent_id). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial periods in presentation format */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of financial periods */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Financial facts in nested tree structure */
-                                    facts: components["schemas"]["def-5"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/snapshot": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete financial statements snapshot for multiple companies. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest financial statements */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        /** @description Financial facts (metric_id -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        /** @description Financial facts (metric_id -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        /** @description Financial facts (metric_id -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/snapshot/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete detailed financial statements snapshot with formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest detailed financial statements */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        /** @description Financial facts (metric_id -> detailed info) */
-                                        facts?: {
-                                            [key: string]: {
-                                                /** @description Numeric value of the financial fact */
-                                                value: number;
-                                                /** @description ID of the parent metric */
-                                                parent_id?: string | null;
-                                                /** @description Calculation formula details */
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Metric identifier */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                /** @description SEC accession number */
-                                                accession_number?: string | null;
-                                                /** @description HTML tag ID for source linking */
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        /** @description Financial facts (metric_id -> detailed info) */
-                                        facts?: {
-                                            [key: string]: {
-                                                /** @description Numeric value of the financial fact */
-                                                value: number;
-                                                /** @description ID of the parent metric */
-                                                parent_id?: string | null;
-                                                /** @description Calculation formula details */
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Metric identifier */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                /** @description SEC accession number */
-                                                accession_number?: string | null;
-                                                /** @description HTML tag ID for source linking */
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        /** @description Financial facts (metric_id -> detailed info) */
-                                        facts?: {
-                                            [key: string]: {
-                                                /** @description Numeric value of the financial fact */
-                                                value: number;
-                                                /** @description ID of the parent metric */
-                                                parent_id?: string | null;
-                                                /** @description Calculation formula details */
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Metric identifier */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                /** @description SEC accession number */
-                                                accession_number?: string | null;
-                                                /** @description HTML tag ID for source linking */
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/standardized/snapshot/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete financial statements snapshot in presentation format (nested tree structure based on parent_id). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest financial statements in presentation format */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-5"][];
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-5"][];
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-5"][];
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/income-statement": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported income statement data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their as-reported financial statements */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods for the company */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    /** @description As-reported facts keyed by concept */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/income-statement/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed as-reported income statement data with html_label, formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods with detailed facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: {
-                                        [key: string]: {
-                                            value?: number;
-                                            html_label?: string | null;
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Standardized metric ID */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            accession_number?: string | null;
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/income-statement/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported income statement data in presentation format (nested tree structure based on parent_path). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with as-reported statements in presentation (tree) format */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description Periods containing presentation-formatted facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: components["schemas"]["def-4"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/balance-sheet": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported balance sheet data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their as-reported financial statements */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods for the company */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    /** @description As-reported facts keyed by concept */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/balance-sheet/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed as-reported balance sheet data with html_label, formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods with detailed facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: {
-                                        [key: string]: {
-                                            value?: number;
-                                            html_label?: string | null;
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Standardized metric ID */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            accession_number?: string | null;
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/balance-sheet/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported balance sheet data in presentation format (nested tree structure based on parent_path). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with as-reported statements in presentation (tree) format */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description Periods containing presentation-formatted facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: components["schemas"]["def-4"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/cash-flow-statement": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported cash flow statement data for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their as-reported financial statements */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods for the company */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    /** @description As-reported facts keyed by concept */
-                                    facts: {
-                                        [key: string]: number;
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/cash-flow-statement/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch detailed as-reported cash flow statement data with html_label, formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with detailed as-reported financial statements (includes labels/formulas) */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description As-reported periods with detailed facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: {
-                                        [key: string]: {
-                                            value?: number;
-                                            html_label?: string | null;
-                                            formula?: {
-                                                /** @description Readable formula string */
-                                                formulaStr: string;
-                                                /** @description Metrics used in the formula */
-                                                members: ({
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "reported";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Financial concept */
-                                                    concept: string;
-                                                    /** @description Start date (ISO format) */
-                                                    start_date?: string | null;
-                                                    /** @description End date (ISO format) */
-                                                    end_date?: string | null;
-                                                    /** @description Instant date (ISO format) */
-                                                    instant_date?: string | null;
-                                                    /** @description Segment information */
-                                                    segment?: {
-                                                        [key: string]: unknown;
-                                                    } | null;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                } | {
-                                                    /**
-                                                     * @description Member type
-                                                     * @enum {string}
-                                                     */
-                                                    type: "standardized";
-                                                    /** @description Value of the member */
-                                                    value: number;
-                                                    /** @description Standardized metric ID */
-                                                    metric_id: string;
-                                                    /** @description Fiscal period type */
-                                                    fiscal_period_type?: string | null;
-                                                    /** @description Fiscal year */
-                                                    fiscal_year?: number | null;
-                                                    /** @description Fiscal quarter */
-                                                    fiscal_quarter?: number | null;
-                                                })[];
-                                            } | null;
-                                            accession_number?: string | null;
-                                            html_tag_id?: string | null;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/cash-flow-statement/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch as-reported cash flow statement data in presentation format (nested tree structure based on parent_path). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Sort direction for periods by period_end */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with as-reported statements in presentation (tree) format */
-                            companies: {
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description Periods containing presentation-formatted facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /** @description Type of fiscal period */
-                                    fiscal_period_type: string;
-                                    /** @description Period end date (YYYY-MM-DD) */
-                                    period_end: string;
-                                    facts: components["schemas"]["def-4"][];
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/snapshot": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete as-reported financial statements snapshot for multiple companies. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest financial statements */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        /** @description Financial facts (concept -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        /** @description Financial facts (concept -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        /** @description Financial facts (concept -> value) */
-                                        facts?: {
-                                            [key: string]: number;
-                                        };
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/snapshot/detailed": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete detailed as-reported financial statements snapshot with html_label, formula, accession number, and html tag info. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                    /** @description Include formula in response */
-                    with_formula?: "true" | "false";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest detailed financial statements */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        facts?: {
-                                            [key: string]: {
-                                                value?: number;
-                                                html_label?: string | null;
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Standardized metric ID */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                accession_number?: string | null;
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        facts?: {
-                                            [key: string]: {
-                                                value?: number;
-                                                html_label?: string | null;
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Standardized metric ID */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                accession_number?: string | null;
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        facts?: {
-                                            [key: string]: {
-                                                value?: number;
-                                                html_label?: string | null;
-                                                formula?: {
-                                                    /** @description Readable formula string */
-                                                    formulaStr: string;
-                                                    /** @description Metrics used in the formula */
-                                                    members: ({
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "reported";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Financial concept */
-                                                        concept: string;
-                                                        /** @description Start date (ISO format) */
-                                                        start_date?: string | null;
-                                                        /** @description End date (ISO format) */
-                                                        end_date?: string | null;
-                                                        /** @description Instant date (ISO format) */
-                                                        instant_date?: string | null;
-                                                        /** @description Segment information */
-                                                        segment?: {
-                                                            [key: string]: unknown;
-                                                        } | null;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                    } | {
-                                                        /**
-                                                         * @description Member type
-                                                         * @enum {string}
-                                                         */
-                                                        type: "standardized";
-                                                        /** @description Value of the member */
-                                                        value: number;
-                                                        /** @description Standardized metric ID */
-                                                        metric_id: string;
-                                                        /** @description Fiscal period type */
-                                                        fiscal_period_type?: string | null;
-                                                        /** @description Fiscal year */
-                                                        fiscal_year?: number | null;
-                                                        /** @description Fiscal quarter */
-                                                        fiscal_quarter?: number | null;
-                                                    })[];
-                                                } | null;
-                                                accession_number?: string | null;
-                                                html_tag_id?: string | null;
-                                            };
-                                        };
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/as-reported/snapshot/presentation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch latest complete as-reported financial statements snapshot in presentation format (nested tree structure based on parent_path). */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
-                    identifiers: string;
-                    /** @description Type of fiscal period */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
-                    calendar_year?: number;
-                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
-                    calendar_quarter?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their latest financial statements in presentation format */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description SEC Central Index Key */
-                                cik: string;
-                                /** @description Fiscal year */
-                                fiscal_year: number;
-                                /** @description Fiscal quarter (1-4) */
-                                fiscal_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /**
-                                 * @description Type of fiscal period
-                                 * @enum {string}
-                                 */
-                                fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                /**
-                                 * Format: date
-                                 * @description Period end date (YYYY-MM-DD)
-                                 */
-                                period_end: string;
-                                statements: {
-                                    /** @description Latest income statement facts or null if not available */
-                                    income_statement: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-4"][];
-                                    } | null;
-                                    /** @description Latest balance sheet facts or null if not available */
-                                    balance_sheet: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-4"][];
-                                    } | null;
-                                    /** @description Latest cash flow statement facts or null if not available */
-                                    cash_flow_statement: {
-                                        /** @description Financial facts in nested tree structure */
-                                        facts?: components["schemas"]["def-4"][];
-                                    } | null;
-                                };
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/financial-metrics/ratios": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch financial ratios for a company. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Filter by ratio category: valuation, profitability, liquidity, solvency */
-                    category?: "valuation" | "profitability" | "liquidity" | "solvency";
-                    /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker (1-100) */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description List of companies with their financial ratios */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description List of periods with financial ratios */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Ratio facts grouped by category, where each category contains key-value pairs of metric names and their numeric values */
-                                    facts: {
-                                        [key: string]: {
-                                            [key: string]: number;
-                                        };
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -3329,13 +1851,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description List of companies with their CAGR metrics */
-                            companies: {
+                            companies: Array<{
                                 /** @description Company ticker symbol */
                                 ticker: string;
                                 /** @description CIK (with or without leading zeros) */
                                 cik: string;
                                 /** @description List of periods with CAGR metrics */
-                                periods: {
+                                periods: Array<{
                                     /** @description Fiscal year */
                                     fiscal_year: number;
                                     /** @description Fiscal quarter (1-4) */
@@ -3348,7 +1870,7 @@ export interface paths {
                                      * @description Type of fiscal period (always 'annual' for CAGR)
                                      * @enum {string}
                                      */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
                                     /**
                                      * Format: date
                                      * @description Period end date (YYYY-MM-DD)
@@ -3360,10 +1882,10 @@ export interface paths {
                                             [key: string]: number;
                                         };
                                     };
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -3395,9 +1917,9 @@ export interface paths {
                     /** @description Ticker symbol or CIK */
                     identifier: string;
                     /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
                     /** @description Filter by growth type: year_over_year, quarter_over_quarter */
-                    growth_type?: "year_over_year" | "quarter_over_quarter";
+                    growth_type?: "quarter_over_quarter" | "year_over_year";
                     /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
                     sort?: "asc" | "desc";
                     /** @description Maximum number of periods per ticker (1-100) */
@@ -3419,13 +1941,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description List of companies with their growth metrics */
-                            companies: {
+                            companies: Array<{
                                 /** @description Company ticker symbol */
                                 ticker: string;
                                 /** @description CIK (with or without leading zeros) */
                                 cik: string;
                                 /** @description List of periods with growth metrics */
-                                periods: {
+                                periods: Array<{
                                     /** @description Fiscal year */
                                     fiscal_year: number;
                                     /** @description Fiscal quarter (1-4) */
@@ -3438,7 +1960,7 @@ export interface paths {
                                      * @description Type of fiscal period
                                      * @enum {string}
                                      */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
                                     /**
                                      * Format: date
                                      * @description Period end date (YYYY-MM-DD)
@@ -3448,10 +1970,10 @@ export interface paths {
                                     facts: {
                                         [key: string]: number;
                                     };
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -3469,23 +1991,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/segmented-financials": {
+    "/v1/financial-metrics/ratios": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Fetch segmented financial data for a company. Returns financial facts broken down by business segments. */
+        /** @description Fetch financial ratios for a company. */
         get: {
             parameters: {
                 query: {
                     /** @description Ticker symbol or CIK */
                     identifier: string;
                     /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Filter by segment ID: seg_revenue_product, seg_revenue_geographic, seg_revenue_business_segment, seg_cost_of_revenue_business_segment, seg_research_and_development_expenses_business_segment, seg_selling_and_marketing_expenses_business_segment, seg_general_and_administrative_expenses_business_segment */
-                    segment_id?: "seg_revenue_product" | "seg_revenue_geographic" | "seg_revenue_business_segment" | "seg_cost_of_revenue_business_segment" | "seg_research_and_development_expenses_business_segment" | "seg_selling_and_marketing_expenses_business_segment" | "seg_general_and_administrative_expenses_business_segment";
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Filter by ratio category: valuation, profitability, liquidity, solvency */
+                    category?: "liquidity" | "profitability" | "solvency" | "valuation";
                     /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
                     sort?: "asc" | "desc";
                     /** @description Maximum number of periods per ticker (1-100) */
@@ -3506,14 +2028,14 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description Companies with segmented financial facts */
-                            companies: {
+                            /** @description List of companies with their financial ratios */
+                            companies: Array<{
                                 /** @description Company ticker symbol */
                                 ticker: string;
                                 /** @description CIK (with or without leading zeros) */
                                 cik: string;
-                                /** @description Segmented financial periods */
-                                periods: {
+                                /** @description List of periods with financial ratios */
+                                periods: Array<{
                                     /** @description Fiscal year */
                                     fiscal_year: number;
                                     /** @description Fiscal quarter (1-4) */
@@ -3526,29 +2048,22 @@ export interface paths {
                                      * @description Type of fiscal period
                                      * @enum {string}
                                      */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
                                     /**
                                      * Format: date
                                      * @description Period end date (YYYY-MM-DD)
                                      */
                                     period_end: string;
-                                    /** @description Facts grouped by metric_id, each containing array of segment values */
+                                    /** @description Ratio facts grouped by category, where each category contains key-value pairs of metric names and their numeric values */
                                     facts: {
                                         [key: string]: {
-                                            /** @description Numeric value of the fact */
-                                            value: number;
-                                            /** @description Unique segment identifier */
-                                            segment_id: string;
-                                            /** @description XBRL axis */
-                                            axis?: string | null;
-                                            /** @description XBRL member */
-                                            member?: string | null;
-                                        }[];
+                                            [key: string]: number;
+                                        };
                                     };
-                                }[];
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -3566,137 +2081,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/segmented-financials/detailed": {
+    "/v1/insider-trades": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Fetch detailed segmented financial data with additional metadata including axis, member, metric, accession_number, and html_tag_id. */
+        /** @description Fetch insider transactions for a specific company. */
         get: {
             parameters: {
                 query: {
-                    /** @description Ticker symbol or CIK */
+                    /** @description Company ticker symbol or CIK */
                     identifier: string;
-                    /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
-                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                    /** @description Filter by segment ID: seg_revenue_product, seg_revenue_geographic, seg_revenue_business_segment, seg_cost_of_revenue_business_segment, seg_research_and_development_expenses_business_segment, seg_selling_and_marketing_expenses_business_segment, seg_general_and_administrative_expenses_business_segment */
-                    segment_id?: "seg_revenue_product" | "seg_revenue_geographic" | "seg_revenue_business_segment" | "seg_cost_of_revenue_business_segment" | "seg_research_and_development_expenses_business_segment" | "seg_selling_and_marketing_expenses_business_segment" | "seg_general_and_administrative_expenses_business_segment";
-                    /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of periods per ticker (1-100) */
-                    limit?: number;
-                    /** @description Number of periods to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Companies with detailed segmented financial facts */
-                            companies: {
-                                /** @description Company ticker symbol */
-                                ticker: string;
-                                /** @description CIK (with or without leading zeros) */
-                                cik: string;
-                                /** @description Segmented financial periods with detailed facts */
-                                periods: {
-                                    /** @description Fiscal year */
-                                    fiscal_year: number;
-                                    /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number;
-                                    /** @description Calendar year */
-                                    calendar_year: number;
-                                    /** @description Calendar quarter (1-4) */
-                                    calendar_quarter: number;
-                                    /**
-                                     * @description Type of fiscal period
-                                     * @enum {string}
-                                     */
-                                    fiscal_period_type: "quarterly" | "annual" | "ytd" | "ttm";
-                                    /**
-                                     * Format: date
-                                     * @description Period end date (YYYY-MM-DD)
-                                     */
-                                    period_end: string;
-                                    /** @description Facts grouped by metric_id with detailed segment information */
-                                    facts: {
-                                        [key: string]: {
-                                            /** @description Numeric value of the fact */
-                                            value: number;
-                                            /** @description Unique segment identifier */
-                                            segment_id: string;
-                                            /** @description Segment metadata (dimension/member pairs) */
-                                            segment?: {
-                                                [key: string]: unknown;
-                                            };
-                                            /** @description XBRL axis */
-                                            axis?: string | null;
-                                            /** @description XBRL member */
-                                            member?: string | null;
-                                            /** @description Metric tag */
-                                            metric?: string | null;
-                                            /** @description SEC accession number */
-                                            accession_number?: string | null;
-                                            /** @description HTML tag ID for linking to source */
-                                            html_tag_id?: string | null;
-                                            /** @description HTML label for the fact */
-                                            html_label?: string | null;
-                                            /** @description Unit of measurement */
-                                            unit?: string | null;
-                                        }[];
-                                    };
-                                }[];
-                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                                next_url?: string;
-                            }[];
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                404: components["responses"]["NotFoundError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/ipos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description List all IPOs. */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description Filter IPOs with listing_date on or after this date (YYYY-MM-DD) */
+                    /** @description Filter transactions filed on or after this date (YYYY-MM-DD) */
                     start_date?: string;
-                    /** @description Filter IPOs with listing_date on or before this date (YYYY-MM-DD) */
+                    /** @description Filter transactions filed on or before this date (YYYY-MM-DD) */
                     end_date?: string;
-                    /** @description Sort direction for IPOs by listing_date */
+                    /** @description Filter by acquisition (A) or disposition (D) */
+                    acquired_disposed?: "A" | "D";
+                    /** @description Sort direction by filed_at date */
                     sort?: "asc" | "desc";
-                    /** @description Maximum number of IPOs to return */
+                    /** @description Maximum number of transactions to return */
                     limit?: number;
-                    /** @description Number of IPOs to skip for pagination */
+                    /** @description Number of transactions to skip for pagination */
                     offset?: number;
                 };
                 header?: never;
@@ -3712,149 +2120,55 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description List of IPO records */
-                            ipos: {
-                                /** @description IPO listing date (YYYY-MM-DD) */
-                                listing_date: string;
-                                /** @description IPO announcement date (YYYY-MM-DD) */
-                                announced_date: string;
-                                /** @description Currency code (e.g., USD) */
-                                currency_code: string;
-                                /** @description Final issue price */
-                                final_issue_price: number;
-                                /** @description Highest offer price */
-                                highest_offer_price: number;
-                                /** @description IPO status */
-                                ipo_status: string;
-                                /** @description ISIN identifier */
-                                isin: string;
-                                /** @description Issue end date (YYYY-MM-DD) */
-                                issue_end_date: string;
-                                /** @description Issue start date (YYYY-MM-DD) */
-                                issue_start_date: string;
-                                /** @description Issuer name */
-                                issuer_name: string;
-                                /** @description Last updated timestamp */
-                                last_updated: string;
-                                /** @description Lot size */
-                                lot_size: number;
-                                /** @description Lowest offer price */
-                                lowest_offer_price: number;
-                                /** @description Maximum shares offered */
-                                max_shares_offered: number;
-                                /** @description Minimum shares offered */
-                                min_shares_offered: number;
-                                /** @description Primary exchange */
-                                primary_exchange: string;
-                                /** @description Security description */
-                                security_description: string;
-                                /** @description Security type */
-                                security_type: string;
-                                /** @description Shares outstanding */
-                                shares_outstanding: number;
-                                /** @description Ticker symbol */
-                                ticker: string;
-                                /** @description Total offer size */
-                                total_offer_size: number;
-                                /** @description Country code */
-                                us_code: string;
-                            }[];
+                            /** @description Company ticker symbol */
+                            ticker: string;
+                            /** @description CIK (with or without leading zeros) */
+                            cik: string;
                             /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                             next_url?: string;
-                        };
-                    };
-                };
-                400: components["responses"]["BadRequestError"];
-                401: components["responses"]["UnauthorizedError"];
-                500: components["responses"]["InternalServerError"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/institutional-ownership/holdings-by-investor": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch institutional holdings for a specific institutional investor. */
-        get: {
-            parameters: {
-                query: {
-                    /** @description Institution CIK */
-                    cik: string;
-                    /** @description Sort direction by dollar_value */
-                    sort?: "asc" | "desc";
-                    /** @description Maximum number of holdings to return */
-                    limit?: number;
-                    /** @description Number of holdings to skip for pagination */
-                    offset?: number;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @description Institution CIK */
-                            cik_institution: string;
-                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                            next_url?: string;
-                            /** @description Holdings positions for the institution */
-                            holdings: {
+                            /** @description Insider transactions matching the query */
+                            transactions: Array<{
+                                /** @description Internal transaction ID */
+                                id: string;
                                 /** @description SEC filing accession number */
                                 accession_number: string;
-                                /** @description Calendar quarter (1-4) */
-                                calendar_quarter: number;
-                                /** @description Calendar year */
-                                calendar_year: number;
-                                /** @description Company CIK */
-                                cik_company?: string | null;
-                                /** @description Institution CIK */
-                                cik_institution: string;
-                                /** @description Company CUSIP */
-                                cusip_company: string;
-                                /** @description Position market value in USD */
-                                dollar_value: number;
-                                /** @description Filing date (YYYY-MM-DD) */
-                                filing_date: string;
-                                /** @description Investment discretion type */
-                                investment_discretion?: string | null;
-                                /** @description URL to SEC filing details */
-                                link_to_filing_details: string;
-                                /** @description Company name */
-                                name_company?: string | null;
-                                /** @description Period end date (YYYY-MM-DD) */
-                                period_end: string;
-                                /** @description Option type if applicable */
-                                put_call?: string | null;
-                                /** @description Shares or principal amount */
-                                shares_or_principal_amount: number;
-                                /** @description Type of position amount */
-                                shares_or_principal_amount_type: string;
-                                /** @description Company ticker symbol */
-                                ticker_company?: string | null;
-                                /** @description Votes with no authority */
-                                voting_authority_none?: number | null;
-                                /** @description Votes with shared authority */
-                                voting_authority_shared?: number | null;
-                                /** @description Votes with sole authority */
-                                voting_authority_sole?: number | null;
-                            }[];
+                                /** @description CIK of the company */
+                                cik: string;
+                                /** @description Filing timestamp (ISO string) */
+                                filed_at: string;
+                                /** @description Period of report (ISO date) */
+                                period_of_report?: null | string;
+                                /** @description Name of the reporting insider */
+                                reporting_person_name: string;
+                                /** @description Insider is a director */
+                                reporting_person_is_director: boolean;
+                                /** @description Insider is an officer */
+                                reporting_person_is_officer: boolean;
+                                /** @description Insider owns 10%+ */
+                                reporting_person_is_ten_percent_owner: boolean;
+                                /** @description Insider flagged as other */
+                                reporting_person_is_other: boolean;
+                                /** @description Officer title flag (if applicable) */
+                                reporting_person_officer_title?: boolean | null;
+                                /** @description Other role description */
+                                reporting_person_other_text?: null | string;
+                                /** @description Security title */
+                                security_title: string;
+                                /** @description A for acquisition, D for disposition */
+                                acquired_disposed: string;
+                                /** @description SEC transaction code */
+                                coding_code: string;
+                                /** @description Number of shares traded */
+                                shares: number;
+                                /** @description Price per share */
+                                share_price: number;
+                                /** @description Total transaction value */
+                                total: number;
+                                /** @description Shares held after the transaction */
+                                shares_owned_following_transaction: number;
+                                /** @description Shares held before the transaction */
+                                shares_owned_before_transaction?: null | number;
+                            }>;
                         };
                     };
                 };
@@ -3914,7 +2228,7 @@ export interface paths {
                             /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                             next_url?: string;
                             /** @description Institutional holdings for the company */
-                            holdings: {
+                            holdings: Array<{
                                 /** @description SEC filing accession number */
                                 accession_number: string;
                                 /** @description Calendar quarter (1-4) */
@@ -3922,7 +2236,7 @@ export interface paths {
                                 /** @description Calendar year */
                                 calendar_year: number;
                                 /** @description Company CIK */
-                                cik_company?: string | null;
+                                cik_company?: null | string;
                                 /** @description Institution CIK */
                                 cik_institution: string;
                                 /** @description Company CUSIP */
@@ -3932,28 +2246,28 @@ export interface paths {
                                 /** @description Filing date (YYYY-MM-DD) */
                                 filing_date: string;
                                 /** @description Investment discretion type */
-                                investment_discretion?: string | null;
+                                investment_discretion?: null | string;
                                 /** @description URL to SEC filing details */
                                 link_to_filing_details: string;
                                 /** @description Company name */
-                                name_company?: string | null;
+                                name_company?: null | string;
                                 /** @description Period end date (YYYY-MM-DD) */
                                 period_end: string;
                                 /** @description Option type if applicable */
-                                put_call?: string | null;
+                                put_call?: null | string;
                                 /** @description Shares or principal amount */
                                 shares_or_principal_amount: number;
                                 /** @description Type of position amount */
                                 shares_or_principal_amount_type: string;
                                 /** @description Company ticker symbol */
-                                ticker_company?: string | null;
+                                ticker_company?: null | string;
                                 /** @description Votes with no authority */
-                                voting_authority_none?: number | null;
+                                voting_authority_none?: null | number;
                                 /** @description Votes with shared authority */
-                                voting_authority_shared?: number | null;
+                                voting_authority_shared?: null | number;
                                 /** @description Votes with sole authority */
-                                voting_authority_sole?: number | null;
-                            }[];
+                                voting_authority_sole?: null | number;
+                            }>;
                         };
                     };
                 };
@@ -3971,36 +2285,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/institutional-ownership/transactions": {
+    "/v1/institutional-ownership/holdings-by-investor": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Fetch institutional transaction activity (position changes between periods). */
+        /** @description Fetch institutional holdings for a specific institutional investor. */
         get: {
             parameters: {
-                query?: {
-                    /** @description Institution CIK (at least one of cik or identifier required) */
-                    cik?: string;
-                    /** @description Company ticker symbol or CIK (at least one of cik or identifier required) */
-                    identifier?: string;
-                    /** @description Filter transactions with period_end_new on or after this date (YYYY-MM-DD) */
-                    start_date?: string;
-                    /** @description Filter transactions with period_end_new on or before this date (YYYY-MM-DD) */
-                    end_date?: string;
-                    /** @description Filter by transaction type: new_buy, added, reduced, sold_out */
-                    type?: "new_buy" | "added" | "reduced" | "sold_out";
-                    /** @description Filter by calendar year (of new position) */
-                    calendar_year?: number;
-                    /** @description Filter by calendar quarter (of new position) */
-                    calendar_quarter?: number;
-                    /** @description Sort direction by period_end_new: 'asc' (oldest first), 'desc' (newest first) */
+                query: {
+                    /** @description Institution CIK */
+                    cik: string;
+                    /** @description Sort direction by dollar_value */
                     sort?: "asc" | "desc";
-                    /** @description Maximum number of transactions to return (1-1000) */
+                    /** @description Maximum number of holdings to return */
                     limit?: number;
-                    /** @description Number of transactions to skip for pagination */
+                    /** @description Number of holdings to skip for pagination */
                     offset?: number;
                 };
                 header?: never;
@@ -4016,58 +2318,51 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
+                            /** @description Institution CIK */
+                            cik_institution: string;
                             /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                             next_url?: string;
-                            /** @description Institutional holdings transactions */
-                            transactions: {
-                                /** @description Institution CIK */
-                                cik_institution: string;
-                                /** @description Company CIK */
-                                cik_company?: string | null;
-                                /** @description Company CUSIP */
-                                cusip_company: string;
-                                /** @description Company ticker symbol */
-                                ticker_company?: string | null;
-                                /**
-                                 * @description Transaction type: new_buy, added, reduced, sold_out
-                                 * @enum {string}
-                                 */
-                                type: "new_buy" | "added" | "reduced" | "sold_out";
-                                /** @description Change in dollar value */
-                                change_dollar_value: number;
-                                /** @description Absolute change in shares or principal */
-                                change_shares_or_principal_amount_absolute: number;
-                                /** @description Percent change in shares or principal */
-                                change_shares_or_principal_amount_percent: number;
-                                /** @description New position size */
-                                shares_or_principal_amount_new: number;
-                                /** @description Prior position size */
-                                shares_or_principal_amount_old: number;
+                            /** @description Holdings positions for the institution */
+                            holdings: Array<{
                                 /** @description SEC filing accession number */
                                 accession_number: string;
                                 /** @description Calendar quarter (1-4) */
                                 calendar_quarter: number;
                                 /** @description Calendar year */
                                 calendar_year: number;
+                                /** @description Company CIK */
+                                cik_company?: null | string;
+                                /** @description Institution CIK */
+                                cik_institution: string;
+                                /** @description Company CUSIP */
+                                cusip_company: string;
                                 /** @description Position market value in USD */
                                 dollar_value: number;
                                 /** @description Filing date (YYYY-MM-DD) */
                                 filing_date: string;
                                 /** @description Investment discretion type */
-                                investment_discretion?: string | null;
+                                investment_discretion?: null | string;
+                                /** @description URL to SEC filing details */
+                                link_to_filing_details: string;
+                                /** @description Company name */
+                                name_company?: null | string;
                                 /** @description Period end date (YYYY-MM-DD) */
                                 period_end: string;
                                 /** @description Option type if applicable */
-                                put_call?: string | null;
+                                put_call?: null | string;
+                                /** @description Shares or principal amount */
+                                shares_or_principal_amount: number;
                                 /** @description Type of position amount */
                                 shares_or_principal_amount_type: string;
+                                /** @description Company ticker symbol */
+                                ticker_company?: null | string;
                                 /** @description Votes with no authority */
-                                voting_authority_none?: number | null;
+                                voting_authority_none?: null | number;
                                 /** @description Votes with shared authority */
-                                voting_authority_shared?: number | null;
+                                voting_authority_shared?: null | number;
                                 /** @description Votes with sole authority */
-                                voting_authority_sole?: number | null;
-                            }[];
+                                voting_authority_sole?: null | number;
+                            }>;
                         };
                     };
                 };
@@ -4119,24 +2414,24 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Institution records matching the query */
-                            institutions: {
+                            institutions: Array<{
                                 /** @description Institution CIK (with or without leading zeros) */
                                 cik: string;
                                 /** @description Institution name */
                                 name: string;
                                 /** @description City */
-                                city: string | null;
+                                city: null | string;
                                 /** @description State or province */
-                                state: string | null;
+                                state: null | string;
                                 /** @description Country */
-                                country: string | null;
+                                country: null | string;
                                 /** @description Address line 1 */
-                                street1: string | null;
+                                street1: null | string;
                                 /** @description Address line 2 */
-                                street2: string | null;
+                                street2: null | string;
                                 /** @description Postal/ZIP code */
-                                zip_code: string | null;
-                            }[];
+                                zip_code: null | string;
+                            }>;
                             /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                             next_url?: string;
                         };
@@ -4155,28 +2450,34 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/insider-trades": {
+    "/v1/institutional-ownership/transactions": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Fetch insider transactions for a specific company. */
+        /** @description Fetch institutional transaction activity (position changes between periods). */
         get: {
             parameters: {
-                query: {
-                    /** @description Company ticker symbol or CIK */
-                    identifier: string;
-                    /** @description Filter transactions filed on or after this date (YYYY-MM-DD) */
+                query?: {
+                    /** @description Institution CIK (at least one of cik or identifier required) */
+                    cik?: string;
+                    /** @description Company ticker symbol or CIK (at least one of cik or identifier required) */
+                    identifier?: string;
+                    /** @description Filter transactions with period_end_new on or after this date (YYYY-MM-DD) */
                     start_date?: string;
-                    /** @description Filter transactions filed on or before this date (YYYY-MM-DD) */
+                    /** @description Filter transactions with period_end_new on or before this date (YYYY-MM-DD) */
                     end_date?: string;
-                    /** @description Filter by acquisition (A) or disposition (D) */
-                    acquired_disposed?: "A" | "D";
-                    /** @description Sort direction by filed_at date */
+                    /** @description Filter by transaction type: new_buy, added, reduced, sold_out */
+                    type?: "added" | "new_buy" | "reduced" | "sold_out";
+                    /** @description Filter by calendar year (of new position) */
+                    calendar_year?: number;
+                    /** @description Filter by calendar quarter (of new position) */
+                    calendar_quarter?: number;
+                    /** @description Sort direction by period_end_new: 'asc' (oldest first), 'desc' (newest first) */
                     sort?: "asc" | "desc";
-                    /** @description Maximum number of transactions to return */
+                    /** @description Maximum number of transactions to return (1-1000) */
                     limit?: number;
                     /** @description Number of transactions to skip for pagination */
                     offset?: number;
@@ -4194,61 +2495,328 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description Company ticker symbol */
-                            ticker: string;
-                            /** @description CIK (with or without leading zeros) */
-                            cik: string;
                             /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                             next_url?: string;
-                            /** @description Insider transactions matching the query */
-                            transactions: {
-                                /** @description Internal transaction ID */
-                                id: string;
+                            /** @description Institutional holdings transactions */
+                            transactions: Array<{
+                                /** @description Institution CIK */
+                                cik_institution: string;
+                                /** @description Company CIK */
+                                cik_company?: null | string;
+                                /** @description Company CUSIP */
+                                cusip_company: string;
+                                /** @description Company ticker symbol */
+                                ticker_company?: null | string;
+                                /**
+                                 * @description Transaction type: new_buy, added, reduced, sold_out
+                                 * @enum {string}
+                                 */
+                                type: "added" | "new_buy" | "reduced" | "sold_out";
+                                /** @description Change in dollar value */
+                                change_dollar_value: number;
+                                /** @description Absolute change in shares or principal */
+                                change_shares_or_principal_amount_absolute: number;
+                                /** @description Percent change in shares or principal */
+                                change_shares_or_principal_amount_percent: number;
+                                /** @description New position size */
+                                shares_or_principal_amount_new: number;
+                                /** @description Prior position size */
+                                shares_or_principal_amount_old: number;
                                 /** @description SEC filing accession number */
                                 accession_number: string;
-                                /** @description CIK of the company */
-                                cik: string;
-                                /** @description Filing timestamp (ISO string) */
-                                filed_at: string;
-                                /** @description Period of report (ISO date) */
-                                period_of_report?: string | null;
-                                /** @description Name of the reporting insider */
-                                reporting_person_name: string;
-                                /** @description Insider is a director */
-                                reporting_person_is_director: boolean;
-                                /** @description Insider is an officer */
-                                reporting_person_is_officer: boolean;
-                                /** @description Insider owns 10%+ */
-                                reporting_person_is_ten_percent_owner: boolean;
-                                /** @description Insider flagged as other */
-                                reporting_person_is_other: boolean;
-                                /** @description Officer title flag (if applicable) */
-                                reporting_person_officer_title?: boolean | null;
-                                /** @description Other role description */
-                                reporting_person_other_text?: string | null;
-                                /** @description Security title */
-                                security_title: string;
-                                /** @description A for acquisition, D for disposition */
-                                acquired_disposed: string;
-                                /** @description SEC transaction code */
-                                coding_code: string;
-                                /** @description Number of shares traded */
-                                shares: number;
-                                /** @description Price per share */
-                                share_price: number;
-                                /** @description Total transaction value */
-                                total: number;
-                                /** @description Shares held after the transaction */
-                                shares_owned_following_transaction: number;
-                                /** @description Shares held before the transaction */
-                                shares_owned_before_transaction?: number | null;
-                            }[];
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Position market value in USD */
+                                dollar_value: number;
+                                /** @description Filing date (YYYY-MM-DD) */
+                                filing_date: string;
+                                /** @description Investment discretion type */
+                                investment_discretion?: null | string;
+                                /** @description Period end date (YYYY-MM-DD) */
+                                period_end: string;
+                                /** @description Option type if applicable */
+                                put_call?: null | string;
+                                /** @description Type of position amount */
+                                shares_or_principal_amount_type: string;
+                                /** @description Votes with no authority */
+                                voting_authority_none?: null | number;
+                                /** @description Votes with shared authority */
+                                voting_authority_shared?: null | number;
+                                /** @description Votes with sole authority */
+                                voting_authority_sole?: null | number;
+                            }>;
                         };
                     };
                 };
                 400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
                 404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ipos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List all IPOs. */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filter IPOs with listing_date on or after this date (YYYY-MM-DD) */
+                    start_date?: string;
+                    /** @description Filter IPOs with listing_date on or before this date (YYYY-MM-DD) */
+                    end_date?: string;
+                    /** @description Sort direction for IPOs by listing_date */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of IPOs to return */
+                    limit?: number;
+                    /** @description Number of IPOs to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of IPO records */
+                            ipos: Array<{
+                                /** @description IPO listing date (YYYY-MM-DD) */
+                                listing_date: string;
+                                /** @description IPO announcement date (YYYY-MM-DD) */
+                                announced_date: string;
+                                /** @description Currency code (e.g., USD) */
+                                currency_code: string;
+                                /** @description Final issue price */
+                                final_issue_price: number;
+                                /** @description Highest offer price */
+                                highest_offer_price: number;
+                                /** @description IPO status */
+                                ipo_status: string;
+                                /** @description ISIN identifier */
+                                isin: string;
+                                /** @description Issue end date (YYYY-MM-DD) */
+                                issue_end_date: string;
+                                /** @description Issue start date (YYYY-MM-DD) */
+                                issue_start_date: string;
+                                /** @description Issuer name */
+                                issuer_name: string;
+                                /** @description Last updated timestamp */
+                                last_updated: string;
+                                /** @description Lot size */
+                                lot_size: number;
+                                /** @description Lowest offer price */
+                                lowest_offer_price: number;
+                                /** @description Maximum shares offered */
+                                max_shares_offered: number;
+                                /** @description Minimum shares offered */
+                                min_shares_offered: number;
+                                /** @description Primary exchange */
+                                primary_exchange: string;
+                                /** @description Security description */
+                                security_description: string;
+                                /** @description Security type */
+                                security_type: string;
+                                /** @description Shares outstanding */
+                                shares_outstanding: number;
+                                /** @description Ticker symbol */
+                                ticker: string;
+                                /** @description Total offer size */
+                                total_offer_size: number;
+                                /** @description Country code */
+                                us_code: string;
+                            }>;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/market/market-holidays": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch market holidays. */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Sort direction for holidays by date */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of holidays to return */
+                    limit?: number;
+                    /** @description Number of holidays to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Market holidays */
+                            holidays: Array<{
+                                /**
+                                 * Format: date
+                                 * @description Holiday date (YYYY-MM-DD)
+                                 */
+                                day: string;
+                                /** @description Holiday name */
+                                event_name: string;
+                                /** @description Market open time (if partial day) */
+                                start_time: null | string;
+                                /** @description Market close time (if partial day) */
+                                end_time: null | string;
+                            }>;
+                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                            next_url?: string;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/metadata/list-available-metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List all available standardized metrics (income statement, balance sheet, cash flow statement, ratios, growth, CAGR, and segmented). */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Available metric identifiers */
+                            metrics: Array<{
+                                /** @description Metric identifier */
+                                metric_id: string;
+                                /** @description Human-readable metric name */
+                                name: string;
+                            }>;
+                        };
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/metadata/list-available-section-ids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List all available section IDs for SEC filings, grouped by form type (10-K, 10-Q, 8-K). */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description Supported form types with their section IDs */
+                            form_types: Array<{
+                                /** @enum {string} */
+                                form_type: "8-K" | "10-K" | "10-Q";
+                                /** @description Sections available for the form type */
+                                sections: Array<{
+                                    /** @description Section identifier */
+                                    section_id: string;
+                                    /** @description Form part */
+                                    part: string;
+                                    /** @description Item identifier */
+                                    item_id: string;
+                                    /** @description Section title */
+                                    title: string;
+                                }>;
+                            }>;
+                        };
+                    };
+                };
+                401: components["responses"]["UnauthorizedError"];
                 500: components["responses"]["InternalServerError"];
             };
         };
@@ -4296,13 +2864,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Companies with filings */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK (with or without leading zeros) */
                                 cik: string;
                                 /** @description Company filings */
-                                filings: {
+                                filings: Array<{
                                     /** @description SEC filing accession number */
                                     accession_number: string;
                                     /** @description Calendar quarter (1-4) */
@@ -4317,24 +2885,24 @@ export interface paths {
                                      */
                                     filing_date: string;
                                     /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number | null;
+                                    fiscal_quarter: null | number;
                                     /** @description Fiscal year */
-                                    fiscal_year: number | null;
+                                    fiscal_year: null | number;
                                     /** @description SEC form type */
                                     form_type: string;
                                     /** @description URL to the filing HTML */
-                                    html_url: string | null;
+                                    html_url: null | string;
                                     /** @description URL to the filing PDF */
-                                    pdf_url: string | null;
+                                    pdf_url: null | string;
                                     /**
                                      * Format: date
                                      * @description Period end date
                                      */
-                                    period_end: string | null;
-                                }[];
+                                    period_end: null | string;
+                                }>;
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
                                 next_url?: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -4386,7 +2954,7 @@ export interface paths {
                             /** @description The search response text answering the query */
                             text: string;
                             /** @description List of SEC filing sources that were used to generate the response */
-                            sources: {
+                            sources: Array<{
                                 /** @description CIK of the filing */
                                 cik: string;
                                 /** @description Accession number of the filing */
@@ -4402,7 +2970,7 @@ export interface paths {
                                 filing_date: string;
                                 /** @description Form type of the filing (e.g., 10-K, 10-Q, 8-K) */
                                 form_type: string;
-                            }[];
+                            }>;
                         };
                     };
                 };
@@ -4433,7 +3001,7 @@ export interface paths {
                     /** @description Ticker symbol or CIK */
                     identifier: string;
                     /** @description SEC form type. Filter requirements vary: 8-K requires accession_number; 10-K requires accession_number or fiscal_year; 10-Q requires accession_number or fiscal_year+fiscal_quarter. */
-                    form_type: "10-Q" | "10-K" | "8-K";
+                    form_type: "8-K" | "10-K" | "10-Q";
                     /** @description Optional section ID. If not specified, all sections from the filing are returned. */
                     section_id?: string;
                     /** @description SEC accession number of the filing */
@@ -4457,13 +3025,13 @@ export interface paths {
                     content: {
                         "application/json": {
                             /** @description Companies with requested filing sections */
-                            companies: {
+                            companies: Array<{
                                 /** @description Ticker symbol */
                                 ticker: string;
                                 /** @description CIK (with or without leading zeros) */
                                 cik: string;
                                 /** @description Filing sections for the company */
-                                sections: {
+                                sections: Array<{
                                     /** @description SEC filing accession number */
                                     accession_number: string;
                                     /** @description Calendar quarter (1-4) */
@@ -4480,15 +3048,15 @@ export interface paths {
                                      */
                                     filing_date: string;
                                     /** @description Fiscal quarter (1-4) */
-                                    fiscal_quarter: number | null;
+                                    fiscal_quarter: null | number;
                                     /** @description Fiscal year */
-                                    fiscal_year: number | null;
+                                    fiscal_year: null | number;
                                     /** @description SEC form type */
                                     form_type: string;
                                     /** @description HTML element ID for section anchor */
                                     html_tag_id: string;
                                     /** @description URL to the filing HTML */
-                                    html_url: string | null;
+                                    html_url: null | string;
                                     /** @description Item identifier */
                                     item_id: string;
                                     /** @description Form part */
@@ -4500,8 +3068,8 @@ export interface paths {
                                     period_end: string;
                                     /** @description Section title */
                                     title: string;
-                                }[];
-                            }[];
+                                }>;
+                            }>;
                         };
                     };
                 };
@@ -4519,22 +3087,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/market/market-holidays": {
+    "/v1/segmented-financials": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Fetch market holidays. */
+        /** @description Fetch segmented financial data for a company. Returns financial facts broken down by business segments. */
         get: {
             parameters: {
-                query?: {
-                    /** @description Sort direction for holidays by date */
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Filter by segment ID: seg_revenue_product, seg_revenue_geographic, seg_revenue_business_segment, seg_cost_of_revenue_business_segment, seg_research_and_development_expenses_business_segment, seg_selling_and_marketing_expenses_business_segment, seg_general_and_administrative_expenses_business_segment */
+                    segment_id?: "seg_cost_of_revenue_business_segment" | "seg_general_and_administrative_expenses_business_segment" | "seg_research_and_development_expenses_business_segment" | "seg_revenue_business_segment" | "seg_revenue_geographic" | "seg_revenue_product" | "seg_selling_and_marketing_expenses_business_segment";
+                    /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
                     sort?: "asc" | "desc";
-                    /** @description Maximum number of holidays to return */
+                    /** @description Maximum number of periods per ticker (1-100) */
                     limit?: number;
-                    /** @description Number of holidays to skip for pagination */
+                    /** @description Number of periods to skip for pagination */
                     offset?: number;
                 };
                 header?: never;
@@ -4550,27 +3124,55 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description Market holidays */
-                            holidays: {
-                                /**
-                                 * Format: date
-                                 * @description Holiday date (YYYY-MM-DD)
-                                 */
-                                day: string;
-                                /** @description Holiday name */
-                                event_name: string;
-                                /** @description Market open time (if partial day) */
-                                start_time: string | null;
-                                /** @description Market close time (if partial day) */
-                                end_time: string | null;
-                            }[];
-                            /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
-                            next_url?: string;
+                            /** @description Companies with segmented financial facts */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description Segmented financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Facts grouped by metric_id, each containing array of segment values */
+                                    facts: {
+                                        [key: string]: Array<{
+                                            /** @description Numeric value of the fact */
+                                            value: number;
+                                            /** @description Unique segment identifier */
+                                            segment_id: string;
+                                            /** @description XBRL axis */
+                                            axis?: null | string;
+                                            /** @description XBRL member */
+                                            member?: null | string;
+                                        }>;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
                         };
                     };
                 };
                 400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
                 500: components["responses"]["InternalServerError"];
             };
         };
@@ -4582,17 +3184,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/metadata/list-available-metrics": {
+    "/v1/segmented-financials/detailed": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description List all available standardized metrics (income statement, balance sheet, cash flow statement, ratios, growth, CAGR, and segmented). */
+        /** @description Fetch detailed segmented financial data with additional metadata including axis, member, metric, accession_number, and html_tag_id. */
         get: {
             parameters: {
-                query?: never;
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period: 'quarterly' (Q1-Q4), 'annual' (full year), 'ytd' (year-to-date), 'ttm' (trailing twelve months) */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Filter by segment ID: seg_revenue_product, seg_revenue_geographic, seg_revenue_business_segment, seg_cost_of_revenue_business_segment, seg_research_and_development_expenses_business_segment, seg_selling_and_marketing_expenses_business_segment, seg_general_and_administrative_expenses_business_segment */
+                    segment_id?: "seg_cost_of_revenue_business_segment" | "seg_general_and_administrative_expenses_business_segment" | "seg_research_and_development_expenses_business_segment" | "seg_revenue_business_segment" | "seg_revenue_geographic" | "seg_revenue_product" | "seg_selling_and_marketing_expenses_business_segment";
+                    /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker (1-100) */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -4606,17 +3221,69 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description Available metric identifiers */
-                            metrics: {
-                                /** @description Metric identifier */
-                                metric_id: string;
-                                /** @description Human-readable metric name */
-                                name: string;
-                            }[];
+                            /** @description Companies with detailed segmented financial facts */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description Segmented financial periods with detailed facts */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Facts grouped by metric_id with detailed segment information */
+                                    facts: {
+                                        [key: string]: Array<{
+                                            /** @description Numeric value of the fact */
+                                            value: number;
+                                            /** @description Unique segment identifier */
+                                            segment_id: string;
+                                            /** @description Segment metadata (dimension/member pairs) */
+                                            segment?: {
+                                                [key: string]: unknown;
+                                            };
+                                            /** @description XBRL axis */
+                                            axis?: null | string;
+                                            /** @description XBRL member */
+                                            member?: null | string;
+                                            /** @description Metric tag */
+                                            metric?: null | string;
+                                            /** @description SEC accession number */
+                                            accession_number?: null | string;
+                                            /** @description HTML tag ID for linking to source */
+                                            html_tag_id?: null | string;
+                                            /** @description HTML label for the fact */
+                                            html_label?: null | string;
+                                            /** @description Unit of measurement */
+                                            unit?: null | string;
+                                        }>;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
                         };
                     };
                 };
+                400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
                 500: components["responses"]["InternalServerError"];
             };
         };
@@ -4628,17 +3295,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/metadata/list-available-section-ids": {
+    "/v1/standardized/balance-sheet": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description List all available section IDs for SEC filings, grouped by form type (10-K, 10-Q, 8-K). */
+        /** @description Fetch standardized balance sheet data for a company. */
         get: {
             parameters: {
-                query?: never;
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -4652,26 +3330,1348 @@ export interface paths {
                     };
                     content: {
                         "application/json": {
-                            /** @description Supported form types with their section IDs */
-                            form_types: {
-                                /** @enum {string} */
-                                form_type: "10-K" | "10-Q" | "8-K";
-                                /** @description Sections available for the form type */
-                                sections: {
-                                    /** @description Section identifier */
-                                    section_id: string;
-                                    /** @description Form part */
-                                    part: string;
-                                    /** @description Item identifier */
-                                    item_id: string;
-                                    /** @description Section title */
-                                    title: string;
-                                }[];
-                            }[];
+                            /** @description List of companies with their financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> value) */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
                         };
                     };
                 };
+                400: components["responses"]["BadRequestError"];
                 401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/balance-sheet/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed balance sheet data with formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their detailed financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of detailed financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> detailed info) */
+                                    facts: {
+                                        [key: string]: {
+                                            /** @description Numeric value of the financial fact */
+                                            value: number;
+                                            /** @description ID of the parent metric */
+                                            parent_id?: null | string;
+                                            /** @description Calculation formula details */
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Metric identifier */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            /** @description SEC accession number */
+                                            accession_number?: null | string;
+                                            /** @description HTML tag ID for source linking */
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/balance-sheet/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch balance sheet data in presentation format (nested tree structure based on parent_id). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their financial periods in presentation format */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts in nested tree structure */
+                                    facts: Array<components["schemas"]["def-5"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/cash-flow-statement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch standardized cash flow statement data for a company. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> value) */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/cash-flow-statement/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed cash flow statement data with formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their detailed financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of detailed financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> detailed info) */
+                                    facts: {
+                                        [key: string]: {
+                                            /** @description Numeric value of the financial fact */
+                                            value: number;
+                                            /** @description ID of the parent metric */
+                                            parent_id?: null | string;
+                                            /** @description Calculation formula details */
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Metric identifier */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            /** @description SEC accession number */
+                                            accession_number?: null | string;
+                                            /** @description HTML tag ID for source linking */
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/cash-flow-statement/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch cash flow statement data in presentation format (nested tree structure based on parent_id). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their financial periods in presentation format */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts in nested tree structure */
+                                    facts: Array<components["schemas"]["def-5"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/income-statement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch standardized income statement data for a company. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> value) */
+                                    facts: {
+                                        [key: string]: number;
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/income-statement/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch detailed income statement data with formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their detailed financial periods */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of detailed financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts (metric_id -> detailed info) */
+                                    facts: {
+                                        [key: string]: {
+                                            /** @description Numeric value of the financial fact */
+                                            value: number;
+                                            /** @description ID of the parent metric */
+                                            parent_id?: null | string;
+                                            /** @description Calculation formula details */
+                                            formula?: null | {
+                                                /** @description Readable formula string */
+                                                formulaStr: string;
+                                                /** @description Metrics used in the formula */
+                                                members: Array<{
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "reported";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Financial concept */
+                                                    concept: string;
+                                                    /** @description Start date (ISO format) */
+                                                    start_date?: null | string;
+                                                    /** @description End date (ISO format) */
+                                                    end_date?: null | string;
+                                                    /** @description Instant date (ISO format) */
+                                                    instant_date?: null | string;
+                                                    /** @description Segment information */
+                                                    segment?: null | {
+                                                        [key: string]: unknown;
+                                                    };
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                } | {
+                                                    /**
+                                                     * @description Member type
+                                                     * @enum {string}
+                                                     */
+                                                    type: "standardized";
+                                                    /** @description Value of the member */
+                                                    value: number;
+                                                    /** @description Metric identifier */
+                                                    metric_id: string;
+                                                    /** @description Fiscal period type */
+                                                    fiscal_period_type?: null | string;
+                                                    /** @description Fiscal year */
+                                                    fiscal_year?: null | number;
+                                                    /** @description Fiscal quarter */
+                                                    fiscal_quarter?: null | number;
+                                                }>;
+                                            };
+                                            /** @description SEC accession number */
+                                            accession_number?: null | string;
+                                            /** @description HTML tag ID for source linking */
+                                            html_tag_id?: null | string;
+                                        };
+                                    };
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/income-statement/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch income statement data in presentation format (nested tree structure based on parent_id). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Ticker symbol or CIK */
+                    identifier: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Sort direction for periods by period_end */
+                    sort?: "asc" | "desc";
+                    /** @description Maximum number of periods per ticker */
+                    limit?: number;
+                    /** @description Number of periods to skip for pagination */
+                    offset?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their financial periods in presentation format */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description CIK (with or without leading zeros) */
+                                cik: string;
+                                /** @description List of financial periods */
+                                periods: Array<{
+                                    /** @description Fiscal year */
+                                    fiscal_year: number;
+                                    /** @description Fiscal quarter (1-4) */
+                                    fiscal_quarter: number;
+                                    /** @description Calendar year */
+                                    calendar_year: number;
+                                    /** @description Calendar quarter (1-4) */
+                                    calendar_quarter: number;
+                                    /**
+                                     * @description Type of fiscal period
+                                     * @enum {string}
+                                     */
+                                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                    /**
+                                     * Format: date
+                                     * @description Period end date (YYYY-MM-DD)
+                                     */
+                                    period_end: string;
+                                    /** @description Financial facts in nested tree structure */
+                                    facts: Array<components["schemas"]["def-5"]>;
+                                }>;
+                                /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */
+                                next_url?: string;
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/snapshot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete financial statements snapshot for multiple companies. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest financial statements */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        /** @description Financial facts (metric_id -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        /** @description Financial facts (metric_id -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        /** @description Financial facts (metric_id -> value) */
+                                        facts?: {
+                                            [key: string]: number;
+                                        };
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/snapshot/detailed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete detailed financial statements snapshot with formula, accession number, and html tag info. */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                    /** @description Include formula in response */
+                    with_formula?: "false" | "true";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest detailed financial statements */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        /** @description Financial facts (metric_id -> detailed info) */
+                                        facts?: {
+                                            [key: string]: {
+                                                /** @description Numeric value of the financial fact */
+                                                value: number;
+                                                /** @description ID of the parent metric */
+                                                parent_id?: null | string;
+                                                /** @description Calculation formula details */
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Metric identifier */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                /** @description SEC accession number */
+                                                accession_number?: null | string;
+                                                /** @description HTML tag ID for source linking */
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        /** @description Financial facts (metric_id -> detailed info) */
+                                        facts?: {
+                                            [key: string]: {
+                                                /** @description Numeric value of the financial fact */
+                                                value: number;
+                                                /** @description ID of the parent metric */
+                                                parent_id?: null | string;
+                                                /** @description Calculation formula details */
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Metric identifier */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                /** @description SEC accession number */
+                                                accession_number?: null | string;
+                                                /** @description HTML tag ID for source linking */
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        /** @description Financial facts (metric_id -> detailed info) */
+                                        facts?: {
+                                            [key: string]: {
+                                                /** @description Numeric value of the financial fact */
+                                                value: number;
+                                                /** @description ID of the parent metric */
+                                                parent_id?: null | string;
+                                                /** @description Calculation formula details */
+                                                formula?: null | {
+                                                    /** @description Readable formula string */
+                                                    formulaStr: string;
+                                                    /** @description Metrics used in the formula */
+                                                    members: Array<{
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "reported";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Financial concept */
+                                                        concept: string;
+                                                        /** @description Start date (ISO format) */
+                                                        start_date?: null | string;
+                                                        /** @description End date (ISO format) */
+                                                        end_date?: null | string;
+                                                        /** @description Instant date (ISO format) */
+                                                        instant_date?: null | string;
+                                                        /** @description Segment information */
+                                                        segment?: null | {
+                                                            [key: string]: unknown;
+                                                        };
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                    } | {
+                                                        /**
+                                                         * @description Member type
+                                                         * @enum {string}
+                                                         */
+                                                        type: "standardized";
+                                                        /** @description Value of the member */
+                                                        value: number;
+                                                        /** @description Metric identifier */
+                                                        metric_id: string;
+                                                        /** @description Fiscal period type */
+                                                        fiscal_period_type?: null | string;
+                                                        /** @description Fiscal year */
+                                                        fiscal_year?: null | number;
+                                                        /** @description Fiscal quarter */
+                                                        fiscal_quarter?: null | number;
+                                                    }>;
+                                                };
+                                                /** @description SEC accession number */
+                                                accession_number?: null | string;
+                                                /** @description HTML tag ID for source linking */
+                                                html_tag_id?: null | string;
+                                            };
+                                        };
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/standardized/snapshot/presentation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch latest complete financial statements snapshot in presentation format (nested tree structure based on parent_id). */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Comma-separated list of ticker symbols or CIKs (1-10 identifiers) */
+                    identifiers: string;
+                    /** @description Type of fiscal period */
+                    fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                    /** @description Calendar year. For annual periods, only calendar_year is needed. For non-annual periods, must be provided together with calendar_quarter. */
+                    calendar_year?: number;
+                    /** @description Calendar quarter (1-4). For annual periods, should not be provided. For non-annual periods, must be provided together with calendar_year. */
+                    calendar_quarter?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @description List of companies with their latest financial statements in presentation format */
+                            companies: Array<{
+                                /** @description Company ticker symbol */
+                                ticker: string;
+                                /** @description SEC Central Index Key */
+                                cik: string;
+                                /** @description Fiscal year */
+                                fiscal_year: number;
+                                /** @description Fiscal quarter (1-4) */
+                                fiscal_quarter: number;
+                                /** @description Calendar year */
+                                calendar_year: number;
+                                /** @description Calendar quarter (1-4) */
+                                calendar_quarter: number;
+                                /**
+                                 * @description Type of fiscal period
+                                 * @enum {string}
+                                 */
+                                fiscal_period_type: "annual" | "quarterly" | "ttm" | "ytd";
+                                /**
+                                 * Format: date
+                                 * @description Period end date (YYYY-MM-DD)
+                                 */
+                                period_end: string;
+                                statements: {
+                                    /** @description Latest income statement facts or null if not available */
+                                    income_statement: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-5"]>;
+                                    };
+                                    /** @description Latest balance sheet facts or null if not available */
+                                    balance_sheet: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-5"]>;
+                                    };
+                                    /** @description Latest cash flow statement facts or null if not available */
+                                    cash_flow_statement: null | {
+                                        /** @description Financial facts in nested tree structure */
+                                        facts?: Array<components["schemas"]["def-5"]>;
+                                    };
+                                };
+                            }>;
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequestError"];
+                401: components["responses"]["UnauthorizedError"];
+                404: components["responses"]["NotFoundError"];
                 500: components["responses"]["InternalServerError"];
             };
         };
@@ -4702,137 +4702,10 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** BadRequestError */
-        "def-0": {
-            /**
-             * @description Type of error
-             * @example Bad Request
-             */
-            error: string;
-            /**
-             * @description Detailed error message
-             * @example Invalid request parameters
-             */
-            message: string;
-        };
-        /** UnauthorizedError */
-        "def-1": {
-            /**
-             * @description Type of error
-             * @example Unauthorized
-             */
-            error: string;
-            /**
-             * @description Detailed error message
-             * @example Missing or invalid Authorization header. Expected: Bearer <api_key>
-             */
-            message: string;
-        };
-        /** NotFoundError */
-        "def-2": {
-            /**
-             * @description Type of error
-             * @example Not Found
-             */
-            error: string;
-            /**
-             * @description Detailed error message
-             * @example No valid company found for identifier
-             */
-            message: string;
-        };
-        /** InternalServerError */
-        "def-3": {
-            /**
-             * @description Type of error
-             * @example Internal Server Error
-             */
-            error: string;
-            /**
-             * @description Detailed error message
-             * @example An unexpected error occurred
-             */
-            message: string;
-        };
-        /** PresentationFact */
-        "def-4": {
-            /** @description Financial concept ID */
-            concept: string;
-            /** @description Label for the concept */
-            label: string;
-            /** @description Numeric value for the metric (if available) */
-            value?: number | null;
-            /** @description Depth level in the tree structure (0 for root items) */
-            depth: number;
-            /** @description Indicates if this item is a total (sum of siblings) */
-            isTotal?: boolean;
-            /** @description Nested child facts with facts schema (only present if there are children) */
-            children?: components["schemas"]["def-4"][];
-        };
-        /** StandardizedPresentationFact */
-        "def-5": {
-            /** @description Standardized metric ID */
-            metric_id: string;
-            /** @description Numeric value for the metric */
-            value: number;
-            /** @description Nested child facts with facts schema (only present if there are children) */
-            children?: components["schemas"]["def-5"][];
-        };
-        WebSocketFiling: {
-            /** @description SEC accession number */
-            accession_number: string;
-            /** @description Calendar quarter (1-4) */
-            calendar_quarter: number;
-            /** @description Calendar year (e.g. 2024) */
-            calendar_year: number;
-            /** @description Company CIK */
-            cik: string;
-            /** @description Whether filing content is fully processed */
-            filing_content_analyzed: boolean;
-            /**
-             * Format: date
-             * @description Filing date
-             */
-            filing_date: string;
-            /** @description Fiscal quarter if available */
-            fiscal_quarter?: number | null;
-            /** @description Fiscal year if available */
-            fiscal_year?: number | null;
-            /** @description SEC form type (e.g. 10-K, 10-Q) */
-            form_type: string;
-            /**
-             * Format: uri
-             * @description HTML filing URL
-             */
-            html_url?: string | null;
-            /** @description Supabase link to filing details */
-            link_to_filing_details: string;
-            /**
-             * Format: uri
-             * @description PDF filing URL
-             */
-            pdf_url?: string | null;
-            /**
-             * Format: date
-             * @description Period end date
-             */
-            period_end?: string | null;
-            /** @description True when the processing pipeline completed */
-            pipeline_finished: boolean;
-        };
-        /** @description Broadcast when a new SEC filing finishes processing */
-        WebSocketNewFilingEvent: {
-            /** @enum {string} */
-            type: "new_filing";
-            filing: components["schemas"]["WebSocketFiling"];
-        };
-        /** @description Server heartbeat payload sent when protocol-level ping is unavailable */
-        WebSocketPingEvent: {
-            /** @enum {string} */
-            type: "ping";
-        };
-    };
+    headers: never;
+    parameters: never;
+    pathItems: never;
+    requestBodies: never;
     responses: {
         /** @description Bad Request - Invalid request parameters */
         BadRequestError: {
@@ -4915,10 +4788,137 @@ export interface components {
             };
         };
     };
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    schemas: {
+        /** BadRequestError */
+        "def-0": {
+            /**
+             * @description Type of error
+             * @example Bad Request
+             */
+            error: string;
+            /**
+             * @description Detailed error message
+             * @example Invalid request parameters
+             */
+            message: string;
+        };
+        /** UnauthorizedError */
+        "def-1": {
+            /**
+             * @description Type of error
+             * @example Unauthorized
+             */
+            error: string;
+            /**
+             * @description Detailed error message
+             * @example Missing or invalid Authorization header. Expected: Bearer <api_key>
+             */
+            message: string;
+        };
+        /** NotFoundError */
+        "def-2": {
+            /**
+             * @description Type of error
+             * @example Not Found
+             */
+            error: string;
+            /**
+             * @description Detailed error message
+             * @example No valid company found for identifier
+             */
+            message: string;
+        };
+        /** InternalServerError */
+        "def-3": {
+            /**
+             * @description Type of error
+             * @example Internal Server Error
+             */
+            error: string;
+            /**
+             * @description Detailed error message
+             * @example An unexpected error occurred
+             */
+            message: string;
+        };
+        /** PresentationFact */
+        "def-4": {
+            /** @description Financial concept ID */
+            concept: string;
+            /** @description Label for the concept */
+            label: string;
+            /** @description Numeric value for the metric (if available) */
+            value?: null | number;
+            /** @description Depth level in the tree structure (0 for root items) */
+            depth: number;
+            /** @description Indicates if this item is a total (sum of siblings) */
+            isTotal?: boolean;
+            /** @description Nested child facts with facts schema (only present if there are children) */
+            children?: Array<components["schemas"]["def-4"]>;
+        };
+        /** StandardizedPresentationFact */
+        "def-5": {
+            /** @description Standardized metric ID */
+            metric_id: string;
+            /** @description Numeric value for the metric */
+            value: number;
+            /** @description Nested child facts with facts schema (only present if there are children) */
+            children?: Array<components["schemas"]["def-5"]>;
+        };
+        "WebSocketFiling": {
+            /** @description SEC accession number */
+            accession_number: string;
+            /** @description Calendar quarter (1-4) */
+            calendar_quarter: number;
+            /** @description Calendar year (e.g. 2024) */
+            calendar_year: number;
+            /** @description Company CIK */
+            cik: string;
+            /** @description Whether filing content is fully processed */
+            filing_content_analyzed: boolean;
+            /**
+             * Format: date
+             * @description Filing date
+             */
+            filing_date: string;
+            /** @description Fiscal quarter if available */
+            fiscal_quarter?: null | number;
+            /** @description Fiscal year if available */
+            fiscal_year?: null | number;
+            /** @description SEC form type (e.g. 10-K, 10-Q) */
+            form_type: string;
+            /**
+             * Format: uri
+             * @description HTML filing URL
+             */
+            html_url?: null | string;
+            /** @description Supabase link to filing details */
+            link_to_filing_details: string;
+            /**
+             * Format: uri
+             * @description PDF filing URL
+             */
+            pdf_url?: null | string;
+            /**
+             * Format: date
+             * @description Period end date
+             */
+            period_end?: null | string;
+            /** @description True when the processing pipeline completed */
+            pipeline_finished: boolean;
+        };
+        /** @description Broadcast when a new SEC filing finishes processing */
+        "WebSocketNewFilingEvent": {
+            /** @enum {string} */
+            type: "new_filing";
+            filing: components["schemas"]["WebSocketFiling"];
+        };
+        /** @description Server heartbeat payload sent when protocol-level ping is unavailable */
+        "WebSocketPingEvent": {
+            /** @enum {string} */
+            type: "ping";
+        };
+    };
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

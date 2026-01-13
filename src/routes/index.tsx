@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
 
 function IndexPage() {
     return (
-        <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-10 lg:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 lg:px-8">
             <section className="space-y-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-primary">Invinite API</p>
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">

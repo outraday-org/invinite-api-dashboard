@@ -8,6 +8,25 @@ export const Route = createFileRoute("/$ticker/")({
     component: TickerOverview,
 });
 
+function formatEnDateTime(value: string) {
+    // API marks this as `format: date` (YYYY-MM-DD). Date-only strings parse as UTC in JS,
+    // which can shift the displayed day depending on local timezone. Force local midnight.
+    const parsed = value.includes("T") ? new Date(value) : new Date(`${value}T00:00:00`);
+
+    if (Number.isNaN(parsed.getTime())) {
+        return value;
+    }
+
+    const hasTime = value.includes("T");
+
+    return new Intl.DateTimeFormat("en", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        ...(hasTime ? { hour: "2-digit", minute: "2-digit" } : null),
+    }).format(parsed);
+}
+
 function TickerOverview() {
     const { ticker } = Route.useParams();
 
@@ -44,10 +63,6 @@ function TickerOverview() {
                         <span className="font-medium">{company.cik}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Exchange</span>
-                        <span className="font-medium">{company.exchange}</span>
-                    </div>
-                    <div className="flex justify-between">
                         <span className="text-muted-foreground">Sector</span>
                         <span className="font-medium">{company.sector}</span>
                     </div>
@@ -59,6 +74,14 @@ function TickerOverview() {
                         <span className="text-muted-foreground">Currency</span>
                         <span className="font-medium">{company.currency}</span>
                     </div>
+                    {company.employees && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Employees</span>
+                            <span className="font-medium">
+                                {company.employees.toLocaleString()}
+                            </span>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
@@ -87,6 +110,10 @@ function TickerOverview() {
                             </span>
                         </div>
                     )}
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Exchange</span>
+                        <span className="font-medium">{company.exchange}</span>
+                    </div>
                     {company.employees && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Employees</span>
@@ -97,8 +124,8 @@ function TickerOverview() {
                     )}
                     {company.list_date && (
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Listed</span>
-                            <span className="font-medium">{company.list_date}</span>
+                            <span className="text-muted-foreground">Listed since</span>
+                            <span className="font-medium">{formatEnDateTime(company.list_date)}</span>
                         </div>
                     )}
                 </CardContent>
