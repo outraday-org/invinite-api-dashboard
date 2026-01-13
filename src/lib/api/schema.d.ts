@@ -139,6 +139,8 @@ export interface paths {
                                 ticker: string;
                                 /** @description Company name */
                                 name: string;
+                                /** @description Logo image URL */
+                                logo_url: string | null;
                             }[];
                             /** @description True if additional companies are available beyond this page */
                             has_more: boolean;

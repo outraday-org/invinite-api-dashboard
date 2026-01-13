@@ -559,7 +559,8 @@
                         "required": [
                           "cik",
                           "ticker",
-                          "name"
+                          "name",
+                          "logo_url"
                         ],
                         "properties": {
                           "cik": {
@@ -573,6 +574,11 @@
                           "name": {
                             "type": "string",
                             "description": "Company name"
+                          },
+                          "logo_url": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Logo image URL"
                           }
                         }
                       }

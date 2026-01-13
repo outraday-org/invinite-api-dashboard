@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueries } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import * as React from "react";
@@ -8,8 +7,6 @@ import * as React from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useCompanySearch } from "@/lib/api/queries";
-import { getCompanyDetails } from "@/lib/api/server-functions";
-import { useApiKeyStore } from "@/lib/stores/api-key-store";
 import { cn } from "@/lib/utils";
 
 type TickerSearchProps = {
@@ -45,48 +42,6 @@ export function TickerSearch({ defaultTicker = "", placeholder = "Search company
     const { data, isFetching } = useCompanySearch(debouncedQuery);
 
     const companies = React.useMemo(() => data?.companies ?? [], [data]);
-
-    // IMPORTANT: keep selectors referentially stable.
-    // Returning a new object here can break React's useSyncExternalStore snapshot caching
-    // and cause an infinite render loop.
-    const apiKey = useApiKeyStore(s => s.apiKey);
-
-    const apiKeyUpdatedAt = useApiKeyStore(s => s.apiKeyUpdatedAt);
-
-    const hasHydrated = useApiKeyStore(s => s.hasHydrated);
-
-    const tickersToHydrate = React.useMemo(
-        () => companies.slice(0, 10).map(c => c.ticker),
-        [companies],
-    );
-
-    const logoQueries = useQueries({
-        queries: tickersToHydrate.map(ticker => ({
-            enabled: hasHydrated && open && debouncedQuery.trim().length > 0,
-            queryFn: async () => {
-                const res = await getCompanyDetails({
-                    data: {
-                        apiKey: apiKey ?? undefined,
-                        identifier: ticker,
-                    },
-                });
-
-                return res.companies[0]?.logo_url ?? null;
-            },
-            queryKey: ["company", "details", ticker, String(apiKeyUpdatedAt)],
-            staleTime: 5 * 60 * 1000,
-        })),
-    });
-
-    const logoByTicker = React.useMemo(() => {
-        const map = new Map<string, null | string>();
-
-        tickersToHydrate.forEach((ticker, idx) => {
-            map.set(ticker, logoQueries[idx]?.data ?? null);
-        });
-
-        return map;
-    }, [logoQueries, tickersToHydrate]);
 
     const [anchorStyle, setAnchorStyle] = React.useState<null | React.CSSProperties>(null);
 
@@ -232,7 +187,7 @@ export function TickerSearch({ defaultTicker = "", placeholder = "Search company
                             )}
 
                             {!isFetching && companies.length > 0 && companies.map((company) => {
-                                const logoUrl = logoByTicker.get(company.ticker) ?? null;
+                                const logoUrl = company.logo_url ?? null;
 
                                 return (
                                     <button
