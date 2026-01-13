@@ -52,33 +52,14 @@ function RootLayout() {
     return (
         <>
             <div className="sticky top-0 z-40 h-14 bg-background/80 supports-backdrop-filter:backdrop-blur-md">
-                <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-3 px-4">
+                <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-3 pl-2 pr-4">
                     <div className="justify-self-start shrink-0">
-                        {isMobile && (
-                            <SidebarTrigger
-                                aria-label="Toggle sidebar"
-                                className="shrink-0 flex items-center gap-2 rounded-md px-4 -ml-2 py-4 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                                <PanelLeftIcon className="size-4" />
-                            </SidebarTrigger>
-                        )}
-                        {!isMobile && (
-                            <div className="w-[calc(16rem-24px)] flex items-center justify-between gap-2">
-                                <Link
-                                    aria-label="Go to dashboard home"
-                                    className="shrink-0 flex items-center gap-2 rounded-md px-2 -ml-2 py-1 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                    to="/"
-                                >
-                                    <img alt="Invinite" className="h-6 w-6 shrink-0" src="/logo192.png" />
-                                </Link>
-                                <SidebarTrigger
-                                    aria-label="Toggle sidebar"
-                                    className="shrink-0 flex items-center gap-2 rounded-md px-4 -ml-2 py-4 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                    <PanelLeftIcon className="size-4" />
-                                </SidebarTrigger>
-                            </div>
-                        )}
+                        <SidebarTrigger
+                            aria-label="Toggle sidebar"
+                            className="shrink-0 flex items-center gap-2 rounded-md size-8 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                            <PanelLeftIcon className="size-4" />
+                        </SidebarTrigger>
                     </div>
                     <TickerSearch />
                     <div className="justify-self-end">
