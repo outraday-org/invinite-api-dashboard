@@ -216,13 +216,6 @@
             "nullable": true,
             "description": "Numeric value for the metric (if available)"
           },
-          "children": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/def-4"
-            },
-            "description": "Nested child facts with facts schema (only present if there are children)"
-          },
           "depth": {
             "type": "integer",
             "description": "Depth level in the tree structure (0 for root items)"
@@ -230,6 +223,13 @@
           "isTotal": {
             "type": "boolean",
             "description": "Indicates if this item is a total (sum of siblings)"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/def-4"
+            },
+            "description": "Nested child facts with facts schema (only present if there are children)"
           }
         },
         "required": [
