@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import type {
+    AvailableFormTypesResponse,
     CompanyDetailsResponse,
     CompanySearchResponse,
     FilingsResponse,
@@ -96,6 +97,29 @@ export const getFilings = createServerFn({ method: "GET" })
         });
 
         if (error) throw error;
+
+        return res;
+    });
+
+const availableFormTypesSchema = z.object({
+    apiKey: apiKeySchema,
+    identifier: z.string().optional(),
+});
+
+export const getAvailableFormTypes = createServerFn({ method: "GET" })
+    .inputValidator(availableFormTypesSchema)
+    .handler(async ({ data }): Promise<AvailableFormTypesResponse> => {
+        const { apiKey, identifier } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res } = await api.GET("/v1/sec-filings/available-form-types", {
+            params: { query: { identifier } },
+        });
+
+        if (!res) {
+            throw new Error("Failed to load available form types");
+        }
 
         return res;
     });

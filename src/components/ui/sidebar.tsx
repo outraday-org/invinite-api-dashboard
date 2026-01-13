@@ -145,7 +145,7 @@ function SidebarProvider({
         <SidebarContext.Provider value={contextValue}>
             <div
                 className={cn(
-                    "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex w-full",
+                    "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex flex-col w-full h-full",
                     className,
                 )}
                 data-slot="sidebar-wrapper"

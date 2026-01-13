@@ -10711,6 +10711,68 @@
         "x-tier": "basic"
       }
     },
+    "/v1/sec-filings/available-form-types": {
+      "get": {
+        "tags": [
+          "SEC Filings"
+        ],
+        "description": "List available SEC filing form types present in the filings table. Optionally filter by a company identifier (ticker or CIK).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "identifier",
+            "required": false,
+            "description": "Optional ticker symbol or CIK. If omitted, returns form types across all filings."
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "form_types"
+                  ],
+                  "properties": {
+                    "form_types": {
+                      "type": "array",
+                      "description": "Deduplicated SEC form types present in the filings table",
+                      "items": {
+                        "type": "string",
+                        "description": "SEC form type (e.g., 10-K, 10-Q, 8-K, 3, 4, 5, 13F-HR)"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "x-tier": "starter"
+      }
+    },
     "/v1/market/market-holidays": {
       "get": {
         "tags": [

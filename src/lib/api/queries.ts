@@ -1,12 +1,15 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
+
+import { queryOptions, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import { toast } from "sonner";
 
 import { useApiKeyStore } from "@/lib/stores/api-key-store";
 
-import type { FiscalPeriodType, StatementType } from "./types";
+import type { FilingsResponse, FiscalPeriodType, StatementType } from "./types";
 
 import {
+    getAvailableFormTypes,
     getCompanyDetails,
     getFilings,
     getStandardizedFinancials,
@@ -64,6 +67,18 @@ export const filingsOptions = (input: FilingsQueryInput) =>
             input.limit ?? 40,
             input.offset ?? 0,
         ],
+        staleTime: 10 * 60 * 1000,
+    });
+
+type AvailableFormTypesInput = {
+    identifier: string;
+};
+
+export const availableFormTypesOptions = (input: AvailableFormTypesInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getAvailableFormTypes({ data: input }),
+        queryKey: ["filings", "available-form-types", input.identifier],
         staleTime: 10 * 60 * 1000,
     });
 
@@ -157,6 +172,87 @@ export function useFilings(input: FilingsQueryInput) {
             queryKey: [...filingsOptions(input).queryKey, String(apiKeyUpdatedAt)],
         }),
     );
+
+    useErrorToast(result.error, "Failed to load filings");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useAvailableFormTypes(input: AvailableFormTypesInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...availableFormTypesOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getAvailableFormTypes({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [...availableFormTypesOptions(input).queryKey, String(apiKeyUpdatedAt)],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load form types");
+
+    return {
+        ...result,
+        data: result.data,
+    };
+}
+
+type FilingsInfiniteInput = Omit<FilingsQueryInput, "offset"> & {
+    limit: number;
+};
+
+export function useFilingsInfinite(input: FilingsInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "filings",
+        "infinite",
+        input.identifier,
+        input.formType ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        FilingsResponse,
+        Error,
+        InfiniteData<FilingsResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: FilingsResponse, allPages: Array<FilingsResponse>) => {
+            const pageSize = input.limit;
+
+            const lastCount = lastPage.companies[0]?.filings?.length ?? 0;
+
+            if (lastCount < pageSize) return undefined;
+
+            const nextOffset = allPages.reduce(
+                (acc, page) => acc + (page.companies[0]?.filings?.length ?? 0),
+                0,
+            );
+
+            return nextOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getFilings({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
 
     useErrorToast(result.error, "Failed to load filings");
 

@@ -1,13 +1,13 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
 import { ApiKeyDialogButton } from "@/components/api-key-dialog";
 import { TickerSearch } from "@/components/ticker-search";
-import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
@@ -47,11 +47,9 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
-    const { isMobile } = useSidebar();
-
     return (
         <>
-            <div className="sticky top-0 z-40 h-14 bg-background/80 supports-backdrop-filter:backdrop-blur-md">
+            <div className="sticky shrink-0 top-0 z-40 h-14 bg-background/80 supports-backdrop-filter:backdrop-blur-md">
                 <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-3 pl-2 pr-4">
                     <div className="justify-self-start shrink-0">
                         <SidebarTrigger
@@ -80,7 +78,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             </head>
             <body style={{ "--app-topbar-height": "56px" } as React.CSSProperties}>
                 <QueryClientProvider client={queryClient}>
-                    <SidebarProvider className="has-data-[variant=inset]:bg-background block" defaultOpen>
+                    <SidebarProvider className="has-data-[variant=inset]:bg-background" defaultOpen>
                         {children}
                         <TanStackDevtools
                             config={{

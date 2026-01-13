@@ -3,29 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ErrorState } from "@/components/ui/error-state";
 import { useCompanyDetails } from "@/lib/api/queries";
+import { formatEnDateTime } from "@/lib/date";
 
 export const Route = createFileRoute("/$ticker/")({
     component: TickerOverview,
 });
-
-function formatEnDateTime(value: string) {
-    // API marks this as `format: date` (YYYY-MM-DD). Date-only strings parse as UTC in JS,
-    // which can shift the displayed day depending on local timezone. Force local midnight.
-    const parsed = value.includes("T") ? new Date(value) : new Date(`${value}T00:00:00`);
-
-    if (Number.isNaN(parsed.getTime())) {
-        return value;
-    }
-
-    const hasTime = value.includes("T");
-
-    return new Intl.DateTimeFormat("en", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        ...(hasTime ? { hour: "2-digit", minute: "2-digit" } : null),
-    }).format(parsed);
-}
 
 function TickerOverview() {
     const { ticker } = Route.useParams();

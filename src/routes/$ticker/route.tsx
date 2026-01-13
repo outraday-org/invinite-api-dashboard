@@ -60,31 +60,33 @@ function TickerLayout() {
                 </SidebarContent>
             </Sidebar>
 
-            <SidebarInset>
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 lg:px-8">
-                    <header className="flex flex-col gap-2">
-                        <div className="flex items-center gap-3">
-                            {company?.logo_url && (
-                                <img
-                                    alt={`${ticker} logo`}
-                                    className="bg-muted ring-border/60 h-9 w-9 rounded-md object-contain ring-1"
-                                    src={company.logo_url}
-                                />
-                            )}
-                            <h1 className="text-3xl font-bold tracking-tight">{ticker}</h1>
-                            {company && (
-                                <span className="text-muted-foreground text-lg">{company.name}</span>
-                            )}
-                        </div>
-                    </header>
+            <div className="relative h-full grow flex flex-col">
+                <SidebarInset>
+                    <div className="mx-auto flex w-full h-full max-w-6xl flex-col gap-6 px-4 py-8 lg:px-8">
+                        <header className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                                {company?.logo_url && (
+                                    <img
+                                        alt={`${ticker} logo`}
+                                        className="bg-muted ring-border/60 h-9 w-9 rounded-md object-contain ring-1"
+                                        src={company.logo_url}
+                                    />
+                                )}
+                                <h1 className="text-3xl font-bold tracking-tight">{ticker}</h1>
+                                {company && (
+                                    <span className="text-muted-foreground text-lg">{company.name}</span>
+                                )}
+                            </div>
+                        </header>
 
-                    {error && (
-                        <ErrorState error={error} title="Failed to load company header details" />
-                    )}
+                        {error && (
+                            <ErrorState error={error} title="Failed to load company header details" />
+                        )}
 
-                    <Outlet />
-                </div>
-            </SidebarInset>
+                        <Outlet />
+                    </div>
+                </SidebarInset>
+            </div>
         </>
     );
 }
