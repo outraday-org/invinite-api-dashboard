@@ -1,18 +1,32 @@
-"use client";
-
 import { useVirtualizer } from "@tanstack/react-virtual";
 import * as React from "react";
-import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
 import { cn } from "@/lib/utils";
 
-// Vite + react-pdf worker setup
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.min.mjs",
-    import.meta.url,
-).toString();
+type ReactPdfModule = {
+    Document: React.ComponentType<{
+        file: string;
+        loading?: React.ReactNode;
+        onLoadError?: (e: unknown) => void;
+        onLoadSuccess?: (args: { numPages: number }) => void;
+        onSourceError?: (e: unknown) => void;
+        children?: React.ReactNode;
+    }>;
+    Page: React.ComponentType<{
+        loading?: React.ReactNode;
+        pageNumber: number;
+        renderAnnotationLayer?: boolean;
+        renderTextLayer?: boolean;
+        width?: number;
+    }>;
+    pdfjs: {
+        GlobalWorkerOptions: {
+            workerSrc: string;
+        };
+    };
+};
 
 function getErrorMessage(err: unknown, fallback: string) {
     if (typeof err === "object" && err !== null && "message" in err) {
@@ -31,6 +45,10 @@ export function PdfViewer({
     url: string;
     className?: string;
 }) {
+    // This project SSRs on Netlify Functions. `react-pdf` imports `pdfjs-dist`, which expects
+    // browser globals like `DOMMatrix`. So we only import `react-pdf` in the browser.
+    const isBrowser = typeof window !== "undefined";
+
     const scrollRef = React.useRef<HTMLDivElement | null>(null);
 
     const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -40,6 +58,30 @@ export function PdfViewer({
     const [numPages, setNumPages] = React.useState<number>(0);
 
     const [error, setError] = React.useState<null | string>(null);
+
+    const [reactPdf, setReactPdf] = React.useState<null | ReactPdfModule>(null);
+
+    React.useEffect(() => {
+        if (!isBrowser) return;
+
+        let cancelled = false;
+
+        void import("react-pdf").then((mod) => {
+            if (cancelled) return;
+
+            // Vite + react-pdf worker setup
+            (mod as unknown as ReactPdfModule).pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+                /* @vite-ignore */ "pdfjs-dist/build/pdf.worker.min.mjs",
+                import.meta.url,
+            ).toString();
+
+            setReactPdf(mod as unknown as ReactPdfModule);
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [isBrowser]);
 
     React.useEffect(() => {
         const el = containerRef.current;
@@ -78,6 +120,28 @@ export function PdfViewer({
     const virtualItems = virtualizer.getVirtualItems();
 
     if (!url) return null;
+
+    if (!isBrowser) {
+        return (
+            <div className={cn("flex flex-col min-h-0", className)}>
+                <div className="rounded-md bg-muted/20 p-3 text-muted-foreground text-xs">
+                    PDF preview loads in the browser…
+                </div>
+            </div>
+        );
+    }
+
+    if (!reactPdf) {
+        return (
+            <div className={cn("flex flex-col min-h-0", className)}>
+                <div className="rounded-md bg-muted/20 p-3 text-muted-foreground text-xs">
+                    Loading PDF viewer…
+                </div>
+            </div>
+        );
+    }
+
+    const { Document, Page } = reactPdf;
 
     return (
         <div className={cn("flex flex-col min-h-0", className)}>

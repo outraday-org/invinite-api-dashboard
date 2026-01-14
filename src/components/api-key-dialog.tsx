@@ -1,4 +1,3 @@
-"use client";
 
 import { KeyRound } from "lucide-react";
 import * as React from "react";
