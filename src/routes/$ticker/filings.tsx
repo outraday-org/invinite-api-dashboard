@@ -4,7 +4,15 @@ import * as React from "react";
 
 import type { Filing } from "@/lib/api/types";
 
+import { PdfViewer } from "@/components/pdf-viewer";
 import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { ErrorState } from "@/components/ui/error-state";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,6 +30,8 @@ function FilingsPage() {
     const [formTypeFilter, setFormTypeFilter] = React.useState<null | string>(null);
 
     const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("desc");
+
+    const [pdfDialog, setPdfDialog] = React.useState<null | { title: string; url: string }>(null);
 
     // Fetch available form types for this identifier (ticker or CIK)
     const {
@@ -90,7 +100,16 @@ function FilingsPage() {
                 <ScrollArea className="h-0 grow">
                     <div className="space-y-4 pt-4">
                         {displayFilings.map(filing => (
-                            <FilingItem filing={filing} key={filing.accession_number} />
+                            <FilingItem
+                                filing={filing}
+                                key={filing.accession_number}
+                                onOpenPdf={(url) => {
+                                    setPdfDialog({
+                                        title: `${filing.form_type} • ${filing.accession_number}`,
+                                        url,
+                                    });
+                                }}
+                            />
                         ))}
                     </div>
 
@@ -123,6 +142,46 @@ function FilingsPage() {
 
     return (
         <div className="space-y-4 relative flex flex-col h-0 grow">
+            <Dialog
+                onOpenChange={(open) => {
+                    if (!open) setPdfDialog(null);
+                }}
+                open={Boolean(pdfDialog)}
+            >
+                <DialogContent className="sm:max-w-6xl h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] p-0">
+                    <div className="flex h-full min-h-0 flex-col">
+                        <div className="p-4 pb-2">
+                            <DialogHeader>
+                                <DialogTitle className="flex items-center justify-between gap-3">
+                                    <span className="min-w-0 truncate">{pdfDialog?.title ?? "PDF"}</span>
+                                    {pdfDialog?.url && (
+                                        <a
+                                            className="text-primary hover:underline text-xs font-normal shrink-0"
+                                            href={pdfDialog.url}
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        >
+                                            Open in new tab
+                                        </a>
+                                    )}
+                                </DialogTitle>
+                                <DialogDescription className="truncate">
+                                    {pdfDialog?.url ?? ""}
+                                </DialogDescription>
+                            </DialogHeader>
+                        </div>
+
+                        <div className="px-4 pb-4 min-h-0 grow">
+                            {pdfDialog?.url
+                                ? (
+                                        <PdfViewer className="h-full" url={pdfDialog.url} />
+                                    )
+                                : null}
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             <div className="flex items-center justify-between mb-6">
                 <div className="space-y-1">
                     <div className="text-sm font-semibold">SEC Filings</div>
@@ -158,7 +217,13 @@ function FilingsPage() {
     );
 }
 
-function FilingItem({ filing }: { filing: Filing }) {
+function FilingItem({
+    filing,
+    onOpenPdf,
+}: {
+    filing: Filing;
+    onOpenPdf: (url: string) => void;
+}) {
     return (
         <>
             <div className="grid gap-x-6 gap-y-1 sm:grid-cols-5 sm:items-center">
@@ -197,14 +262,13 @@ function FilingItem({ filing }: { filing: Filing }) {
                             )}
                     {filing.pdf_url
                         ? (
-                                <a
+                                <button
                                     className="text-primary hover:underline inline-flex w-12 justify-start leading-none"
-                                    href={filing.pdf_url}
-                                    rel="noreferrer"
-                                    target="_blank"
+                                    onClick={() => onOpenPdf(filing.pdf_url!)}
+                                    type="button"
                                 >
                                     PDF
-                                </a>
+                                </button>
                             )
                         : (
                                 <span className="w-12" />
