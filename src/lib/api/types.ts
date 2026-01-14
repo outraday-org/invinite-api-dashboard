@@ -18,6 +18,10 @@ export type StandardizedFinancialsPresentationResponse = ApiResponse<
     "/v1/standardized/income-statement/presentation",
     "get"
 >;
+export type AsReportedFinancialsPresentationResponse = ApiResponse<
+    "/v1/as-reported/income-statement/presentation",
+    "get"
+>;
 
 // Derived entity types
 export type Company = CompanySearchResponse["companies"][number];
@@ -25,6 +29,9 @@ export type CompanyDetails = CompanyDetailsResponse["companies"][number];
 export type Filing = FilingsResponse["companies"][number]["filings"][number];
 export type FinancialPeriod
     = StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];
+export type PresentationFinancialPeriod
+    = | AsReportedFinancialsPresentationResponse["companies"][number]["periods"][number]
+        | StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];
 
 // Query parameter types
 export type FiscalPeriodType = "annual" | "quarterly" | "ttm" | "ytd";

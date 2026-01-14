@@ -22,6 +22,7 @@ const navItems = [
     { icon: LayoutDashboardIcon, label: "Overview", to: "/$ticker" },
     { icon: FileTextIcon, label: "Filings", to: "/$ticker/filings" },
     { icon: BarChart3Icon, label: "Standardized Financials", to: "/$ticker/financials-standardized" },
+    { icon: BarChart3Icon, label: "As Reported Financials", to: "/$ticker/financials-as-reported" },
 ] as const;
 
 function TickerLayout() {

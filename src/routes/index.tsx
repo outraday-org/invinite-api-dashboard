@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ApiKeyInlineField } from "@/components/api-key-inline";
+import { ApiKeyInlineField } from "@/components/api-key/api-key-inline";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 

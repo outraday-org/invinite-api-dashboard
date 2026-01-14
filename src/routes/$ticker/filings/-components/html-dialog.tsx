@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 
-import { HtmlViewer } from "@/components/html-viewer";
+import { HtmlViewer } from "@/components/html/html-viewer";
 import {
     Dialog,
     DialogContent,

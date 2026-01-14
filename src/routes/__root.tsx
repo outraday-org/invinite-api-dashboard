@@ -5,8 +5,8 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
-import { ApiKeyDialogButton } from "@/components/api-key-dialog";
-import { TickerSearch } from "@/components/ticker-search";
+import { ApiKeyDialogButton } from "@/components/api-key/api-key-dialog";
+import { TickerSearch } from "@/components/search/ticker-search";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 

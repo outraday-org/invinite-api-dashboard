@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import type {
+    AsReportedFinancialsPresentationResponse,
     AvailableFormTypesResponse,
     CompanyDetailsResponse,
     CompanySearchResponse,
@@ -150,6 +151,40 @@ export const getStandardizedFinancials = createServerFn({ method: "GET" })
         const api = createApiClient(apiKey);
 
         const path = `/v1/standardized/${statement}/presentation` as const;
+
+        const { data: res, error } = await api.GET(path, {
+            params: {
+                query: {
+                    fiscal_period_type: fiscalPeriodType,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+export const getAsReportedFinancialsPresentation = createServerFn({ method: "GET" })
+    .inputValidator(financialsSchema)
+    .handler(async ({ data }): Promise<AsReportedFinancialsPresentationResponse> => {
+        const {
+            apiKey,
+            fiscalPeriodType,
+            identifier,
+            limit = 8,
+            offset = 0,
+            sort = "desc",
+            statement,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const path = `/v1/as-reported/${statement}/presentation` as const;
 
         const { data: res, error } = await api.GET(path, {
             params: {

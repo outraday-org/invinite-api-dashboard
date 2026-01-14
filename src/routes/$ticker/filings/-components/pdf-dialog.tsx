@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 
-import { PdfViewer } from "@/components/pdf-viewer";
+import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import {
     Dialog,
     DialogContent,

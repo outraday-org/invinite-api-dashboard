@@ -15,9 +15,13 @@ export function formatNumberEnCompact(
     value: number,
     options: Intl.NumberFormatOptions = {},
 ) {
-    return new Intl.NumberFormat("en", {
+    const formatted = new Intl.NumberFormat("en", {
         notation: "compact",
         compactDisplay: "short",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
         ...options,
     }).format(value);
+
+    return formatted.replace(/(\d)([A-Za-z])/g, "$1 $2");
 }

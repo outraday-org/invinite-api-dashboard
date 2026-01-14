@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { useHtmlDocumentProcessing } from "../hooks/use-html-document-processing";
+import { useHtmlDocumentProcessing } from "../../hooks/use-html-document-processing";
 
 export function HtmlViewer({
     className,

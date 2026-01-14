@@ -9,6 +9,7 @@ import { useApiKeyStore } from "@/lib/stores/api-key-store";
 import type { FilingsResponse, FiscalPeriodType, StatementType } from "./types";
 
 import {
+    getAsReportedFinancialsPresentation,
     getAvailableFormTypes,
     getCompanyDetails,
     getFilings,
@@ -97,6 +98,27 @@ export const standardizedFinancialsOptions = (input: StandardizedFinancialsInput
         queryFn: () => getStandardizedFinancials({ data: input }),
         queryKey: [
             "standardized",
+            input.statement,
+            input.identifier,
+            input.fiscalPeriodType,
+            input.sort ?? "desc",
+            input.limit ?? 8,
+            input.offset ?? 0,
+        ],
+        staleTime: 5 * 60 * 1000,
+    });
+
+type AsReportedFinancialsPresentationInput = StandardizedFinancialsInput;
+
+export const asReportedFinancialsPresentationOptions = (
+    input: AsReportedFinancialsPresentationInput,
+) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getAsReportedFinancialsPresentation({ data: input }),
+        queryKey: [
+            "as-reported",
+            "presentation",
             input.statement,
             input.identifier,
             input.fiscalPeriodType,
@@ -276,6 +298,32 @@ export function useStandardizedFinancials(input: StandardizedFinancialsInput) {
     );
 
     useErrorToast(result.error, "Failed to load financials");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useAsReportedFinancialsPresentation(
+    input: AsReportedFinancialsPresentationInput,
+) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...asReportedFinancialsPresentationOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getAsReportedFinancialsPresentation({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [
+                ...asReportedFinancialsPresentationOptions(input).queryKey,
+                String(apiKeyUpdatedAt),
+            ],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load as-reported financials");
 
     return {
         ...result,
