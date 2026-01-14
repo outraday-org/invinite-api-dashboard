@@ -132,4 +132,7 @@
     height: 100vh;
     @apply font-sans;
     }
+  table, thead, tbody, tfoot, tr, th, td {
+    @apply border-border
+  }
 }

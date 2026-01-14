@@ -14,12 +14,17 @@ export type AvailableFormTypesResponse = ApiResponse<"/v1/sec-filings/available-
 
 // All 3 statement endpoints have the same response structure
 export type StandardizedFinancialsResponse = ApiResponse<"/v1/standardized/income-statement", "get">;
+export type StandardizedFinancialsPresentationResponse = ApiResponse<
+    "/v1/standardized/income-statement/presentation",
+    "get"
+>;
 
 // Derived entity types
 export type Company = CompanySearchResponse["companies"][number];
 export type CompanyDetails = CompanyDetailsResponse["companies"][number];
 export type Filing = FilingsResponse["companies"][number]["filings"][number];
-export type FinancialPeriod = StandardizedFinancialsResponse["companies"][number]["periods"][number];
+export type FinancialPeriod
+    = StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];
 
 // Query parameter types
 export type FiscalPeriodType = "annual" | "quarterly" | "ttm" | "ytd";

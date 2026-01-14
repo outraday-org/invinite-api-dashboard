@@ -6,7 +6,7 @@ import type {
     CompanyDetailsResponse,
     CompanySearchResponse,
     FilingsResponse,
-    StandardizedFinancialsResponse,
+    StandardizedFinancialsPresentationResponse,
 } from "./types";
 
 import { createApiClient } from "./client.server";
@@ -136,7 +136,7 @@ const financialsSchema = z.object({
 
 export const getStandardizedFinancials = createServerFn({ method: "GET" })
     .inputValidator(financialsSchema)
-    .handler(async ({ data }): Promise<StandardizedFinancialsResponse> => {
+    .handler(async ({ data }): Promise<StandardizedFinancialsPresentationResponse> => {
         const {
             apiKey,
             fiscalPeriodType,
@@ -149,7 +149,7 @@ export const getStandardizedFinancials = createServerFn({ method: "GET" })
 
         const api = createApiClient(apiKey);
 
-        const path = `/v1/standardized/${statement}` as const;
+        const path = `/v1/standardized/${statement}/presentation` as const;
 
         const { data: res, error } = await api.GET(path, {
             params: {
