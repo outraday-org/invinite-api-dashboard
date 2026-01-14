@@ -25,6 +25,7 @@ type ReactPdfModule = {
         GlobalWorkerOptions: {
             workerSrc: string;
         };
+        version?: string;
     };
 };
 
@@ -51,8 +52,6 @@ export function PdfViewer({
 
     const scrollRef = React.useRef<HTMLDivElement | null>(null);
 
-    const containerRef = React.useRef<HTMLDivElement | null>(null);
-
     const [containerWidth, setContainerWidth] = React.useState<number>(0);
 
     const [numPages, setNumPages] = React.useState<number>(0);
@@ -60,6 +59,27 @@ export function PdfViewer({
     const [error, setError] = React.useState<null | string>(null);
 
     const [reactPdf, setReactPdf] = React.useState<null | ReactPdfModule>(null);
+
+    const resizeObserverRef = React.useRef<null | ResizeObserver>(null);
+
+    const setMeasureEl = React.useCallback((el: HTMLDivElement | null) => {
+        resizeObserverRef.current?.disconnect();
+
+        resizeObserverRef.current = null;
+
+        if (!el) return;
+
+        const ro = new ResizeObserver(() => {
+            setContainerWidth(el.clientWidth);
+        });
+
+        ro.observe(el);
+
+        resizeObserverRef.current = ro;
+
+        // Initial measure (RO callback may be async)
+        setContainerWidth(el.clientWidth);
+    }, []);
 
     React.useEffect(() => {
         if (!isBrowser) return;
@@ -70,10 +90,13 @@ export function PdfViewer({
             if (cancelled) return;
 
             // Vite + react-pdf worker setup
-            (mod as unknown as ReactPdfModule).pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-                /* @vite-ignore */ "pdfjs-dist/build/pdf.worker.min.mjs",
-                import.meta.url,
-            ).toString();
+            // Use a CDN worker to avoid Vite/pdfjs-dist export-path issues.
+            // This also keeps the worker out of the SSR bundle.
+            const pdfjs = (mod as unknown as ReactPdfModule).pdfjs;
+
+            const version = pdfjs.version ?? "5";
+
+            pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
 
             setReactPdf(mod as unknown as ReactPdfModule);
         });
@@ -84,20 +107,11 @@ export function PdfViewer({
     }, [isBrowser]);
 
     React.useEffect(() => {
-        const el = containerRef.current;
+        return () => {
+            resizeObserverRef.current?.disconnect();
 
-        if (!el) return;
-
-        const ro = new ResizeObserver(() => {
-            setContainerWidth(el.clientWidth);
-        });
-
-        ro.observe(el);
-
-        // Initial measure (RO callback may be async)
-        setContainerWidth(el.clientWidth);
-
-        return () => ro.disconnect();
+            resizeObserverRef.current = null;
+        };
     }, []);
 
     React.useEffect(() => {
@@ -149,7 +163,7 @@ export function PdfViewer({
                 className="relative h-full min-h-0 overflow-auto rounded-md bg-muted/20"
                 ref={scrollRef}
             >
-                <div className="p-3" ref={containerRef}>
+                <div className="p-3" ref={setMeasureEl}>
                     {error
                         ? (
                                 <div className="text-destructive text-xs">{error}</div>

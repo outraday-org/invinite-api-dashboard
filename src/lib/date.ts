@@ -11,6 +11,7 @@ export function formatEnDateTime(value: string, options?: { hideTime?: boolean }
     }
 
     const hasTime = value.includes("T");
+
     const showTime = hasTime && options?.hideTime !== true;
 
     return new Intl.DateTimeFormat("en", {

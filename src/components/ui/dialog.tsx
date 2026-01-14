@@ -1,4 +1,3 @@
-
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { XIcon } from "lucide-react";
 import * as React from "react";
@@ -96,7 +95,7 @@ function DialogFooter({
     return (
         <div
             className={cn(
-                "gap-2 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+                "gap-2 flex flex-col-reverse sm:flex-row sm:justify-end",
                 className,
             )}
             data-slot="dialog-footer"
@@ -115,7 +114,7 @@ function DialogFooter({
 function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     return (
         <DialogPrimitive.Title
-            className={cn("text-sm font-medium", className)}
+            className={cn("text-sm font-medium pr-6 ", className)}
             data-slot="dialog-title"
             {...props}
         />

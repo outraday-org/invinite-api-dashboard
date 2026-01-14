@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { ArrowDown, ArrowDownIcon, ArrowUpIcon, ExternalLink } from "lucide-react";
 import * as React from "react";
 
 import type { Filing } from "@/lib/api/types";
 
+import { HtmlViewer } from "@/components/html-viewer";
 import { PdfViewer } from "@/components/pdf-viewer";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,23 @@ export const Route = createFileRoute("/$ticker/filings")({
     component: FilingsPage,
 });
 
+function formatFiscalQuarterLabel(periodEnd: string) {
+    // Prefer YYYY-MM-DD parsing without timezone ambiguity
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(periodEnd)
+        ? new Date(`${periodEnd}T00:00:00Z`)
+        : new Date(periodEnd);
+
+    if (Number.isNaN(d.getTime())) return null;
+
+    const month = d.getUTCMonth() + 1; // 1-12
+
+    const quarter = Math.floor((month - 1) / 3) + 1; // 1-4
+
+    const yy = String(d.getUTCFullYear() % 100).padStart(2, "0");
+
+    return `Q${quarter} FY${yy}`;
+}
+
 function FilingsPage() {
     const { ticker } = Route.useParams();
 
@@ -31,7 +49,23 @@ function FilingsPage() {
 
     const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("desc");
 
-    const [pdfDialog, setPdfDialog] = React.useState<null | { title: string; url: string }>(null);
+    const [pdfDialog, setPdfDialog] = React.useState<null | {
+        url: string;
+        ticker: string;
+        formType: string;
+        accessionNumber: string;
+        filingDate: string;
+        periodEnd: null | string;
+    }>(null);
+
+    const [htmlDialog, setHtmlDialog] = React.useState<null | {
+        url: string;
+        ticker: string;
+        formType: string;
+        accessionNumber: string;
+        filingDate: string;
+        periodEnd: null | string;
+    }>(null);
 
     // Fetch available form types for this identifier (ticker or CIK)
     const {
@@ -82,8 +116,8 @@ function FilingsPage() {
                 <div className="hidden sm:grid gap-x-6 gap-y-1 sm:grid-cols-5 sm:items-center text-muted-foreground text-xs pb-2">
                     <div>Form Type</div>
                     <div>Accession Number</div>
-                    <div>Period End</div>
-                    <div>Downloads</div>
+                    <div>Fiscal Period</div>
+                    <div>Files</div>
                     <button
                         className="inline-flex cursor-pointer w-full items-center justify-end gap-1 text-right hover:text-foreground transition-colors"
                         onClick={() => setSortDirection(prev => (prev === "desc" ? "asc" : "desc"))}
@@ -103,9 +137,23 @@ function FilingsPage() {
                             <FilingItem
                                 filing={filing}
                                 key={filing.accession_number}
+                                onOpenHtml={(url) => {
+                                    setHtmlDialog({
+                                        accessionNumber: filing.accession_number,
+                                        filingDate: filing.filing_date,
+                                        formType: filing.form_type,
+                                        periodEnd: filing.period_end,
+                                        ticker,
+                                        url,
+                                    });
+                                }}
                                 onOpenPdf={(url) => {
                                     setPdfDialog({
-                                        title: `${filing.form_type} • ${filing.accession_number}`,
+                                        accessionNumber: filing.accession_number,
+                                        filingDate: filing.filing_date,
+                                        formType: filing.form_type,
+                                        periodEnd: filing.period_end,
+                                        ticker,
                                         url,
                                     });
                                 }}
@@ -122,18 +170,21 @@ function FilingsPage() {
                                         type="button"
                                         variant="outline"
                                     >
+                                        <ArrowDown className="size-4" />
                                         {isFetchingNextPage
                                             ? "Loading..."
                                             : "Load more"}
                                     </Button>
                                 )
-                            : (
-                                    <div className="text-muted-foreground text-xs">End of results</div>
-                                )}
+                            : null}
                     </div>
 
                     {!isLoading && displayFilings.length === 0 && (
                         <div className="text-muted-foreground w-full text-center text-xs p-2">No filings found.</div>
+                    )}
+
+                    {isLoading && displayFilings.length === 0 && (
+                        <div className="text-muted-foreground w-full text-center text-xs p-2">Loading...</div>
                     )}
                 </ScrollArea>
             </div>
@@ -144,31 +195,134 @@ function FilingsPage() {
         <div className="space-y-4 relative flex flex-col h-0 grow">
             <Dialog
                 onOpenChange={(open) => {
+                    if (!open) setHtmlDialog(null);
+                }}
+                open={Boolean(htmlDialog)}
+            >
+                <DialogContent className="sm:max-w-6xl h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] p-0">
+                    <div className="flex h-full min-h-0 flex-col">
+                        <div className="p-4 pb-2 flex flex-col shrink-0">
+                            <DialogHeader>
+                                <DialogTitle className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span className="truncate">{htmlDialog?.ticker ?? ticker}</span>
+                                            <span className="text-muted-foreground">•</span>
+                                            <span className="truncate">{htmlDialog?.formType ?? "HTML"}</span>
+                                            {htmlDialog?.periodEnd
+                                                ? (
+                                                        <>
+                                                            <span className="text-muted-foreground">•</span>
+                                                            <span className="truncate">
+                                                                {formatFiscalQuarterLabel(htmlDialog.periodEnd) ?? "—"}
+                                                            </span>
+                                                        </>
+                                                    )
+                                                : null}
+                                        </div>
+                                    </div>
+                                    {htmlDialog?.url && (
+                                        <a
+                                            className="text-primary flex items-center gap-1 hover:underline text-xs font-normal shrink-0"
+                                            href={htmlDialog.url}
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        >
+                                            Open in new tab
+                                            {" "}
+                                            <ExternalLink className="size-3 mb-0.5" />
+                                        </a>
+                                    )}
+                                </DialogTitle>
+                                <DialogDescription className="sr-only">
+                                    HTML preview
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="shrink-0 text-muted-foreground text-xs mt-0.5 flex items-center gap-2 min-w-0">
+                                <span className="truncate">{htmlDialog?.accessionNumber ?? ""}</span>
+                                {htmlDialog?.filingDate
+                                    ? (
+                                            <>
+                                                <span>•</span>
+                                                <span className="truncate">
+                                                    {formatEnDateTime(htmlDialog.filingDate, { hideTime: true })}
+                                                </span>
+                                            </>
+                                        )
+                                    : null}
+                            </div>
+                        </div>
+
+                        <div className="px-4 pb-4 min-h-0 grow">
+                            {htmlDialog?.url
+                                ? (
+                                        <HtmlViewer className="h-full" title={`${htmlDialog.ticker} ${htmlDialog.formType}`} url={htmlDialog.url} />
+                                    )
+                                : null}
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                onOpenChange={(open) => {
                     if (!open) setPdfDialog(null);
                 }}
                 open={Boolean(pdfDialog)}
             >
                 <DialogContent className="sm:max-w-6xl h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] p-0">
                     <div className="flex h-full min-h-0 flex-col">
-                        <div className="p-4 pb-2">
+                        <div className="p-4 pb-2 flex flex-col shrink-0">
                             <DialogHeader>
-                                <DialogTitle className="flex items-center justify-between gap-3">
-                                    <span className="min-w-0 truncate">{pdfDialog?.title ?? "PDF"}</span>
+                                <DialogTitle className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span className="truncate">{pdfDialog?.ticker ?? ticker}</span>
+                                            <span className="text-muted-foreground">•</span>
+                                            <span className="truncate">{pdfDialog?.formType ?? "PDF"}</span>
+                                            {pdfDialog?.periodEnd
+                                                ? (
+                                                        <>
+                                                            <span className="text-muted-foreground">•</span>
+                                                            <span className="truncate">
+                                                                {formatFiscalQuarterLabel(pdfDialog.periodEnd) ?? "—"}
+                                                            </span>
+                                                        </>
+                                                    )
+                                                : null}
+                                        </div>
+
+                                    </div>
                                     {pdfDialog?.url && (
                                         <a
-                                            className="text-primary hover:underline text-xs font-normal shrink-0"
+                                            className="text-primary flex items-center gap-1 hover:underline text-xs font-normal shrink-0"
                                             href={pdfDialog.url}
                                             rel="noreferrer"
                                             target="_blank"
                                         >
                                             Open in new tab
+                                            {" "}
+                                            <ExternalLink className="size-3 mb-0.5" />
                                         </a>
                                     )}
                                 </DialogTitle>
-                                <DialogDescription className="truncate">
-                                    {pdfDialog?.url ?? ""}
+                                <DialogDescription className="sr-only">
+                                    PDF preview
                                 </DialogDescription>
                             </DialogHeader>
+                            <div className="shrink-0 text-muted-foreground text-xs mt-0.5 flex items-center gap-2 min-w-0">
+                                <span className="truncate">{pdfDialog?.accessionNumber ?? ""}</span>
+                                {pdfDialog?.filingDate
+                                    ? (
+                                            <>
+                                                <span>•</span>
+                                                <span className="truncate">
+                                                    {formatEnDateTime(pdfDialog.filingDate, { hideTime: true })}
+                                                </span>
+                                            </>
+                                        )
+                                    : null}
+                            </div>
                         </div>
 
                         <div className="px-4 pb-4 min-h-0 grow">
@@ -219,9 +373,11 @@ function FilingsPage() {
 
 function FilingItem({
     filing,
+    onOpenHtml,
     onOpenPdf,
 }: {
     filing: Filing;
+    onOpenHtml: (url: string) => void;
     onOpenPdf: (url: string) => void;
 }) {
     return (
@@ -237,7 +393,7 @@ function FilingItem({
                     {filing.period_end
                         ? (
                                 <>
-                                    {formatEnDateTime(filing.period_end, { hideTime: true })}
+                                    {formatFiscalQuarterLabel(filing.period_end) ?? "—"}
                                 </>
                             )
                         : (
@@ -248,14 +404,13 @@ function FilingItem({
                 <div className="flex items-center justify-start gap-x-3 text-xs">
                     {filing.html_url
                         ? (
-                                <a
-                                    className="text-primary hover:underline inline-flex w-12 justify-start leading-none"
-                                    href={filing.html_url}
-                                    rel="noreferrer"
-                                    target="_blank"
+                                <button
+                                    className="text-primary cursor-pointer hover:underline inline-flex w-12 justify-start leading-none"
+                                    onClick={() => onOpenHtml(filing.html_url!)}
+                                    type="button"
                                 >
                                     HTML
-                                </a>
+                                </button>
                             )
                         : (
                                 <span className="w-12" />
@@ -263,7 +418,7 @@ function FilingItem({
                     {filing.pdf_url
                         ? (
                                 <button
-                                    className="text-primary hover:underline inline-flex w-12 justify-start leading-none"
+                                    className="text-primary cursor-pointer hover:underline inline-flex w-12 justify-start leading-none"
                                     onClick={() => onOpenPdf(filing.pdf_url!)}
                                     type="button"
                                 >
@@ -275,7 +430,7 @@ function FilingItem({
                             )}
                 </div>
 
-                <div className="text-muted-foreground text-xs sm:text-right">
+                <div className="text-muted-foreground text-xs sm:text-right pr-2">
                     {formatEnDateTime(filing.filing_date, { hideTime: true })}
                 </div>
             </div>
