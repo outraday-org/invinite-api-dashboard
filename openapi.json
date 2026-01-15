@@ -271,16 +271,18 @@
           "calendar_quarter",
           "calendar_year",
           "cik",
-          "filing_content_analyzed",
           "filing_date",
+          "fiscal_quarter",
+          "fiscal_year",
           "form_type",
-          "link_to_filing_details",
-          "pipeline_finished"
+          "html_url",
+          "pdf_url",
+          "period_end"
         ],
         "properties": {
           "accession_number": {
             "type": "string",
-            "description": "SEC accession number"
+            "description": "SEC filing accession number"
           },
           "calendar_quarter": {
             "type": "integer",
@@ -288,60 +290,46 @@
           },
           "calendar_year": {
             "type": "integer",
-            "description": "Calendar year (e.g. 2024)"
+            "description": "Calendar year"
           },
           "cik": {
             "type": "string",
-            "description": "Company CIK"
-          },
-          "filing_content_analyzed": {
-            "type": "boolean",
-            "description": "Whether filing content is fully processed"
+            "description": "CIK of the company"
           },
           "filing_date": {
             "type": "string",
             "format": "date",
-            "description": "Filing date"
+            "description": "Filing date (YYYY-MM-DD)"
           },
           "fiscal_quarter": {
             "type": "integer",
             "nullable": true,
-            "description": "Fiscal quarter if available"
+            "description": "Fiscal quarter (1-4)"
           },
           "fiscal_year": {
             "type": "integer",
             "nullable": true,
-            "description": "Fiscal year if available"
+            "description": "Fiscal year"
           },
           "form_type": {
             "type": "string",
-            "description": "SEC form type (e.g. 10-K, 10-Q)"
+            "description": "SEC form type"
           },
           "html_url": {
             "type": "string",
-            "format": "uri",
             "nullable": true,
-            "description": "HTML filing URL"
-          },
-          "link_to_filing_details": {
-            "type": "string",
-            "description": "Supabase link to filing details"
+            "description": "URL to the filing HTML"
           },
           "pdf_url": {
             "type": "string",
-            "format": "uri",
             "nullable": true,
-            "description": "PDF filing URL"
+            "description": "URL to the filing PDF"
           },
           "period_end": {
             "type": "string",
             "format": "date",
             "nullable": true,
             "description": "Period end date"
-          },
-          "pipeline_finished": {
-            "type": "boolean",
-            "description": "True when the processing pipeline completed"
           }
         }
       },

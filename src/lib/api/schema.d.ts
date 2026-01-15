@@ -4826,46 +4826,34 @@ export interface components {
             children?: components["schemas"]["def-5"][];
         };
         WebSocketFiling: {
-            /** @description SEC accession number */
+            /** @description SEC filing accession number */
             accession_number: string;
             /** @description Calendar quarter (1-4) */
             calendar_quarter: number;
-            /** @description Calendar year (e.g. 2024) */
+            /** @description Calendar year */
             calendar_year: number;
-            /** @description Company CIK */
+            /** @description CIK of the company */
             cik: string;
-            /** @description Whether filing content is fully processed */
-            filing_content_analyzed: boolean;
             /**
              * Format: date
-             * @description Filing date
+             * @description Filing date (YYYY-MM-DD)
              */
             filing_date: string;
-            /** @description Fiscal quarter if available */
-            fiscal_quarter?: number | null;
-            /** @description Fiscal year if available */
-            fiscal_year?: number | null;
-            /** @description SEC form type (e.g. 10-K, 10-Q) */
+            /** @description Fiscal quarter (1-4) */
+            fiscal_quarter: number | null;
+            /** @description Fiscal year */
+            fiscal_year: number | null;
+            /** @description SEC form type */
             form_type: string;
-            /**
-             * Format: uri
-             * @description HTML filing URL
-             */
-            html_url?: string | null;
-            /** @description Supabase link to filing details */
-            link_to_filing_details: string;
-            /**
-             * Format: uri
-             * @description PDF filing URL
-             */
-            pdf_url?: string | null;
+            /** @description URL to the filing HTML */
+            html_url: string | null;
+            /** @description URL to the filing PDF */
+            pdf_url: string | null;
             /**
              * Format: date
              * @description Period end date
              */
-            period_end?: string | null;
-            /** @description True when the processing pipeline completed */
-            pipeline_finished: boolean;
+            period_end: string | null;
         };
         /** @description Broadcast when a new SEC filing finishes processing */
         WebSocketNewFilingEvent: {
