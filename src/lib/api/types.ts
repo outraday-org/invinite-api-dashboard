@@ -9,6 +9,8 @@ type ApiResponse<TPath extends keyof paths, TPathValue extends keyof paths[TPath
 // Response types derived from schema
 export type CompanySearchResponse = ApiResponse<"/v1/company/search", "get">;
 export type CompanyDetailsResponse = ApiResponse<"/v1/company/details", "get">;
+export type DividendsResponse = ApiResponse<"/v1/company/dividends", "get">;
+export type SplitsResponse = ApiResponse<"/v1/company/splits", "get">;
 export type FilingsResponse = ApiResponse<"/v1/sec-filings/filings", "get">;
 export type AvailableFormTypesResponse = ApiResponse<"/v1/sec-filings/available-form-types", "get">;
 
@@ -26,6 +28,8 @@ export type AsReportedFinancialsPresentationResponse = ApiResponse<
 // Derived entity types
 export type Company = CompanySearchResponse["companies"][number];
 export type CompanyDetails = CompanyDetailsResponse["companies"][number];
+export type Dividend = DividendsResponse["companies"][number]["dividends"][number];
+export type Split = SplitsResponse["companies"][number]["splits"][number];
 export type Filing = FilingsResponse["companies"][number]["filings"][number];
 export type FinancialPeriod
     = StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];

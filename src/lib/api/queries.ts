@@ -6,12 +6,20 @@ import { toast } from "sonner";
 
 import { useApiKeyStore } from "@/lib/stores/api-key-store";
 
-import type { FilingsResponse, FiscalPeriodType, StatementType } from "./types";
+import type {
+    DividendsResponse,
+    FilingsResponse,
+    FiscalPeriodType,
+    SplitsResponse,
+    StatementType,
+} from "./types";
 
 import {
     getAsReportedFinancialsPresentation,
     getAvailableFormTypes,
     getCompanyDetails,
+    getCompanyDividends,
+    getCompanySplits,
     getFilings,
     getStandardizedFinancials,
     searchCompanies,
@@ -75,11 +83,57 @@ type AvailableFormTypesInput = {
     identifier: string;
 };
 
+type DividendsQueryInput = {
+    endDate?: string;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+    startDate?: string;
+};
+
 export const availableFormTypesOptions = (input: AvailableFormTypesInput) =>
     queryOptions({
         enabled: input.identifier.trim().length > 0,
         queryFn: () => getAvailableFormTypes({ data: input }),
         queryKey: ["filings", "available-form-types", input.identifier],
+        staleTime: 10 * 60 * 1000,
+    });
+
+type SplitsQueryInput = {
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+};
+
+export const dividendsOptions = (input: DividendsQueryInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getCompanyDividends({ data: input }),
+        queryKey: [
+            "dividends",
+            input.identifier,
+            input.startDate ?? "all",
+            input.endDate ?? "all",
+            input.sort ?? "desc",
+            input.limit ?? 40,
+            input.offset ?? 0,
+        ],
+        staleTime: 10 * 60 * 1000,
+    });
+
+export const splitsOptions = (input: SplitsQueryInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getCompanySplits({ data: input }),
+        queryKey: [
+            "splits",
+            input.identifier,
+            input.sort ?? "desc",
+            input.limit ?? 40,
+            input.offset ?? 0,
+        ],
         staleTime: 10 * 60 * 1000,
     });
 
@@ -228,6 +282,14 @@ type FilingsInfiniteInput = Omit<FilingsQueryInput, "offset"> & {
     limit: number;
 };
 
+type DividendsInfiniteInput = Omit<DividendsQueryInput, "offset"> & {
+    limit: number;
+};
+
+type SplitsInfiniteInput = Omit<SplitsQueryInput, "offset"> & {
+    limit: number;
+};
+
 export function useFilingsInfinite(input: FilingsInfiniteInput) {
     const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
 
@@ -249,17 +311,25 @@ export function useFilingsInfinite(input: FilingsInfiniteInput) {
         number
     >({
         enabled: hasHydrated && input.identifier.trim().length > 0,
-        getNextPageParam: (lastPage: FilingsResponse, allPages: Array<FilingsResponse>) => {
-            const pageSize = input.limit;
+        getNextPageParam: (lastPage: FilingsResponse) => {
+            const nextUrl = lastPage.companies[0]?.next_url;
 
-            const lastCount = lastPage.companies[0]?.filings?.length ?? 0;
+            if (!nextUrl) return undefined;
 
-            if (lastCount < pageSize) return undefined;
+            let nextOffset: null | number = null;
 
-            const nextOffset = allPages.reduce(
-                (acc, page) => acc + (page.companies[0]?.filings?.length ?? 0),
-                0,
-            );
+            try {
+                const parsed = new URL(nextUrl, "http://localhost");
+
+                const offsetParam = parsed.searchParams.get("offset");
+
+                if (offsetParam) nextOffset = Number(offsetParam);
+            }
+            catch {
+                nextOffset = null;
+            }
+
+            if (nextOffset === null || Number.isNaN(nextOffset)) return undefined;
 
             return nextOffset;
         },
@@ -277,6 +347,120 @@ export function useFilingsInfinite(input: FilingsInfiniteInput) {
     });
 
     useErrorToast(result.error, "Failed to load filings");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useDividendsInfinite(input: DividendsInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "dividends",
+        "infinite",
+        input.identifier,
+        input.startDate ?? "all",
+        input.endDate ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        DividendsResponse,
+        Error,
+        InfiniteData<DividendsResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: DividendsResponse) => {
+            const nextUrl = lastPage.companies[0]?.next_url;
+
+            if (!nextUrl) return undefined;
+
+            const parsed = new URL(nextUrl, "http://local");
+
+            const offset = parsed.searchParams.get("offset");
+
+            if (!offset) return undefined;
+
+            const parsedOffset = Number(offset);
+
+            return Number.isNaN(parsedOffset) ? undefined : parsedOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getCompanyDividends({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load dividends");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useSplitsInfinite(input: SplitsInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "splits",
+        "infinite",
+        input.identifier,
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        SplitsResponse,
+        Error,
+        InfiniteData<SplitsResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: SplitsResponse) => {
+            const nextUrl = lastPage.companies[0]?.next_url;
+
+            if (!nextUrl) return undefined;
+
+            const parsed = new URL(nextUrl, "http://local");
+
+            const offset = parsed.searchParams.get("offset");
+
+            if (!offset) return undefined;
+
+            const parsedOffset = Number(offset);
+
+            return Number.isNaN(parsedOffset) ? undefined : parsedOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getCompanySplits({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load stock splits");
 
     return {
         ...result,

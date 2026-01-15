@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { BarChart3Icon, FileTextIcon, LayoutDashboardIcon } from "lucide-react";
+import { BarChart3Icon, CoinsIcon, FileTextIcon, LayoutDashboardIcon, SplitIcon } from "lucide-react";
 
 import { ErrorState } from "@/components/ui/error-state";
 import {
@@ -23,6 +23,8 @@ const navItems = [
     { icon: FileTextIcon, label: "Filings", to: "/$ticker/filings" },
     { icon: BarChart3Icon, label: "Standardized Financials", to: "/$ticker/financials-standardized" },
     { icon: BarChart3Icon, label: "As Reported Financials", to: "/$ticker/financials-as-reported" },
+    { icon: CoinsIcon, label: "Dividends", to: "/$ticker/dividends" },
+    { icon: SplitIcon, label: "Stock Splits", to: "/$ticker/stock-splits" },
 ] as const;
 
 function TickerLayout() {

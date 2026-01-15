@@ -6,7 +6,9 @@ import type {
     AvailableFormTypesResponse,
     CompanyDetailsResponse,
     CompanySearchResponse,
+    DividendsResponse,
     FilingsResponse,
+    SplitsResponse,
     StandardizedFinancialsPresentationResponse,
 } from "./types";
 
@@ -55,6 +57,86 @@ export const getCompanyDetails = createServerFn({ method: "GET" })
 
         const { data: res, error } = await api.GET("/v1/company/details", {
             params: { query: { identifier } },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const dividendsSchema = z.object({
+    apiKey: apiKeySchema,
+    endDate: z.string().optional(),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+    startDate: z.string().optional(),
+});
+
+export const getCompanyDividends = createServerFn({ method: "GET" })
+    .inputValidator(dividendsSchema)
+    .handler(async ({ data }): Promise<DividendsResponse> => {
+        const {
+            apiKey,
+            endDate,
+            identifier,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+            startDate,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/company/dividends", {
+            params: {
+                query: {
+                    end_date: endDate,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                    start_date: startDate,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const splitsSchema = z.object({
+    apiKey: apiKeySchema,
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+export const getCompanySplits = createServerFn({ method: "GET" })
+    .inputValidator(splitsSchema)
+    .handler(async ({ data }): Promise<SplitsResponse> => {
+        const {
+            apiKey,
+            identifier,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/company/splits", {
+            params: {
+                query: {
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
         });
 
         if (error) throw error;
