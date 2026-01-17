@@ -13,6 +13,8 @@ import type {
     FiscalPeriodType,
     GrowthType,
     InsiderTradesResponse,
+    InstitutionalHoldingsResponse,
+    InstitutionalTransactionsResponse,
     IposResponse,
     MarketHolidaysResponse,
     RatioCategory,
@@ -32,6 +34,9 @@ import {
     getFinancialGrowth,
     getFinancialRatios,
     getInsiderTrades,
+    getInstitutionalHoldingsByCompany,
+    getInstitutionalTransactions,
+    getInstitutions,
     getIpos,
     getMarketHolidays,
     getSegmentedFinancials,
@@ -129,6 +134,33 @@ type InsiderTradesQueryInput = {
     offset?: number;
     sort?: "asc" | "desc";
     startDate?: string;
+};
+
+type InstitutionalTransactionsQueryInput = {
+    calendarQuarter?: number;
+    calendarYear?: number;
+    endDate?: string;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+    startDate?: string;
+    type?: "added" | "new_buy" | "reduced" | "sold_out";
+};
+
+type InstitutionalHoldingsQueryInput = {
+    identifier: string;
+    limit?: number;
+    minValue?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+};
+
+type InstitutionsQueryInput = {
+    ciks?: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
 };
 
 type MarketHolidaysQueryInput = {
@@ -447,6 +479,14 @@ type InsiderTradesInfiniteInput = Omit<InsiderTradesQueryInput, "offset"> & {
     limit: number;
 };
 
+type InstitutionalTransactionsInfiniteInput = Omit<InstitutionalTransactionsQueryInput, "offset"> & {
+    limit: number;
+};
+
+type InstitutionalHoldingsInfiniteInput = Omit<InstitutionalHoldingsQueryInput, "offset"> & {
+    limit: number;
+};
+
 type IposInfiniteInput = Omit<IposQueryInput, "offset"> & {
     limit: number;
 };
@@ -692,6 +732,165 @@ export function useInsiderTradesInfinite(input: InsiderTradesInfiniteInput) {
     });
 
     useErrorToast(result.error, "Failed to load insider trades");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useInstitutionalTransactionsInfinite(input: InstitutionalTransactionsInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "institutional-transactions",
+        "infinite",
+        input.identifier,
+        input.type ?? "all",
+        input.calendarYear ?? "all",
+        input.calendarQuarter ?? "all",
+        input.startDate ?? "all",
+        input.endDate ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        InstitutionalTransactionsResponse,
+        Error,
+        InfiniteData<InstitutionalTransactionsResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: InstitutionalTransactionsResponse) => {
+            const nextUrl = lastPage.next_url;
+
+            if (!nextUrl) return undefined;
+
+            let nextOffset: null | number = null;
+
+            try {
+                const parsed = new URL(nextUrl, "http://localhost");
+
+                const offsetParam = parsed.searchParams.get("offset");
+
+                if (offsetParam) nextOffset = Number(offsetParam);
+            }
+            catch {
+                nextOffset = null;
+            }
+
+            if (nextOffset === null || Number.isNaN(nextOffset)) return undefined;
+
+            return nextOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getInstitutionalTransactions({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load institutional transactions");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useInstitutionalHoldingsInfinite(input: InstitutionalHoldingsInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "institutional-holdings",
+        "infinite",
+        input.identifier,
+        input.minValue ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        InstitutionalHoldingsResponse,
+        Error,
+        InfiniteData<InstitutionalHoldingsResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: InstitutionalHoldingsResponse) => {
+            const nextUrl = lastPage.next_url;
+
+            if (!nextUrl) return undefined;
+
+            let nextOffset: null | number = null;
+
+            try {
+                const parsed = new URL(nextUrl, "http://localhost");
+
+                const offsetParam = parsed.searchParams.get("offset");
+
+                if (offsetParam) nextOffset = Number(offsetParam);
+            }
+            catch {
+                nextOffset = null;
+            }
+
+            if (nextOffset === null || Number.isNaN(nextOffset)) return undefined;
+
+            return nextOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getInstitutionalHoldingsByCompany({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load institutional ownership");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useInstitutions(input: InstitutionsQueryInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            enabled: hasHydrated && Boolean(input.ciks?.trim()),
+            queryFn: () => getInstitutions({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [
+                "institutions",
+                input.ciks ?? "all",
+                input.sort ?? "asc",
+                input.limit ?? 100,
+                input.offset ?? 0,
+                String(apiKeyUpdatedAt),
+            ],
+            staleTime: 10 * 60 * 1000,
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load institutions");
 
     return {
         ...result,

@@ -9171,13 +9171,28 @@
                             "nullable": true,
                             "description": "Company CIK"
                           },
-                          "cik_institution": {
+                          "name_company": {
                             "type": "string",
-                            "description": "Institution CIK"
+                            "nullable": true,
+                            "description": "Company name"
+                          },
+                          "ticker_company": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Company ticker symbol"
                           },
                           "cusip_company": {
                             "type": "string",
                             "description": "Company CUSIP"
+                          },
+                          "cik_institution": {
+                            "type": "string",
+                            "description": "Institution CIK"
+                          },
+                          "name_institution": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Institution name"
                           },
                           "dollar_value": {
                             "type": "number",
@@ -9196,11 +9211,6 @@
                             "type": "string",
                             "description": "URL to SEC filing details"
                           },
-                          "name_company": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Company name"
-                          },
                           "period_end": {
                             "type": "string",
                             "description": "Period end date (YYYY-MM-DD)"
@@ -9217,11 +9227,6 @@
                           "shares_or_principal_amount_type": {
                             "type": "string",
                             "description": "Type of position amount"
-                          },
-                          "ticker_company": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Company ticker symbol"
                           },
                           "voting_authority_none": {
                             "type": "number",
@@ -9392,13 +9397,28 @@
                             "nullable": true,
                             "description": "Company CIK"
                           },
-                          "cik_institution": {
+                          "name_company": {
                             "type": "string",
-                            "description": "Institution CIK"
+                            "nullable": true,
+                            "description": "Company name"
+                          },
+                          "ticker_company": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Company ticker symbol"
                           },
                           "cusip_company": {
                             "type": "string",
                             "description": "Company CUSIP"
+                          },
+                          "cik_institution": {
+                            "type": "string",
+                            "description": "Institution CIK"
+                          },
+                          "name_institution": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Institution name"
                           },
                           "dollar_value": {
                             "type": "number",
@@ -9417,11 +9437,6 @@
                             "type": "string",
                             "description": "URL to SEC filing details"
                           },
-                          "name_company": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Company name"
-                          },
                           "period_end": {
                             "type": "string",
                             "description": "Period end date (YYYY-MM-DD)"
@@ -9438,11 +9453,6 @@
                           "shares_or_principal_amount_type": {
                             "type": "string",
                             "description": "Type of position amount"
-                          },
-                          "ticker_company": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Company ticker symbol"
                           },
                           "voting_authority_none": {
                             "type": "number",
@@ -9650,19 +9660,29 @@
                             "type": "string",
                             "description": "Institution CIK"
                           },
+                          "name_institution": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Institution name"
+                          },
                           "cik_company": {
                             "type": "string",
                             "nullable": true,
                             "description": "Company CIK"
                           },
-                          "cusip_company": {
+                          "name_company": {
                             "type": "string",
-                            "description": "Company CUSIP"
+                            "nullable": true,
+                            "description": "Company name"
                           },
                           "ticker_company": {
                             "type": "string",
                             "nullable": true,
                             "description": "Company ticker symbol"
+                          },
+                          "cusip_company": {
+                            "type": "string",
+                            "description": "Company CUSIP"
                           },
                           "type": {
                             "type": "string",

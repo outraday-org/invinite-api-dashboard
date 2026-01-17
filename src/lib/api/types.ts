@@ -19,6 +19,18 @@ export type AvailableFormTypesResponse = ApiResponse<"/v1/sec-filings/available-
 export type FinancialRatiosResponse = ApiResponse<"/v1/financial-metrics/ratios", "get">;
 export type FinancialGrowthResponse = ApiResponse<"/v1/financial-metrics/growth", "get">;
 export type FinancialCagrResponse = ApiResponse<"/v1/financial-metrics/cagr", "get">;
+export type InstitutionalTransactionsResponse = ApiResponse<
+    "/v1/institutional-ownership/transactions",
+    "get"
+>;
+export type InstitutionalHoldingsResponse = ApiResponse<
+    "/v1/institutional-ownership/holdings-by-company",
+    "get"
+>;
+export type InstitutionsResponse = ApiResponse<
+    "/v1/institutional-ownership/institutions",
+    "get"
+>;
 
 // All 3 statement endpoints have the same response structure
 export type StandardizedFinancialsResponse = ApiResponse<"/v1/standardized/income-statement", "get">;
@@ -41,6 +53,9 @@ export type InsiderTrade = InsiderTradesResponse["transactions"][number];
 export type Ipo = IposResponse["ipos"][number];
 export type MarketHoliday = MarketHolidaysResponse["holidays"][number];
 export type Filing = FilingsResponse["companies"][number]["filings"][number];
+export type InstitutionalTransaction = InstitutionalTransactionsResponse["transactions"][number];
+export type InstitutionalHolding = InstitutionalHoldingsResponse["holdings"][number];
+export type Institution = InstitutionsResponse["institutions"][number];
 export type FinancialPeriod
     = StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];
 export type PresentationFinancialPeriod

@@ -41,6 +41,7 @@ const navItems = [
     { icon: CoinsIcon, label: "Dividends", to: "/$ticker/dividends" },
     { icon: SplitIcon, label: "Stock Splits", to: "/$ticker/stock-splits" },
     { icon: UserRoundIcon, label: "Insider Trades", to: "/$ticker/insider-trades" },
+    { icon: Building2Icon, label: "Institutions", to: "/$ticker/institutions" },
     { icon: Building2Icon, label: "IPOs", to: "/$ticker/ipos" },
     { icon: CalendarDaysIcon, label: "Market Holidays", to: "/$ticker/market-holidays" },
 ] as const;

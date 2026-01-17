@@ -3826,10 +3826,16 @@ export interface paths {
                                 calendar_year: number;
                                 /** @description Company CIK */
                                 cik_company?: string | null;
-                                /** @description Institution CIK */
-                                cik_institution: string;
+                                /** @description Company name */
+                                name_company?: string | null;
+                                /** @description Company ticker symbol */
+                                ticker_company?: string | null;
                                 /** @description Company CUSIP */
                                 cusip_company: string;
+                                /** @description Institution CIK */
+                                cik_institution: string;
+                                /** @description Institution name */
+                                name_institution?: string | null;
                                 /** @description Position market value in USD */
                                 dollar_value: number;
                                 /** @description Filing date (YYYY-MM-DD) */
@@ -3838,8 +3844,6 @@ export interface paths {
                                 investment_discretion?: string | null;
                                 /** @description URL to SEC filing details */
                                 link_to_filing_details: string;
-                                /** @description Company name */
-                                name_company?: string | null;
                                 /** @description Period end date (YYYY-MM-DD) */
                                 period_end: string;
                                 /** @description Option type if applicable */
@@ -3848,8 +3852,6 @@ export interface paths {
                                 shares_or_principal_amount: number;
                                 /** @description Type of position amount */
                                 shares_or_principal_amount_type: string;
-                                /** @description Company ticker symbol */
-                                ticker_company?: string | null;
                                 /** @description Votes with no authority */
                                 voting_authority_none?: number | null;
                                 /** @description Votes with shared authority */
@@ -3925,10 +3927,16 @@ export interface paths {
                                 calendar_year: number;
                                 /** @description Company CIK */
                                 cik_company?: string | null;
-                                /** @description Institution CIK */
-                                cik_institution: string;
+                                /** @description Company name */
+                                name_company?: string | null;
+                                /** @description Company ticker symbol */
+                                ticker_company?: string | null;
                                 /** @description Company CUSIP */
                                 cusip_company: string;
+                                /** @description Institution CIK */
+                                cik_institution: string;
+                                /** @description Institution name */
+                                name_institution?: string | null;
                                 /** @description Position market value in USD */
                                 dollar_value: number;
                                 /** @description Filing date (YYYY-MM-DD) */
@@ -3937,8 +3945,6 @@ export interface paths {
                                 investment_discretion?: string | null;
                                 /** @description URL to SEC filing details */
                                 link_to_filing_details: string;
-                                /** @description Company name */
-                                name_company?: string | null;
                                 /** @description Period end date (YYYY-MM-DD) */
                                 period_end: string;
                                 /** @description Option type if applicable */
@@ -3947,8 +3953,6 @@ export interface paths {
                                 shares_or_principal_amount: number;
                                 /** @description Type of position amount */
                                 shares_or_principal_amount_type: string;
-                                /** @description Company ticker symbol */
-                                ticker_company?: string | null;
                                 /** @description Votes with no authority */
                                 voting_authority_none?: number | null;
                                 /** @description Votes with shared authority */
@@ -4024,12 +4028,16 @@ export interface paths {
                             transactions: {
                                 /** @description Institution CIK */
                                 cik_institution: string;
+                                /** @description Institution name */
+                                name_institution?: string | null;
                                 /** @description Company CIK */
                                 cik_company?: string | null;
-                                /** @description Company CUSIP */
-                                cusip_company: string;
+                                /** @description Company name */
+                                name_company?: string | null;
                                 /** @description Company ticker symbol */
                                 ticker_company?: string | null;
+                                /** @description Company CUSIP */
+                                cusip_company: string;
                                 /**
                                  * @description Transaction type: new_buy, added, reduced, sold_out
                                  * @enum {string}

@@ -1,132 +1,82 @@
-import * as React from "react";
+import type { VariantProps } from "class-variance-authority";
+
+import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
+import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-type TabsContextValue = {
-    setValue: (value: string) => void;
-    value: string;
-};
-
-const TabsContext = React.createContext<null | TabsContextValue>(null);
-
-const useTabsContext = () => {
-    const ctx = React.useContext(TabsContext);
-
-    if (!ctx) {
-        throw new Error("Tabs components must be used within <Tabs>");
-    }
-
-    return ctx;
-};
-
-type TabsListProps = React.ComponentProps<"div">;
-
-type TabsProps = {
-    children: React.ReactNode;
-    className?: string;
-    defaultValue: string;
-    onValueChange?: (value: string) => void;
-    value?: string;
-};
-
-function Tabs({ children, className, defaultValue, onValueChange, value }: TabsProps) {
-    const [internalValue, setInternalValue] = React.useState(defaultValue);
-
-    const currentValue = value ?? internalValue;
-
-    const handleChange = (next: string) => {
-        if (value === undefined) {
-            setInternalValue(next);
-        }
-
-        onValueChange?.(next);
-    };
-
+function Tabs({
+    className,
+    orientation = "horizontal",
+    ...props
+}: TabsPrimitive.Root.Props) {
     return (
-        <TabsContext.Provider value={{ setValue: handleChange, value: currentValue }}>
-            <div className={cn("flex flex-col gap-3", className)} data-slot="tabs">
-                {children}
-            </div>
-        </TabsContext.Provider>
+        <TabsPrimitive.Root
+            className={cn(
+                "gap-2 group/tabs flex data-[orientation=horizontal]:flex-col",
+                className,
+            )}
+            data-orientation={orientation}
+            data-slot="tabs"
+            {...props}
+        />
     );
 }
 
-const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
-    ({ className, ...props }, ref) => (
-        <div
-            className={cn(
-                "bg-muted text-muted-foreground border-border/60 inline-flex h-10 items-center justify-center rounded-lg border p-1",
-                className,
-            )}
+const tabsListVariants = cva(
+    "rounded-lg p-[3px] group-data-horizontal/tabs:h-8 data-[variant=line]:rounded-none group/tabs-list text-muted-foreground inline-flex w-fit items-center justify-center group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col",
+    {
+        defaultVariants: {
+            variant: "default",
+        },
+        variants: {
+            variant: {
+                default: "bg-muted",
+                line: "gap-1 bg-transparent",
+            },
+        },
+    },
+);
+
+function TabsList({
+    className,
+    variant = "default",
+    ...props
+}: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
+    return (
+        <TabsPrimitive.List
+            className={cn(tabsListVariants({ variant }), className)}
             data-slot="tabs-list"
-            ref={ref}
-            role="tablist"
+            data-variant={variant}
             {...props}
         />
-    ),
-);
+    );
+}
 
-TabsList.displayName = "TabsList";
+function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
+    return (
+        <TabsPrimitive.Tab
+            className={cn(
+                "gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-xs font-medium group-data-vertical/tabs:py-[calc(--spacing(1.25))] [&_svg:not([class*='size-'])]:size-3.5 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap transition-all group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+                "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
+                "data-active:bg-background dark:data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 data-active:text-foreground",
+                "after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+                className,
+            )}
+            data-slot="tabs-trigger"
+            {...props}
+        />
+    );
+}
 
-type TabsTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    value: string;
-};
+function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
+    return (
+        <TabsPrimitive.Panel
+            className={cn("text-xs/relaxed flex-1 outline-none", className)}
+            data-slot="tabs-content"
+            {...props}
+        />
+    );
+}
 
-const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
-    ({ className, value, ...props }, ref) => {
-        const { setValue, value: activeValue } = useTabsContext();
-
-        const isActive = activeValue === value;
-
-        return (
-            <button
-                aria-selected={isActive}
-                className={cn(
-                    "text-sm inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 font-medium transition-all",
-                    "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
-                    "data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground",
-                    className,
-                )}
-                data-slot="tabs-trigger"
-                data-state={isActive ? "active" : "inactive"}
-                onClick={() => setValue(value)}
-                ref={ref}
-                role="tab"
-                type="button"
-                {...props}
-            />
-        );
-    },
-);
-
-TabsTrigger.displayName = "TabsTrigger";
-
-type TabsContentProps = React.HTMLAttributes<HTMLDivElement> & {
-    value: string;
-};
-
-const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
-    ({ className, value, ...props }, ref) => {
-        const { value: activeValue } = useTabsContext();
-
-        const isActive = activeValue === value;
-
-        if (!isActive) return null;
-
-        return (
-            <div
-                className={cn("ring-offset-background focus-visible:outline-none", className)}
-                data-slot="tabs-content"
-                data-state="active"
-                ref={ref}
-                role="tabpanel"
-                {...props}
-            />
-        );
-    },
-);
-
-TabsContent.displayName = "TabsContent";
-
-export { Tabs, TabsContent, TabsList, TabsTrigger };
+export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger };

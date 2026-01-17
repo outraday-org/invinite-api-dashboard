@@ -12,6 +12,9 @@ import type {
     FinancialGrowthResponse,
     FinancialRatiosResponse,
     InsiderTradesResponse,
+    InstitutionalHoldingsResponse,
+    InstitutionalTransactionsResponse,
+    InstitutionsResponse,
     IposResponse,
     MarketHolidaysResponse,
     SegmentedFinancialsResponse,
@@ -188,6 +191,135 @@ export const getInsiderTrades = createServerFn({ method: "GET" })
                     offset,
                     sort,
                     start_date: startDate,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const institutionalTransactionsSchema = z.object({
+    apiKey: apiKeySchema,
+    calendarQuarter: z.number().optional(),
+    calendarYear: z.number().optional(),
+    endDate: z.string().optional(),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+    startDate: z.string().optional(),
+    type: z.enum(["new_buy", "added", "reduced", "sold_out"]).optional(),
+});
+
+export const getInstitutionalTransactions = createServerFn({ method: "GET" })
+    .inputValidator(institutionalTransactionsSchema)
+    .handler(async ({ data }): Promise<InstitutionalTransactionsResponse> => {
+        const {
+            apiKey,
+            calendarQuarter,
+            calendarYear,
+            endDate,
+            identifier,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+            startDate,
+            type,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/institutional-ownership/transactions", {
+            params: {
+                query: {
+                    calendar_quarter: calendarQuarter,
+                    calendar_year: calendarYear,
+                    end_date: endDate,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                    start_date: startDate,
+                    type,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const institutionalHoldingsSchema = z.object({
+    apiKey: apiKeySchema,
+    identifier: z.string(),
+    limit: z.number().optional(),
+    minValue: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+export const getInstitutionalHoldingsByCompany = createServerFn({ method: "GET" })
+    .inputValidator(institutionalHoldingsSchema)
+    .handler(async ({ data }): Promise<InstitutionalHoldingsResponse> => {
+        const {
+            apiKey,
+            identifier,
+            limit = 40,
+            minValue,
+            offset = 0,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/institutional-ownership/holdings-by-company", {
+            params: {
+                query: {
+                    identifier,
+                    limit,
+                    min_value: minValue,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const institutionsSchema = z.object({
+    apiKey: apiKeySchema,
+    ciks: z.string().optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+export const getInstitutions = createServerFn({ method: "GET" })
+    .inputValidator(institutionsSchema)
+    .handler(async ({ data }): Promise<InstitutionsResponse> => {
+        const {
+            apiKey,
+            ciks,
+            limit = 100,
+            offset = 0,
+            sort = "asc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/institutional-ownership/institutions", {
+            params: {
+                query: {
+                    ciks,
+                    limit,
+                    offset,
+                    sort,
                 },
             },
         });
