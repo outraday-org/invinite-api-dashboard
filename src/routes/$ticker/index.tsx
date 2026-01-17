@@ -107,7 +107,9 @@ function TickerOverview() {
                     {company.list_date && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Listed since</span>
-                            <span className="font-medium">{formatEnDateTime(company.list_date)}</span>
+                            <span className="font-medium">
+                                {formatEnDateTime(company.list_date, { hideTime: true })}
+                            </span>
                         </div>
                     )}
                 </CardContent>

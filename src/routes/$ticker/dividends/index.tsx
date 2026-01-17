@@ -84,18 +84,21 @@ function DividendsPage() {
                 header: () => <div className="text-right">Amount</div>,
             },
             {
-                accessorKey: "dividend_type",
-                cell: ({ getValue }) => String(getValue()),
-                header: "Type",
-            },
-            {
                 accessorKey: "frequency",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
 
-                    return <div className="text-right tabular-nums">{Number.isFinite(raw) ? raw : "-"}</div>;
+                    const label = raw === 4
+                        ? "Quarterly"
+                        : raw === 2
+                            ? "Semi-annual"
+                            : raw === 1
+                                ? "Annual"
+                                : "-";
+
+                    return <div>{label}</div>;
                 },
-                header: () => <div className="text-right">Frequency</div>,
+                header: "Frequency",
             },
         ],
         [currencyFormatter],

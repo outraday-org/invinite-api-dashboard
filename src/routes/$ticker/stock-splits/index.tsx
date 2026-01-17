@@ -46,7 +46,15 @@ function StockSplitsPage() {
         () => [
             {
                 accessorKey: "execution_date",
-                cell: ({ getValue }) => formatEnDateTime(String(getValue()), { hideTime: true }),
+                cell: ({ getValue }) => {
+                    const raw = getValue();
+
+                    if (!raw) {
+                        return "-";
+                    }
+
+                    return formatEnDateTime(String(raw), { hideTime: true });
+                },
                 header: "Execution Date",
             },
             {

@@ -1,4 +1,3 @@
-
 import { useNavigate } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import * as React from "react";
