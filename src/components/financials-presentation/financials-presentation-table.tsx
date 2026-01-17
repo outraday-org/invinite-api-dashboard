@@ -5,7 +5,7 @@ import type { PresentationFinancialPeriod } from "@/lib/api/types";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { cn, formatNumberEnCompact } from "@/lib/utils";
+import { cn, formatNumberEnCompact, formatPercentCompact } from "@/lib/utils";
 
 import type { TreeRow } from "./types";
 
@@ -199,7 +199,9 @@ export function FinancialsPresentationTable({
                                                 <span className={cn("tabular-nums", row.isTotal ? "font-semibold" : null)}>
                                                     {val === undefined || val === null
                                                         ? (row.hasChildren ? "" : "—")
-                                                        : formatNumberEnCompact(val)}
+                                                        : row.metricId === "is_effective_tax_rate"
+                                                            ? formatPercentCompact(val)
+                                                            : formatNumberEnCompact(val)}
                                                 </span>
                                             </TableCell>
                                         );
