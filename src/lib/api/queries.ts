@@ -12,6 +12,8 @@ import type {
     FilingsResponse,
     FiscalPeriodType,
     GrowthType,
+    IposResponse,
+    MarketHolidaysResponse,
     RatioCategory,
     SegmentedFinancialsSegmentId,
     SplitsResponse,
@@ -28,6 +30,8 @@ import {
     getFinancialCagr,
     getFinancialGrowth,
     getFinancialRatios,
+    getIpos,
+    getMarketHolidays,
     getSegmentedFinancials,
     getStandardizedFinancials,
     searchCompanies,
@@ -115,6 +119,12 @@ type SplitsQueryInput = {
     sort?: "asc" | "desc";
 };
 
+type MarketHolidaysQueryInput = {
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+};
+
 export const dividendsOptions = (input: DividendsQueryInput) =>
     queryOptions({
         enabled: input.identifier.trim().length > 0,
@@ -138,6 +148,28 @@ export const splitsOptions = (input: SplitsQueryInput) =>
         queryKey: [
             "splits",
             input.identifier,
+            input.sort ?? "desc",
+            input.limit ?? 40,
+            input.offset ?? 0,
+        ],
+        staleTime: 10 * 60 * 1000,
+    });
+
+type IposQueryInput = {
+    endDate?: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+    startDate?: string;
+};
+
+export const iposOptions = (input: IposQueryInput) =>
+    queryOptions({
+        queryFn: () => getIpos({ data: input }),
+        queryKey: [
+            "ipos",
+            input.startDate ?? "all",
+            input.endDate ?? "all",
             input.sort ?? "desc",
             input.limit ?? 40,
             input.offset ?? 0,
@@ -399,6 +431,14 @@ type SplitsInfiniteInput = Omit<SplitsQueryInput, "offset"> & {
     limit: number;
 };
 
+type IposInfiniteInput = Omit<IposQueryInput, "offset"> & {
+    limit: number;
+};
+
+type MarketHolidaysInfiniteInput = Omit<MarketHolidaysQueryInput, "offset"> & {
+    limit: number;
+};
+
 export function useFilingsInfinite(input: FilingsInfiniteInput) {
     const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
 
@@ -570,6 +610,98 @@ export function useSplitsInfinite(input: SplitsInfiniteInput) {
     });
 
     useErrorToast(result.error, "Failed to load stock splits");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useIposInfinite(input: IposInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "ipos",
+        "infinite",
+        input.startDate ?? "all",
+        input.endDate ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        IposResponse,
+        Error,
+        InfiniteData<IposResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated,
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage.ipos.length < input.limit) return undefined;
+
+            return allPages.length * input.limit;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getIpos({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load IPOs");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useMarketHolidaysInfinite(input: MarketHolidaysInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "market-holidays",
+        "infinite",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        MarketHolidaysResponse,
+        Error,
+        InfiniteData<MarketHolidaysResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated,
+        getNextPageParam: (lastPage, allPages) => {
+            if (lastPage.holidays.length < input.limit) return undefined;
+
+            return allPages.length * input.limit;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getMarketHolidays({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load market holidays");
 
     return {
         ...result,

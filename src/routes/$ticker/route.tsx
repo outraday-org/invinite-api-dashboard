@@ -1,5 +1,13 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { BarChart3Icon, CoinsIcon, FileTextIcon, LayoutDashboardIcon, SplitIcon } from "lucide-react";
+import {
+    BarChart3Icon,
+    Building2Icon,
+    CalendarDaysIcon,
+    CoinsIcon,
+    FileTextIcon,
+    LayoutDashboardIcon,
+    SplitIcon,
+} from "lucide-react";
 
 import { ErrorState } from "@/components/ui/error-state";
 import {
@@ -29,6 +37,8 @@ const navItems = [
     { icon: BarChart3Icon, label: "Segmented Financials", to: "/$ticker/segmented-financials" },
     { icon: CoinsIcon, label: "Dividends", to: "/$ticker/dividends" },
     { icon: SplitIcon, label: "Stock Splits", to: "/$ticker/stock-splits" },
+    { icon: Building2Icon, label: "IPOs", to: "/$ticker/ipos" },
+    { icon: CalendarDaysIcon, label: "Market Holidays", to: "/$ticker/market-holidays" },
 ] as const;
 
 function TickerLayout() {

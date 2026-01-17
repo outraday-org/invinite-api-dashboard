@@ -14,6 +14,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TickerIndexRouteImport } from './routes/$ticker/index'
 import { Route as TickerStockSplitsIndexRouteImport } from './routes/$ticker/stock-splits/index'
 import { Route as TickerSegmentedFinancialsIndexRouteImport } from './routes/$ticker/segmented-financials/index'
+import { Route as TickerMarketHolidaysIndexRouteImport } from './routes/$ticker/market-holidays/index'
+import { Route as TickerIposIndexRouteImport } from './routes/$ticker/ipos/index'
 import { Route as TickerFinancialsStandardizedIndexRouteImport } from './routes/$ticker/financials-standardized/index'
 import { Route as TickerFinancialsRatiosIndexRouteImport } from './routes/$ticker/financials-ratios/index'
 import { Route as TickerFinancialsGrowthIndexRouteImport } from './routes/$ticker/financials-growth/index'
@@ -48,6 +50,17 @@ const TickerSegmentedFinancialsIndexRoute =
     path: '/segmented-financials/',
     getParentRoute: () => TickerRouteRoute,
   } as any)
+const TickerMarketHolidaysIndexRoute =
+  TickerMarketHolidaysIndexRouteImport.update({
+    id: '/market-holidays/',
+    path: '/market-holidays/',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
+const TickerIposIndexRoute = TickerIposIndexRouteImport.update({
+  id: '/ipos/',
+  path: '/ipos/',
+  getParentRoute: () => TickerRouteRoute,
+} as any)
 const TickerFinancialsStandardizedIndexRoute =
   TickerFinancialsStandardizedIndexRouteImport.update({
     id: '/financials-standardized/',
@@ -100,6 +113,8 @@ export interface FileRoutesByFullPath {
   '/$ticker/financials-growth': typeof TickerFinancialsGrowthIndexRoute
   '/$ticker/financials-ratios': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/ipos': typeof TickerIposIndexRoute
+  '/$ticker/market-holidays': typeof TickerMarketHolidaysIndexRoute
   '/$ticker/segmented-financials': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits': typeof TickerStockSplitsIndexRoute
 }
@@ -113,6 +128,8 @@ export interface FileRoutesByTo {
   '/$ticker/financials-growth': typeof TickerFinancialsGrowthIndexRoute
   '/$ticker/financials-ratios': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/ipos': typeof TickerIposIndexRoute
+  '/$ticker/market-holidays': typeof TickerMarketHolidaysIndexRoute
   '/$ticker/segmented-financials': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits': typeof TickerStockSplitsIndexRoute
 }
@@ -128,6 +145,8 @@ export interface FileRoutesById {
   '/$ticker/financials-growth/': typeof TickerFinancialsGrowthIndexRoute
   '/$ticker/financials-ratios/': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized/': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/ipos/': typeof TickerIposIndexRoute
+  '/$ticker/market-holidays/': typeof TickerMarketHolidaysIndexRoute
   '/$ticker/segmented-financials/': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits/': typeof TickerStockSplitsIndexRoute
 }
@@ -144,6 +163,8 @@ export interface FileRouteTypes {
     | '/$ticker/financials-growth'
     | '/$ticker/financials-ratios'
     | '/$ticker/financials-standardized'
+    | '/$ticker/ipos'
+    | '/$ticker/market-holidays'
     | '/$ticker/segmented-financials'
     | '/$ticker/stock-splits'
   fileRoutesByTo: FileRoutesByTo
@@ -157,6 +178,8 @@ export interface FileRouteTypes {
     | '/$ticker/financials-growth'
     | '/$ticker/financials-ratios'
     | '/$ticker/financials-standardized'
+    | '/$ticker/ipos'
+    | '/$ticker/market-holidays'
     | '/$ticker/segmented-financials'
     | '/$ticker/stock-splits'
   id:
@@ -171,6 +194,8 @@ export interface FileRouteTypes {
     | '/$ticker/financials-growth/'
     | '/$ticker/financials-ratios/'
     | '/$ticker/financials-standardized/'
+    | '/$ticker/ipos/'
+    | '/$ticker/market-holidays/'
     | '/$ticker/segmented-financials/'
     | '/$ticker/stock-splits/'
   fileRoutesById: FileRoutesById
@@ -215,6 +240,20 @@ declare module '@tanstack/react-router' {
       path: '/segmented-financials'
       fullPath: '/$ticker/segmented-financials'
       preLoaderRoute: typeof TickerSegmentedFinancialsIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/market-holidays/': {
+      id: '/$ticker/market-holidays/'
+      path: '/market-holidays'
+      fullPath: '/$ticker/market-holidays'
+      preLoaderRoute: typeof TickerMarketHolidaysIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/ipos/': {
+      id: '/$ticker/ipos/'
+      path: '/ipos'
+      fullPath: '/$ticker/ipos'
+      preLoaderRoute: typeof TickerIposIndexRouteImport
       parentRoute: typeof TickerRouteRoute
     }
     '/$ticker/financials-standardized/': {
@@ -278,6 +317,8 @@ interface TickerRouteRouteChildren {
   TickerFinancialsGrowthIndexRoute: typeof TickerFinancialsGrowthIndexRoute
   TickerFinancialsRatiosIndexRoute: typeof TickerFinancialsRatiosIndexRoute
   TickerFinancialsStandardizedIndexRoute: typeof TickerFinancialsStandardizedIndexRoute
+  TickerIposIndexRoute: typeof TickerIposIndexRoute
+  TickerMarketHolidaysIndexRoute: typeof TickerMarketHolidaysIndexRoute
   TickerSegmentedFinancialsIndexRoute: typeof TickerSegmentedFinancialsIndexRoute
   TickerStockSplitsIndexRoute: typeof TickerStockSplitsIndexRoute
 }
@@ -292,6 +333,8 @@ const TickerRouteRouteChildren: TickerRouteRouteChildren = {
   TickerFinancialsRatiosIndexRoute: TickerFinancialsRatiosIndexRoute,
   TickerFinancialsStandardizedIndexRoute:
     TickerFinancialsStandardizedIndexRoute,
+  TickerIposIndexRoute: TickerIposIndexRoute,
+  TickerMarketHolidaysIndexRoute: TickerMarketHolidaysIndexRoute,
   TickerSegmentedFinancialsIndexRoute: TickerSegmentedFinancialsIndexRoute,
   TickerStockSplitsIndexRoute: TickerStockSplitsIndexRoute,
 }

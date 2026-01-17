@@ -11,6 +11,8 @@ export type CompanySearchResponse = ApiResponse<"/v1/company/search", "get">;
 export type CompanyDetailsResponse = ApiResponse<"/v1/company/details", "get">;
 export type DividendsResponse = ApiResponse<"/v1/company/dividends", "get">;
 export type SplitsResponse = ApiResponse<"/v1/company/splits", "get">;
+export type IposResponse = ApiResponse<"/v1/ipos", "get">;
+export type MarketHolidaysResponse = ApiResponse<"/v1/market/market-holidays", "get">;
 export type FilingsResponse = ApiResponse<"/v1/sec-filings/filings", "get">;
 export type AvailableFormTypesResponse = ApiResponse<"/v1/sec-filings/available-form-types", "get">;
 export type FinancialRatiosResponse = ApiResponse<"/v1/financial-metrics/ratios", "get">;
@@ -34,6 +36,8 @@ export type Company = CompanySearchResponse["companies"][number];
 export type CompanyDetails = CompanyDetailsResponse["companies"][number];
 export type Dividend = DividendsResponse["companies"][number]["dividends"][number];
 export type Split = SplitsResponse["companies"][number]["splits"][number];
+export type Ipo = IposResponse["ipos"][number];
+export type MarketHoliday = MarketHolidaysResponse["holidays"][number];
 export type Filing = FilingsResponse["companies"][number]["filings"][number];
 export type FinancialPeriod
     = StandardizedFinancialsPresentationResponse["companies"][number]["periods"][number];

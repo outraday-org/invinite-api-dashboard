@@ -11,6 +11,8 @@ import type {
     FinancialCagrResponse,
     FinancialGrowthResponse,
     FinancialRatiosResponse,
+    IposResponse,
+    MarketHolidaysResponse,
     SegmentedFinancialsResponse,
     SplitsResponse,
     StandardizedFinancialsPresentationResponse,
@@ -136,6 +138,75 @@ export const getCompanySplits = createServerFn({ method: "GET" })
             params: {
                 query: {
                     identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const iposSchema = z.object({
+    apiKey: apiKeySchema,
+    endDate: z.string().optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+    startDate: z.string().optional(),
+});
+
+export const getIpos = createServerFn({ method: "GET" })
+    .inputValidator(iposSchema)
+    .handler(async ({ data }): Promise<IposResponse> => {
+        const {
+            apiKey,
+            endDate,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+            startDate,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/ipos", {
+            params: {
+                query: {
+                    end_date: endDate,
+                    limit,
+                    offset,
+                    sort,
+                    start_date: startDate,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const marketHolidaysSchema = z.object({
+    apiKey: apiKeySchema,
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+export const getMarketHolidays = createServerFn({ method: "GET" })
+    .inputValidator(marketHolidaysSchema)
+    .handler(async ({ data }): Promise<MarketHolidaysResponse> => {
+        const { apiKey, limit = 40, offset = 0, sort = "desc" } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/market/market-holidays", {
+            params: {
+                query: {
                     limit,
                     offset,
                     sort,
