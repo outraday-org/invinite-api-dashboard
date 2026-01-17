@@ -2,6 +2,7 @@ import * as React from "react";
 
 import type { SegmentedFinancialPeriod } from "@/lib/api/types";
 
+import { MetricChartDialog } from "@/components/metric-chart/metric-chart-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatMetricId, formatNumberEnCompact, formatSegmentId } from "@/lib/utils";
@@ -41,6 +42,8 @@ const formatSegmentLabel = (row: SegmentedRow) => {
 
 export function SegmentedFinancialsTable({ periods }: { periods: Array<SegmentedFinancialPeriod> }) {
     const periodLabels = React.useMemo(() => periods.map(buildPeriodLabel), [periods]);
+
+    const [selectedRow, setSelectedRow] = React.useState<null | SegmentedRow>(null);
 
     const rows = React.useMemo(() => {
         const rowMap = new Map<string, SegmentedRow>();
@@ -109,7 +112,11 @@ export function SegmentedFinancialsTable({ periods }: { periods: Array<Segmented
                     </TableHeader>
                     <TableBody className="divide-y-0">
                         {rows.map(row => (
-                            <TableRow className="h-[41px] leading-5" key={row.key}>
+                            <TableRow
+                                className="h-[41px] leading-5 cursor-pointer hover:bg-muted/50"
+                                key={row.key}
+                                onClick={() => setSelectedRow(row)}
+                            >
                                 <TableCell className="w-[260px] min-w-[260px] max-w-[260px]">
                                     <div className="font-medium truncate" title={formatMetricId(row.metricId)}>
                                         {formatMetricId(row.metricId)}
@@ -138,6 +145,24 @@ export function SegmentedFinancialsTable({ periods }: { periods: Array<Segmented
                     </TableBody>
                 </Table>
             </ScrollArea>
+            <MetricChartDialog
+                data={selectedRow
+                    ? periodLabels.map(period => ({
+                            period,
+                            value: selectedRow.values[period],
+                        }))
+                    : []}
+                formatValue={formatNumberEnCompact}
+                metricLabel={selectedRow
+                    ? `${formatMetricId(selectedRow.metricId)} · ${formatSegmentLabel(selectedRow)}`
+                    : ""}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setSelectedRow(null);
+                    }
+                }}
+                open={Boolean(selectedRow)}
+            />
         </div>
     );
 }

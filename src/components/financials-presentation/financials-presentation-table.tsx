@@ -3,6 +3,7 @@ import * as React from "react";
 
 import type { PresentationFinancialPeriod } from "@/lib/api/types";
 
+import { MetricChartDialog } from "@/components/metric-chart/metric-chart-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn, formatNumberEnCompact, formatPercentCompact } from "@/lib/utils";
@@ -69,6 +70,8 @@ export function FinancialsPresentationTable({
 
     const [expanded, setExpanded] = React.useState<Set<string>>(() => new Set(allExpandableIds));
 
+    const [selectedRow, setSelectedRow] = React.useState<null | TreeRow>(null);
+
     React.useEffect(() => {
         // keep expanded set in sync when switching statement/period type/ticker
         setExpanded(new Set(allExpandableIds));
@@ -101,6 +104,11 @@ export function FinancialsPresentationTable({
             }))
             .filter(row => !Object.values(row.values).every(value => value === 0));
     }, [canonicalTree, isVisible, periodLabels, valueMaps]);
+
+    const getFormatValue = React.useCallback(
+        (metricId: string) => (metricId === "is_effective_tax_rate" ? formatPercentCompact : formatNumberEnCompact),
+        [],
+    );
 
     return (
         <div className="space-y-2 flex flex-col h-0 grow">
@@ -136,9 +144,10 @@ export function FinancialsPresentationTable({
                                 <TableRow
                                     className={cn(
                                         hasTotalAfter ? "border-b-foreground" : null,
-                                        "h-[41px] leading-5",
+                                        "h-[41px] leading-5 cursor-pointer hover:bg-muted/50",
                                     )}
                                     key={row.metricId}
+                                    onClick={() => setSelectedRow(row)}
                                 >
                                     <TableCell className="w-[420px] min-w-[420px] max-w-[420px]">
                                         <div className="flex items-center gap-1">
@@ -151,7 +160,9 @@ export function FinancialsPresentationTable({
                                                                             "text-muted-foreground hover:text-foreground inline-flex h-6 w-6 items-center justify-center rounded",
                                                                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                                                                         )}
-                                                                        onClick={() =>
+                                                                        onClick={(event) => {
+                                                                            event.stopPropagation();
+
                                                                             setExpanded((prev) => {
                                                                                 const next = new Set(prev);
 
@@ -163,7 +174,8 @@ export function FinancialsPresentationTable({
                                                                                 }
 
                                                                                 return next;
-                                                                            })}
+                                                                            });
+                                                                        }}
                                                                         type="button"
                                                                     >
                                                                         {expanded.has(row.metricId)
@@ -212,6 +224,22 @@ export function FinancialsPresentationTable({
                     </TableBody>
                 </Table>
             </ScrollArea>
+            <MetricChartDialog
+                data={selectedRow
+                    ? periodLabels.map(period => ({
+                            period,
+                            value: selectedRow.values[period],
+                        }))
+                    : []}
+                formatValue={selectedRow ? getFormatValue(selectedRow.metricId) : undefined}
+                metricLabel={selectedRow?.label ?? ""}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setSelectedRow(null);
+                    }
+                }}
+                open={Boolean(selectedRow)}
+            />
         </div>
     );
 }

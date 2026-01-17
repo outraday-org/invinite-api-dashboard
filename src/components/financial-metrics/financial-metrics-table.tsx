@@ -1,3 +1,6 @@
+import * as React from "react";
+
+import { MetricChartDialog } from "@/components/metric-chart/metric-chart-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatNumberEnCompact } from "@/lib/utils";
@@ -39,6 +42,8 @@ export function FinancialMetricsTable({
 }) {
     const hasGroupColumn = rows.some(row => row.group);
 
+    const [selectedRow, setSelectedRow] = React.useState<MetricsTableRow | null>(null);
+
     return (
         <div className="space-y-2 flex flex-col h-0 grow">
             <ScrollArea className="grow h-0">
@@ -64,7 +69,11 @@ export function FinancialMetricsTable({
                     </TableHeader>
                     <TableBody className="divide-y-0">
                         {rows.map(row => (
-                            <TableRow className="h-[41px] leading-5" key={row.key}>
+                            <TableRow
+                                className="h-[41px] leading-5 cursor-pointer hover:bg-muted/50"
+                                key={row.key}
+                                onClick={() => setSelectedRow(row)}
+                            >
                                 {hasGroupColumn
                                     ? (
                                             <TableCell className="w-[320px] min-w-[320px] max-w-[320px]">
@@ -99,6 +108,22 @@ export function FinancialMetricsTable({
                     </TableBody>
                 </Table>
             </ScrollArea>
+            <MetricChartDialog
+                data={selectedRow
+                    ? periodLabels.map(period => ({
+                            period,
+                            value: selectedRow.values[period],
+                        }))
+                    : []}
+                formatValue={selectedRow?.formatValue ?? formatValue}
+                metricLabel={selectedRow?.label ?? ""}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setSelectedRow(null);
+                    }
+                }}
+                open={Boolean(selectedRow)}
+            />
         </div>
     );
 }
