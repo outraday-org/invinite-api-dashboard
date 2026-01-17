@@ -39,7 +39,7 @@ function InsiderTradesPage() {
     });
 
     const trades = React.useMemo(
-        () => data?.pages.flatMap(page => page.transactions ?? []) ?? [],
+        () => data?.pages.flatMap(page => page.transactions) ?? [],
         [data],
     );
 
@@ -63,11 +63,15 @@ function InsiderTradesPage() {
             {
                 cell: ({ row }) => {
                     const trade = row.original;
+
                     const roles: Array<string> = [];
 
                     if (trade.reporting_person_is_director) roles.push("Director");
+
                     if (trade.reporting_person_is_officer) roles.push("Officer");
+
                     if (trade.reporting_person_is_ten_percent_owner) roles.push("10% Owner");
+
                     if (trade.reporting_person_is_other) {
                         roles.push(trade.reporting_person_other_text?.trim() || "Other");
                     }
@@ -86,6 +90,7 @@ function InsiderTradesPage() {
                 accessorKey: "acquired_disposed",
                 cell: ({ getValue }) => {
                     const raw = String(getValue());
+
                     return raw === "A" ? "Acquire" : raw === "D" ? "Dispose" : raw;
                 },
                 header: "A/D",
@@ -98,6 +103,7 @@ function InsiderTradesPage() {
                 accessorKey: "shares",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
+
                     return <div className="text-right tabular-nums">{Number.isFinite(raw) ? formatNumberEn(raw) : "-"}</div>;
                 },
                 header: () => <div className="text-right">Shares</div>,
@@ -106,6 +112,7 @@ function InsiderTradesPage() {
                 accessorKey: "share_price",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
+
                     return (
                         <div className="text-right tabular-nums">
                             {Number.isFinite(raw) ? currencyFormatter.format(raw) : "-"}
@@ -118,6 +125,7 @@ function InsiderTradesPage() {
                 accessorKey: "total",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
+
                     return (
                         <div className="text-right tabular-nums">
                             {Number.isFinite(raw) ? currencyFormatter.format(raw) : "-"}
@@ -130,6 +138,7 @@ function InsiderTradesPage() {
                 accessorKey: "shares_owned_following_transaction",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
+
                     return <div className="text-right tabular-nums">{Number.isFinite(raw) ? formatNumberEn(raw) : "-"}</div>;
                 },
                 header: () => <div className="text-right">Owned After</div>,

@@ -31,7 +31,7 @@ function MarketHolidaysPage() {
     });
 
     const holidays = React.useMemo(
-        () => data?.pages.flatMap(page => page.holidays ?? []) ?? [],
+        () => data?.pages.flatMap(page => page.holidays) ?? [],
         [data],
     );
 

@@ -5,6 +5,7 @@ import * as React from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useCompanySearch } from "@/lib/api/queries";
+import { useTickerStore } from "@/lib/stores/ticker-store";
 import { cn } from "@/lib/utils";
 
 type TickerSearchProps = {
@@ -14,6 +15,8 @@ type TickerSearchProps = {
 
 export function TickerSearch({ defaultTicker = "", placeholder = "Search company" }: TickerSearchProps) {
     const navigate = useNavigate();
+
+    const setLastTicker = useTickerStore(state => state.setLastTicker);
 
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
 
@@ -120,7 +123,11 @@ export function TickerSearch({ defaultTicker = "", placeholder = "Search company
     const goToTicker = (ticker: string) => {
         setOpen(false);
 
-        navigate({ params: { ticker: ticker.toUpperCase() }, to: "/$ticker" });
+        const normalizedTicker = ticker.toUpperCase();
+
+        setLastTicker(normalizedTicker);
+
+        navigate({ params: { ticker: normalizedTicker }, to: "/$ticker" });
     };
 
     const onSubmit = (e: React.FormEvent) => {

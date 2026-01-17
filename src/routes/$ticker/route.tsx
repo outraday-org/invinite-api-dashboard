@@ -20,7 +20,6 @@ import {
     SidebarInset,
     SidebarMenu,
     SidebarMenuItem,
-    SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useCompanyDetails } from "@/lib/api/queries";
 import { cn } from "@/lib/utils";
@@ -90,7 +89,6 @@ function TickerLayout() {
                             </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>
-                    <SidebarSeparator className="my-2" />
                     <SidebarGroup>
                         <SidebarGroupLabel>Market</SidebarGroupLabel>
                         <SidebarGroupContent>

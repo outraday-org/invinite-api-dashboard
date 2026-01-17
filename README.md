@@ -16,9 +16,17 @@ You can provide `INVINITE_API_KEY` two ways:
 
 - `/` — landing page, API key input, and intro cards.
 - `/$ticker` — company overview + market data (e.g. `/AAPL`).
+- `/$ticker/filings` — SEC filings with filters, HTML/PDF viewers.
 - `/$ticker/financials-standardized` — standardized financial statements with
   filters.
 - `/$ticker/financials-as-reported` — as-reported financial statements.
-- `/$ticker/filings` — SEC filings with filters, HTML/PDF viewers.
+- `/$ticker/financials-cagr` — CAGR financial statements.
+- `/$ticker/financials-growth` — growth financial statements.
+- `/$ticker/financials-ratios` — ratio financial statements.
+- `/$ticker/segmented-financials` — segmented financials.
 - `/$ticker/dividends` — dividends history.
 - `/$ticker/stock-splits` — stock split history.
+- `/$ticker/insider-trades` — insider trades.
+- `/$ticker/institutions` — institutions.
+- `/$ticker/ipos` — IPOs.
+- `/$ticker/market-holidays` — market holidays.

@@ -35,7 +35,7 @@ function IposPage() {
     });
 
     const ipos = React.useMemo(
-        () => data?.pages.flatMap(page => page.ipos ?? []) ?? [],
+        () => data?.pages.flatMap(page => page.ipos) ?? [],
         [data],
     );
 
