@@ -11,6 +11,7 @@ import type {
     FinancialCagrResponse,
     FinancialGrowthResponse,
     FinancialRatiosResponse,
+    InsiderTradesResponse,
     IposResponse,
     MarketHolidaysResponse,
     SegmentedFinancialsResponse,
@@ -141,6 +142,52 @@ export const getCompanySplits = createServerFn({ method: "GET" })
                     limit,
                     offset,
                     sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+const insiderTradesSchema = z.object({
+    acquiredDisposed: z.enum(["A", "D"]).optional(),
+    apiKey: apiKeySchema,
+    endDate: z.string().optional(),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+    startDate: z.string().optional(),
+});
+
+export const getInsiderTrades = createServerFn({ method: "GET" })
+    .inputValidator(insiderTradesSchema)
+    .handler(async ({ data }): Promise<InsiderTradesResponse> => {
+        const {
+            acquiredDisposed,
+            apiKey,
+            endDate,
+            identifier,
+            limit = 40,
+            offset = 0,
+            sort = "desc",
+            startDate,
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/insider-trades", {
+            params: {
+                query: {
+                    acquired_disposed: acquiredDisposed,
+                    end_date: endDate,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                    start_date: startDate,
                 },
             },
         });

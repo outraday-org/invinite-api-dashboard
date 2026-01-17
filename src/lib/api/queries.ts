@@ -12,6 +12,7 @@ import type {
     FilingsResponse,
     FiscalPeriodType,
     GrowthType,
+    InsiderTradesResponse,
     IposResponse,
     MarketHolidaysResponse,
     RatioCategory,
@@ -30,6 +31,7 @@ import {
     getFinancialCagr,
     getFinancialGrowth,
     getFinancialRatios,
+    getInsiderTrades,
     getIpos,
     getMarketHolidays,
     getSegmentedFinancials,
@@ -117,6 +119,16 @@ type SplitsQueryInput = {
     limit?: number;
     offset?: number;
     sort?: "asc" | "desc";
+};
+
+type InsiderTradesQueryInput = {
+    acquiredDisposed?: "A" | "D";
+    endDate?: string;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+    startDate?: string;
 };
 
 type MarketHolidaysQueryInput = {
@@ -431,6 +443,10 @@ type SplitsInfiniteInput = Omit<SplitsQueryInput, "offset"> & {
     limit: number;
 };
 
+type InsiderTradesInfiniteInput = Omit<InsiderTradesQueryInput, "offset"> & {
+    limit: number;
+};
+
 type IposInfiniteInput = Omit<IposQueryInput, "offset"> & {
     limit: number;
 };
@@ -610,6 +626,72 @@ export function useSplitsInfinite(input: SplitsInfiniteInput) {
     });
 
     useErrorToast(result.error, "Failed to load stock splits");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useInsiderTradesInfinite(input: InsiderTradesInfiniteInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const queryKey = [
+        "insider-trades",
+        "infinite",
+        input.identifier,
+        input.acquiredDisposed ?? "all",
+        input.startDate ?? "all",
+        input.endDate ?? "all",
+        input.sort ?? "desc",
+        input.limit,
+        String(apiKeyUpdatedAt),
+    ] as const;
+
+    const result = useInfiniteQuery<
+        InsiderTradesResponse,
+        Error,
+        InfiniteData<InsiderTradesResponse, number>,
+        typeof queryKey,
+        number
+    >({
+        enabled: hasHydrated && input.identifier.trim().length > 0,
+        getNextPageParam: (lastPage: InsiderTradesResponse) => {
+            const nextUrl = lastPage.next_url;
+
+            if (!nextUrl) return undefined;
+
+            let nextOffset: null | number = null;
+
+            try {
+                const parsed = new URL(nextUrl, "http://localhost");
+
+                const offsetParam = parsed.searchParams.get("offset");
+
+                if (offsetParam) nextOffset = Number(offsetParam);
+            }
+            catch {
+                nextOffset = null;
+            }
+
+            if (nextOffset === null || Number.isNaN(nextOffset)) return undefined;
+
+            return nextOffset;
+        },
+        initialPageParam: 0,
+        queryFn: ({ pageParam }) =>
+            getInsiderTrades({
+                data: {
+                    ...input,
+                    apiKey: apiKey ?? undefined,
+                    offset: Number(pageParam) || 0,
+                },
+            }),
+        queryKey,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    useErrorToast(result.error, "Failed to load insider trades");
 
     return {
         ...result,
