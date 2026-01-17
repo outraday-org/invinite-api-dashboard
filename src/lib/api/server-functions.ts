@@ -8,6 +8,10 @@ import type {
     CompanySearchResponse,
     DividendsResponse,
     FilingsResponse,
+    FinancialCagrResponse,
+    FinancialGrowthResponse,
+    FinancialRatiosResponse,
+    SegmentedFinancialsResponse,
     SplitsResponse,
     StandardizedFinancialsPresentationResponse,
 } from "./types";
@@ -217,6 +221,53 @@ const financialsSchema = z.object({
     statement: z.enum(["balance-sheet", "cash-flow-statement", "income-statement"]),
 });
 
+const segmentedFinancialsSchema = z.object({
+    apiKey: apiKeySchema,
+    fiscalPeriodType: z.enum(["annual", "quarterly", "ttm", "ytd"]),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    segmentId: z.enum([
+        "seg_revenue_product",
+        "seg_revenue_geographic",
+        "seg_revenue_business_segment",
+        "seg_cost_of_revenue_business_segment",
+        "seg_research_and_development_expenses_business_segment",
+        "seg_selling_and_marketing_expenses_business_segment",
+        "seg_general_and_administrative_expenses_business_segment",
+    ]).optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+const ratiosSchema = z.object({
+    apiKey: apiKeySchema,
+    category: z.enum(["valuation", "profitability", "liquidity", "solvency"]).optional(),
+    fiscalPeriodType: z.enum(["annual", "quarterly", "ttm", "ytd"]),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+const growthSchema = z.object({
+    apiKey: apiKeySchema,
+    fiscalPeriodType: z.enum(["annual", "quarterly", "ttm", "ytd"]),
+    growthType: z.enum(["year_over_year", "quarter_over_quarter"]).optional(),
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
+const cagrSchema = z.object({
+    apiKey: apiKeySchema,
+    identifier: z.string(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+    periodYears: z.union([z.literal(3), z.literal(5), z.literal(10)]).optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
+});
+
 export const getStandardizedFinancials = createServerFn({ method: "GET" })
     .inputValidator(financialsSchema)
     .handler(async ({ data }): Promise<StandardizedFinancialsPresentationResponse> => {
@@ -275,6 +326,136 @@ export const getAsReportedFinancialsPresentation = createServerFn({ method: "GET
                     identifier,
                     limit,
                     offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+export const getSegmentedFinancials = createServerFn({ method: "GET" })
+    .inputValidator(segmentedFinancialsSchema)
+    .handler(async ({ data }): Promise<SegmentedFinancialsResponse> => {
+        const {
+            apiKey,
+            fiscalPeriodType,
+            identifier,
+            limit = 8,
+            offset = 0,
+            segmentId,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/segmented-financials", {
+            params: {
+                query: {
+                    fiscal_period_type: fiscalPeriodType,
+                    identifier,
+                    limit,
+                    offset,
+                    segment_id: segmentId,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+export const getFinancialRatios = createServerFn({ method: "GET" })
+    .inputValidator(ratiosSchema)
+    .handler(async ({ data }): Promise<FinancialRatiosResponse> => {
+        const {
+            apiKey,
+            category,
+            fiscalPeriodType,
+            identifier,
+            limit = 8,
+            offset = 0,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/financial-metrics/ratios", {
+            params: {
+                query: {
+                    category,
+                    fiscal_period_type: fiscalPeriodType,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+export const getFinancialGrowth = createServerFn({ method: "GET" })
+    .inputValidator(growthSchema)
+    .handler(async ({ data }): Promise<FinancialGrowthResponse> => {
+        const {
+            apiKey,
+            fiscalPeriodType,
+            growthType,
+            identifier,
+            limit = 8,
+            offset = 0,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/financial-metrics/growth", {
+            params: {
+                query: {
+                    fiscal_period_type: fiscalPeriodType,
+                    growth_type: growthType,
+                    identifier,
+                    limit,
+                    offset,
+                    sort,
+                },
+            },
+        });
+
+        if (error) throw error;
+
+        return res;
+    });
+
+export const getFinancialCagr = createServerFn({ method: "GET" })
+    .inputValidator(cagrSchema)
+    .handler(async ({ data }): Promise<FinancialCagrResponse> => {
+        const {
+            apiKey,
+            identifier,
+            limit = 8,
+            offset = 0,
+            periodYears,
+            sort = "desc",
+        } = data;
+
+        const api = createApiClient(apiKey);
+
+        const { data: res, error } = await api.GET("/v1/financial-metrics/cagr", {
+            params: {
+                query: {
+                    identifier,
+                    limit,
+                    offset,
+                    period_years: periodYears ? (String(periodYears) as "3" | "5" | "10") : undefined,
                     sort,
                 },
             },

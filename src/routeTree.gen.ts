@@ -13,7 +13,11 @@ import { Route as TickerRouteRouteImport } from './routes/$ticker/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TickerIndexRouteImport } from './routes/$ticker/index'
 import { Route as TickerStockSplitsIndexRouteImport } from './routes/$ticker/stock-splits/index'
+import { Route as TickerSegmentedFinancialsIndexRouteImport } from './routes/$ticker/segmented-financials/index'
 import { Route as TickerFinancialsStandardizedIndexRouteImport } from './routes/$ticker/financials-standardized/index'
+import { Route as TickerFinancialsRatiosIndexRouteImport } from './routes/$ticker/financials-ratios/index'
+import { Route as TickerFinancialsGrowthIndexRouteImport } from './routes/$ticker/financials-growth/index'
+import { Route as TickerFinancialsCagrIndexRouteImport } from './routes/$ticker/financials-cagr/index'
 import { Route as TickerFinancialsAsReportedIndexRouteImport } from './routes/$ticker/financials-as-reported/index'
 import { Route as TickerFilingsIndexRouteImport } from './routes/$ticker/filings/index'
 import { Route as TickerDividendsIndexRouteImport } from './routes/$ticker/dividends/index'
@@ -38,10 +42,34 @@ const TickerStockSplitsIndexRoute = TickerStockSplitsIndexRouteImport.update({
   path: '/stock-splits/',
   getParentRoute: () => TickerRouteRoute,
 } as any)
+const TickerSegmentedFinancialsIndexRoute =
+  TickerSegmentedFinancialsIndexRouteImport.update({
+    id: '/segmented-financials/',
+    path: '/segmented-financials/',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
 const TickerFinancialsStandardizedIndexRoute =
   TickerFinancialsStandardizedIndexRouteImport.update({
     id: '/financials-standardized/',
     path: '/financials-standardized/',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
+const TickerFinancialsRatiosIndexRoute =
+  TickerFinancialsRatiosIndexRouteImport.update({
+    id: '/financials-ratios/',
+    path: '/financials-ratios/',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
+const TickerFinancialsGrowthIndexRoute =
+  TickerFinancialsGrowthIndexRouteImport.update({
+    id: '/financials-growth/',
+    path: '/financials-growth/',
+    getParentRoute: () => TickerRouteRoute,
+  } as any)
+const TickerFinancialsCagrIndexRoute =
+  TickerFinancialsCagrIndexRouteImport.update({
+    id: '/financials-cagr/',
+    path: '/financials-cagr/',
     getParentRoute: () => TickerRouteRoute,
   } as any)
 const TickerFinancialsAsReportedIndexRoute =
@@ -68,7 +96,11 @@ export interface FileRoutesByFullPath {
   '/$ticker/dividends': typeof TickerDividendsIndexRoute
   '/$ticker/filings': typeof TickerFilingsIndexRoute
   '/$ticker/financials-as-reported': typeof TickerFinancialsAsReportedIndexRoute
+  '/$ticker/financials-cagr': typeof TickerFinancialsCagrIndexRoute
+  '/$ticker/financials-growth': typeof TickerFinancialsGrowthIndexRoute
+  '/$ticker/financials-ratios': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/segmented-financials': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits': typeof TickerStockSplitsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -77,7 +109,11 @@ export interface FileRoutesByTo {
   '/$ticker/dividends': typeof TickerDividendsIndexRoute
   '/$ticker/filings': typeof TickerFilingsIndexRoute
   '/$ticker/financials-as-reported': typeof TickerFinancialsAsReportedIndexRoute
+  '/$ticker/financials-cagr': typeof TickerFinancialsCagrIndexRoute
+  '/$ticker/financials-growth': typeof TickerFinancialsGrowthIndexRoute
+  '/$ticker/financials-ratios': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/segmented-financials': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits': typeof TickerStockSplitsIndexRoute
 }
 export interface FileRoutesById {
@@ -88,7 +124,11 @@ export interface FileRoutesById {
   '/$ticker/dividends/': typeof TickerDividendsIndexRoute
   '/$ticker/filings/': typeof TickerFilingsIndexRoute
   '/$ticker/financials-as-reported/': typeof TickerFinancialsAsReportedIndexRoute
+  '/$ticker/financials-cagr/': typeof TickerFinancialsCagrIndexRoute
+  '/$ticker/financials-growth/': typeof TickerFinancialsGrowthIndexRoute
+  '/$ticker/financials-ratios/': typeof TickerFinancialsRatiosIndexRoute
   '/$ticker/financials-standardized/': typeof TickerFinancialsStandardizedIndexRoute
+  '/$ticker/segmented-financials/': typeof TickerSegmentedFinancialsIndexRoute
   '/$ticker/stock-splits/': typeof TickerStockSplitsIndexRoute
 }
 export interface FileRouteTypes {
@@ -100,7 +140,11 @@ export interface FileRouteTypes {
     | '/$ticker/dividends'
     | '/$ticker/filings'
     | '/$ticker/financials-as-reported'
+    | '/$ticker/financials-cagr'
+    | '/$ticker/financials-growth'
+    | '/$ticker/financials-ratios'
     | '/$ticker/financials-standardized'
+    | '/$ticker/segmented-financials'
     | '/$ticker/stock-splits'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -109,7 +153,11 @@ export interface FileRouteTypes {
     | '/$ticker/dividends'
     | '/$ticker/filings'
     | '/$ticker/financials-as-reported'
+    | '/$ticker/financials-cagr'
+    | '/$ticker/financials-growth'
+    | '/$ticker/financials-ratios'
     | '/$ticker/financials-standardized'
+    | '/$ticker/segmented-financials'
     | '/$ticker/stock-splits'
   id:
     | '__root__'
@@ -119,7 +167,11 @@ export interface FileRouteTypes {
     | '/$ticker/dividends/'
     | '/$ticker/filings/'
     | '/$ticker/financials-as-reported/'
+    | '/$ticker/financials-cagr/'
+    | '/$ticker/financials-growth/'
+    | '/$ticker/financials-ratios/'
     | '/$ticker/financials-standardized/'
+    | '/$ticker/segmented-financials/'
     | '/$ticker/stock-splits/'
   fileRoutesById: FileRoutesById
 }
@@ -158,11 +210,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TickerStockSplitsIndexRouteImport
       parentRoute: typeof TickerRouteRoute
     }
+    '/$ticker/segmented-financials/': {
+      id: '/$ticker/segmented-financials/'
+      path: '/segmented-financials'
+      fullPath: '/$ticker/segmented-financials'
+      preLoaderRoute: typeof TickerSegmentedFinancialsIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
     '/$ticker/financials-standardized/': {
       id: '/$ticker/financials-standardized/'
       path: '/financials-standardized'
       fullPath: '/$ticker/financials-standardized'
       preLoaderRoute: typeof TickerFinancialsStandardizedIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/financials-ratios/': {
+      id: '/$ticker/financials-ratios/'
+      path: '/financials-ratios'
+      fullPath: '/$ticker/financials-ratios'
+      preLoaderRoute: typeof TickerFinancialsRatiosIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/financials-growth/': {
+      id: '/$ticker/financials-growth/'
+      path: '/financials-growth'
+      fullPath: '/$ticker/financials-growth'
+      preLoaderRoute: typeof TickerFinancialsGrowthIndexRouteImport
+      parentRoute: typeof TickerRouteRoute
+    }
+    '/$ticker/financials-cagr/': {
+      id: '/$ticker/financials-cagr/'
+      path: '/financials-cagr'
+      fullPath: '/$ticker/financials-cagr'
+      preLoaderRoute: typeof TickerFinancialsCagrIndexRouteImport
       parentRoute: typeof TickerRouteRoute
     }
     '/$ticker/financials-as-reported/': {
@@ -194,7 +274,11 @@ interface TickerRouteRouteChildren {
   TickerDividendsIndexRoute: typeof TickerDividendsIndexRoute
   TickerFilingsIndexRoute: typeof TickerFilingsIndexRoute
   TickerFinancialsAsReportedIndexRoute: typeof TickerFinancialsAsReportedIndexRoute
+  TickerFinancialsCagrIndexRoute: typeof TickerFinancialsCagrIndexRoute
+  TickerFinancialsGrowthIndexRoute: typeof TickerFinancialsGrowthIndexRoute
+  TickerFinancialsRatiosIndexRoute: typeof TickerFinancialsRatiosIndexRoute
   TickerFinancialsStandardizedIndexRoute: typeof TickerFinancialsStandardizedIndexRoute
+  TickerSegmentedFinancialsIndexRoute: typeof TickerSegmentedFinancialsIndexRoute
   TickerStockSplitsIndexRoute: typeof TickerStockSplitsIndexRoute
 }
 
@@ -203,8 +287,12 @@ const TickerRouteRouteChildren: TickerRouteRouteChildren = {
   TickerDividendsIndexRoute: TickerDividendsIndexRoute,
   TickerFilingsIndexRoute: TickerFilingsIndexRoute,
   TickerFinancialsAsReportedIndexRoute: TickerFinancialsAsReportedIndexRoute,
+  TickerFinancialsCagrIndexRoute: TickerFinancialsCagrIndexRoute,
+  TickerFinancialsGrowthIndexRoute: TickerFinancialsGrowthIndexRoute,
+  TickerFinancialsRatiosIndexRoute: TickerFinancialsRatiosIndexRoute,
   TickerFinancialsStandardizedIndexRoute:
     TickerFinancialsStandardizedIndexRoute,
+  TickerSegmentedFinancialsIndexRoute: TickerSegmentedFinancialsIndexRoute,
   TickerStockSplitsIndexRoute: TickerStockSplitsIndexRoute,
 }
 

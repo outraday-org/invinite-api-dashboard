@@ -7944,11 +7944,11 @@
           },
           {
             "schema": {
-              "type": "integer",
+              "type": "string",
               "enum": [
-                3,
-                5,
-                10
+                "3",
+                "5",
+                "10"
               ]
             },
             "in": "query",
@@ -8083,13 +8083,13 @@
                                 },
                                 "facts": {
                                   "type": "object",
-                                  "description": "Nested object: metric_id -> period_years -> CAGR value",
+                                  "description": "Nested object: period_years (3, 5, 10) -> { metric_id: value }",
                                   "additionalProperties": {
                                     "type": "object",
-                                    "description": "CAGR values for different period lengths",
+                                    "description": "Year groups keyed by period_years",
                                     "additionalProperties": {
                                       "type": "number",
-                                      "description": "CAGR value for specific year period"
+                                      "description": "CAGR value for the metric keyed by metric_id"
                                     }
                                   }
                                 }
@@ -8295,11 +8295,15 @@
                                 },
                                 "facts": {
                                   "type": "object",
+                                  "description": "Nested object: growth_type (year_over_year, quarter_over_quarter) -> { metric_id: value }",
                                   "additionalProperties": {
-                                    "type": "number",
-                                    "description": "Numeric growth rate"
-                                  },
-                                  "description": "Key-value pairs of growth metric names and their numeric values"
+                                    "type": "object",
+                                    "description": "Growth type groups keyed by growth_type",
+                                    "additionalProperties": {
+                                      "type": "number",
+                                      "description": "Growth rate value for the metric keyed by metric_id"
+                                    }
+                                  }
                                 }
                               }
                             }

@@ -175,7 +175,7 @@ export function FinancialsPresentationTable({
                                                     )
                                                 : null}
 
-                                            <span
+                                            <div
                                                 className={cn(
                                                     "font-medium truncate",
                                                     row.isTotal ? "font-semibold" : null,
@@ -187,7 +187,7 @@ export function FinancialsPresentationTable({
                                                 title={row.label}
                                             >
                                                 {row.label}
-                                            </span>
+                                            </div>
                                         </div>
                                     </TableCell>
 

@@ -23,6 +23,10 @@ const navItems = [
     { icon: FileTextIcon, label: "Filings", to: "/$ticker/filings" },
     { icon: BarChart3Icon, label: "Standardized Financials", to: "/$ticker/financials-standardized" },
     { icon: BarChart3Icon, label: "As Reported Financials", to: "/$ticker/financials-as-reported" },
+    { icon: BarChart3Icon, label: "CAGR Financials", to: "/$ticker/financials-cagr" },
+    { icon: BarChart3Icon, label: "Growth Financials", to: "/$ticker/financials-growth" },
+    { icon: BarChart3Icon, label: "Ratio Financials", to: "/$ticker/financials-ratios" },
+    { icon: BarChart3Icon, label: "Segmented Financials", to: "/$ticker/segmented-financials" },
     { icon: CoinsIcon, label: "Dividends", to: "/$ticker/dividends" },
     { icon: SplitIcon, label: "Stock Splits", to: "/$ticker/stock-splits" },
 ] as const;

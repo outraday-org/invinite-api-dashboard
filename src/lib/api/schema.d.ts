@@ -3307,7 +3307,7 @@ export interface paths {
                     /** @description Ticker symbol or CIK */
                     identifier: string;
                     /** @description CAGR calculation period in years: 3, 5, 10 */
-                    period_years?: 3 | 5 | 10;
+                    period_years?: "3" | "5" | "10";
                     /** @description Sort direction for periods by period_end: 'asc' (oldest first), 'desc' (newest first) */
                     sort?: "asc" | "desc";
                     /** @description Maximum number of periods per ticker (1-100) */
@@ -3354,7 +3354,7 @@ export interface paths {
                                      * @description Period end date (YYYY-MM-DD)
                                      */
                                     period_end: string;
-                                    /** @description Nested object: metric_id -> period_years -> CAGR value */
+                                    /** @description Nested object: period_years (3, 5, 10) -> { metric_id: value } */
                                     facts: {
                                         [key: string]: {
                                             [key: string]: number;
@@ -3444,9 +3444,11 @@ export interface paths {
                                      * @description Period end date (YYYY-MM-DD)
                                      */
                                     period_end: string;
-                                    /** @description Key-value pairs of growth metric names and their numeric values */
+                                    /** @description Nested object: growth_type (year_over_year, quarter_over_quarter) -> { metric_id: value } */
                                     facts: {
-                                        [key: string]: number;
+                                        [key: string]: {
+                                            [key: string]: number;
+                                        };
                                     };
                                 }[];
                                 /** @description URL for the next page (includes next offset and same limit). Omitted when no next page exists. */

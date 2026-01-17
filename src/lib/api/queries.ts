@@ -7,9 +7,13 @@ import { toast } from "sonner";
 import { useApiKeyStore } from "@/lib/stores/api-key-store";
 
 import type {
+    CagrPeriodYears,
     DividendsResponse,
     FilingsResponse,
     FiscalPeriodType,
+    GrowthType,
+    RatioCategory,
+    SegmentedFinancialsSegmentId,
     SplitsResponse,
     StatementType,
 } from "./types";
@@ -21,6 +25,10 @@ import {
     getCompanyDividends,
     getCompanySplits,
     getFilings,
+    getFinancialCagr,
+    getFinancialGrowth,
+    getFinancialRatios,
+    getSegmentedFinancials,
     getStandardizedFinancials,
     searchCompanies,
 } from "./server-functions";
@@ -176,6 +184,107 @@ export const asReportedFinancialsPresentationOptions = (
             input.statement,
             input.identifier,
             input.fiscalPeriodType,
+            input.sort ?? "desc",
+            input.limit ?? 8,
+            input.offset ?? 0,
+        ],
+        staleTime: 5 * 60 * 1000,
+    });
+
+type SegmentedFinancialsInput = {
+    fiscalPeriodType: FiscalPeriodType;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    segmentId?: SegmentedFinancialsSegmentId;
+    sort?: "asc" | "desc";
+};
+
+type FinancialRatiosInput = {
+    category?: RatioCategory;
+    fiscalPeriodType: FiscalPeriodType;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+};
+
+type FinancialGrowthInput = {
+    fiscalPeriodType: FiscalPeriodType;
+    growthType?: GrowthType;
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    sort?: "asc" | "desc";
+};
+
+type FinancialCagrInput = {
+    identifier: string;
+    limit?: number;
+    offset?: number;
+    periodYears?: CagrPeriodYears;
+    sort?: "asc" | "desc";
+};
+
+export const segmentedFinancialsOptions = (input: SegmentedFinancialsInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getSegmentedFinancials({ data: input }),
+        queryKey: [
+            "segmented-financials",
+            input.identifier,
+            input.fiscalPeriodType,
+            input.segmentId ?? "all",
+            input.sort ?? "desc",
+            input.limit ?? 8,
+            input.offset ?? 0,
+        ],
+        staleTime: 5 * 60 * 1000,
+    });
+
+export const financialRatiosOptions = (input: FinancialRatiosInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getFinancialRatios({ data: input }),
+        queryKey: [
+            "financial-metrics",
+            "ratios",
+            input.identifier,
+            input.fiscalPeriodType,
+            input.category ?? "all",
+            input.sort ?? "desc",
+            input.limit ?? 8,
+            input.offset ?? 0,
+        ],
+        staleTime: 5 * 60 * 1000,
+    });
+
+export const financialGrowthOptions = (input: FinancialGrowthInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getFinancialGrowth({ data: input }),
+        queryKey: [
+            "financial-metrics",
+            "growth",
+            input.identifier,
+            input.fiscalPeriodType,
+            input.growthType ?? "all",
+            input.sort ?? "desc",
+            input.limit ?? 8,
+            input.offset ?? 0,
+        ],
+        staleTime: 5 * 60 * 1000,
+    });
+
+export const financialCagrOptions = (input: FinancialCagrInput) =>
+    queryOptions({
+        enabled: input.identifier.trim().length > 0,
+        queryFn: () => getFinancialCagr({ data: input }),
+        queryKey: [
+            "financial-metrics",
+            "cagr",
+            input.identifier,
+            input.periodYears ?? "all",
             input.sort ?? "desc",
             input.limit ?? 8,
             input.offset ?? 0,
@@ -508,6 +617,90 @@ export function useAsReportedFinancialsPresentation(
     );
 
     useErrorToast(result.error, "Failed to load as-reported financials");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useSegmentedFinancials(input: SegmentedFinancialsInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...segmentedFinancialsOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getSegmentedFinancials({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [...segmentedFinancialsOptions(input).queryKey, String(apiKeyUpdatedAt)],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load segmented financials");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useFinancialRatios(input: FinancialRatiosInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...financialRatiosOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getFinancialRatios({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [...financialRatiosOptions(input).queryKey, String(apiKeyUpdatedAt)],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load financial ratios");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useFinancialGrowth(input: FinancialGrowthInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...financialGrowthOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getFinancialGrowth({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [...financialGrowthOptions(input).queryKey, String(apiKeyUpdatedAt)],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load growth financials");
+
+    return {
+        ...result,
+        data: result.data ?? null,
+    };
+}
+
+export function useFinancialCagr(input: FinancialCagrInput) {
+    const { apiKey, apiKeyUpdatedAt, hasHydrated } = useApiKey();
+
+    const result = useQuery(
+        queryOptions({
+            ...financialCagrOptions(input),
+            enabled: hasHydrated && input.identifier.trim().length > 0,
+            queryFn: () =>
+                getFinancialCagr({ data: { ...input, apiKey: apiKey ?? undefined } }),
+            queryKey: [...financialCagrOptions(input).queryKey, String(apiKeyUpdatedAt)],
+        }),
+    );
+
+    useErrorToast(result.error, "Failed to load CAGR financials");
 
     return {
         ...result,

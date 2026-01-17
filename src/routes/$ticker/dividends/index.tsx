@@ -71,19 +71,6 @@ function DividendsPage() {
                 header: "Payable",
             },
             {
-                accessorKey: "cash_amount",
-                cell: ({ getValue }) => {
-                    const raw = Number(getValue());
-
-                    const formatted = Number.isFinite(raw)
-                        ? currencyFormatter.format(raw)
-                        : "-";
-
-                    return <div className="text-right tabular-nums">{formatted}</div>;
-                },
-                header: () => <div className="text-right">Amount</div>,
-            },
-            {
                 accessorKey: "frequency",
                 cell: ({ getValue }) => {
                     const raw = Number(getValue());
@@ -100,6 +87,20 @@ function DividendsPage() {
                 },
                 header: "Frequency",
             },
+            {
+                accessorKey: "cash_amount",
+                cell: ({ getValue }) => {
+                    const raw = Number(getValue());
+
+                    const formatted = Number.isFinite(raw)
+                        ? currencyFormatter.format(raw)
+                        : "-";
+
+                    return <div className="text-right tabular-nums">{formatted}</div>;
+                },
+                header: () => <div className="text-right">Amount</div>,
+            },
+
         ],
         [currencyFormatter],
     );
@@ -109,6 +110,18 @@ function DividendsPage() {
         data: dividends,
         getCoreRowModel: getCoreRowModel(),
     });
+
+    const getColumnClassName = (columnId: string) => {
+        if (columnId === "cash_amount") {
+            return "w-20 px-1";
+        }
+
+        if (columnId === "frequency") {
+            return "w-24 px-1";
+        }
+
+        return undefined;
+    };
 
     if (error) {
         return (
@@ -134,7 +147,10 @@ function DividendsPage() {
                             {table.getHeaderGroups().map(headerGroup => (
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map(header => (
-                                        <TableHead key={header.id}>
+                                        <TableHead
+                                            className={getColumnClassName(header.column.id)}
+                                            key={header.id}
+                                        >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -150,7 +166,10 @@ function DividendsPage() {
                             {table.getRowModel().rows.map(row => (
                                 <TableRow key={row.id}>
                                     {row.getVisibleCells().map(cell => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell
+                                            className={getColumnClassName(cell.column.id)}
+                                            key={cell.id}
+                                        >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}

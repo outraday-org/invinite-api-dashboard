@@ -1,31 +1,11 @@
+import { formatMetricId } from "@/lib/utils";
+
 import type {
     AsReportedPresentationFactRaw,
     PresentationFact,
     StandardizedPresentationFactRaw,
     TreeRow,
 } from "./types";
-
-export function formatMetricId(metricId: string) {
-    const upperWords = new Set(["ebit", "ebitda", "ebt", "eps"]);
-
-    const words = metricId
-        .split("_")
-        .filter(Boolean)
-        .map((part) => {
-            const lower = part.toLowerCase();
-
-            if (lower.length === 0) return "";
-
-            if (upperWords.has(lower)) return lower.toUpperCase();
-
-            return `${lower[0].toUpperCase()}${lower.slice(1)}`;
-        })
-        .filter(Boolean);
-
-    if (words.length <= 1) return words[0] ?? "";
-
-    return words.slice(1).join(" ");
-}
 
 export function buildTreeRows(
     facts: Array<PresentationFact>,
