@@ -132,6 +132,18 @@ function TickerLayout() {
                                     {company && (
                                         <span className="text-muted-foreground text-lg">{company.name}</span>
                                     )}
+                                    {company?.brand_colors && company.brand_colors.length > 0 && (
+                                        <div className="flex items-center gap-1.5 ml-2">
+                                            {company.brand_colors.map((color, index) => (
+                                                <div
+                                                    className="size-5 rounded-full ring-1 ring-border/60"
+                                                    key={index}
+                                                    style={{ backgroundColor: color }}
+                                                    title={color}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </header>
                         )}

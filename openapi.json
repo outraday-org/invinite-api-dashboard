@@ -661,6 +661,7 @@
                           "homepage_url",
                           "investor_relations_url",
                           "logo_url",
+                          "brand_colors",
                           "street",
                           "city",
                           "state",
@@ -805,6 +806,14 @@
                             "type": "string",
                             "nullable": true,
                             "description": "Logo image URL"
+                          },
+                          "brand_colors": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "nullable": true,
+                            "description": "Brand color hex codes"
                           },
                           "street": {
                             "type": "string",
@@ -11109,8 +11118,8 @@
   },
   "servers": [
     {
-      "url": "https://api.invinite.com",
-      "description": "Production server"
+      "url": "http://localhost:4000",
+      "description": "Development server"
     }
   ],
   "tags": [
