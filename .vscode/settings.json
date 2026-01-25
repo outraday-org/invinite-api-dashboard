@@ -21,16 +21,6 @@
   "workbench.iconTheme": "vs-seti",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "sqltools.connections": [
-    {
-      "ssh": "Disabled",
-      "previewLimit": 50,
-      "server": "db.mojcpuwusvoemanqoxev.supabase.co",
-      "driver": "PostgreSQL",
-      "name": "Remote Dev",
-      "connectString": "postgresql://postgres:aqPbbSvwFeLcWCfqIxuWHzeV@db.mojcpuwusvoemanqoxev.supabase.co:5432/postgres"
-    }
-  ],
   // This tells ESLint to ignore the supabase folder so it doesn't conflict
   "eslint.workingDirectories": [
     {
