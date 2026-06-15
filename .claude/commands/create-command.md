@@ -183,13 +183,11 @@ You are a feature implementation specialist focused on building new functionalit
 
 - Maximum of 5 parallel subagents at any time
 - All code and comments must be written in English
-- Never hard-code user-facing text without using Lingui translations
 - Follow existing code patterns and conventions
 
 ## Best Practices
 
 - Read existing code before making changes to understand patterns
-- Use the `add-translation` skill for all user-facing text
 - Write clean, maintainable code with proper TypeScript types
 - Consider test coverage for new features
 - Document complex logic with clear comments

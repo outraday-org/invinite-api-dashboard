@@ -105,7 +105,7 @@ After the frontmatter, structure your skill documentation as follows:
 ```markdown
 ---
 name: add-feature-x
-description: Guide for adding feature X including backend queries, frontend hooks, and UI components. Use when implementing feature X.
+description: Guide for adding feature X including a TanStack Start server function, React Query hook, and UI component. Use when implementing feature X.
 ---
 
 # Add Feature X
@@ -115,44 +115,60 @@ This skill guides you through adding feature X to the project.
 ## Overview
 
 Feature X requires:
-1. Backend Convex function
-2. Frontend data fetching hook
+1. TanStack Start server function with Zod validation
+2. React Query hook that calls the server function
 3. UI component
 
 ## Step-by-Step Guide
 
-### 1. Create Backend Function
+### 1. Create Server Function
 
 \`\`\`typescript
-// convex/featureX/queries.ts
-import { query } from "../_generated/server";
-import { v } from "convex/values";
+// src/lib/api/server-functions.ts (or a feature-specific file)
+import { createServerFn } from "@tanstack/start";
+import { z } from "zod";
+import { getApiClient } from "./client.server";
 
-export const getFeatureX = query({
-    args: { id: v.id("featureX") },
-    returns: v.object({ name: v.string() }),
-    handler: async (ctx, args) => {
-        return await ctx.db.get(args.id);
-    }
+const getFeatureXSchema = z.object({
+    id: z.string().min(1),
 });
+
+export const getFeatureX = createServerFn({ method: "GET" })
+    .validator(getFeatureXSchema)
+    .handler(async ({ data }) => {
+        const client = getApiClient();
+        const { data: result, error } = await client.GET("/feature-x/{id}", {
+            params: { path: { id: data.id } },
+        });
+        if (error) throw new Error("Failed to fetch feature X");
+        return result;
+    });
 \`\`\`
 
-### 2. Create Frontend Hook
+### 2. Create React Query Hook
 
 \`\`\`typescript
-// src/api/hooks/use-feature-x.ts
-import { useQuery } from "convex/react";
-import { api } from "convex/_generated/api";
+// src/lib/api/queries.ts (or a feature-specific file)
+import { useQuery } from "@tanstack/react-query";
+import { getFeatureX } from "./server-functions";
+
+export const featureXKeys = {
+    all: ["featureX"] as const,
+    byId: (id: string) => [...featureXKeys.all, id] as const,
+};
 
 export const useFeatureX = (id: string) => {
-    return useQuery(api.featureX.queries.getFeatureX, { id });
+    return useQuery({
+        queryKey: featureXKeys.byId(id),
+        queryFn: () => getFeatureX({ data: { id } }),
+    });
 };
 \`\`\`
 
 ## File Checklist
 
-- [ ] `convex/featureX/queries.ts` - Backend query
-- [ ] `src/api/hooks/use-feature-x.ts` - Frontend hook
+- [ ] `src/lib/api/server-functions.ts` - Server function with Zod validation
+- [ ] `src/lib/api/queries.ts` - React Query hook
 - [ ] `src/components/feature-x/FeatureX.tsx` - UI component
 ```
 
@@ -196,9 +212,9 @@ Each skill lives in its own subdirectory with the `SKILL.md` file containing all
 
 ## Common Skill Types
 
-- **add-***: Skills for adding new components (e.g., `add-canvas-shape`, `add-convex-table`)
-- **create-***: Skills for creating new features (e.g., `create-ai-agent`, `create-http-endpoint`)
-- **explain-***: Skills that explain existing patterns (e.g., `explain-convex`, `explain-stripe-payments`)
-- **adjust-***: Skills for modifying existing features (e.g., `adjust-message-shape-agent`)
+- **add-***: Skills for adding new components (e.g., `add-data-table`, `add-route`)
+- **create-***: Skills for creating new features (e.g., `create-server-function`, `create-react-query-hook`)
+- **explain-***: Skills that explain existing patterns (e.g., `explain-api-layer`, `explain-zustand-store`)
+- **adjust-***: Skills for modifying existing features (e.g., `adjust-query-key`, `adjust-zod-schema`)
 
 Choose the appropriate prefix based on the skill's purpose.
