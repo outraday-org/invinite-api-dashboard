@@ -5,10 +5,10 @@ import type { paths } from "./schema";
 import { env } from "../env";
 
 export function createApiClient(apiKey?: string) {
-    const resolvedKey = apiKey?.trim() || env.INVINITE_API_KEY;
+    const resolvedKey = apiKey?.trim() || env.INVINITE_DATA_API_KEY;
 
     return createClient<paths>({
-        baseUrl: env.INVINITE_API_URL,
+        baseUrl: env.INVINITE_DATA_API_URL,
         headers: {
             Authorization: `Bearer ${resolvedKey}`,
         },

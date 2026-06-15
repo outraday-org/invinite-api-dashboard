@@ -45,7 +45,7 @@ export const useApiKeyStore = create<ApiKeyState>()(
                 }),
         }),
         {
-            name: "invinite-api-key",
+            name: "invinite-data-api-key",
             onRehydrateStorage: () => (state) => {
                 if (typeof window === "undefined") return;
 

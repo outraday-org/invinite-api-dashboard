@@ -5,11 +5,11 @@
 
 ## API key
 
-You can provide `INVINITE_API_KEY` two ways:
+You can provide `INVINITE_DATA_API_KEY` two ways:
 
 - UI: on the home page (`/`), enter the key in the API key field. It is stored
-  in `localStorage` (`invinite-api-key`) and used for client requests.
-- Env var: set `INVINITE_API_KEY` in your environment (or a `.env` file) before
+  in `localStorage` (`invinite-data-api-key`) and used for client requests.
+- Env var: set `INVINITE_DATA_API_KEY` in your environment (or a `.env` file) before
   starting the dev server. This is used on the server/SSR side.
 
 ## Routes

@@ -36,7 +36,7 @@ File-based routing with TanStack Router. The route tree is auto-generated in `ro
 
 ### State Management
 
-- **API Key**: Zustand store in `src/lib/stores/api-key-store.ts` persists to localStorage (`invinite-api-key`). Handles SSR hydration with `hasHydrated` flag
+- **API Key**: Zustand store in `src/lib/stores/api-key-store.ts` persists to localStorage (`invinite-data-api-key`). Handles SSR hydration with `hasHydrated` flag
 - **Ticker History**: `src/lib/stores/ticker-store.ts` for recent ticker navigation
 
 ### UI Components (`src/components/ui/`)
@@ -45,8 +45,8 @@ Base UI components built on `@base-ui/react` primitives with `class-variance-aut
 
 ### Environment
 
-- `INVINITE_API_KEY`: Server-side API key (optional, can be set via UI)
-- `INVINITE_API_URL`: API base URL (defaults to https://api.invinite.com)
+- `INVINITE_DATA_API_KEY`: Server-side API key (optional, can be set via UI)
+- `INVINITE_DATA_API_URL`: API base URL (defaults to https://data.invinite.com)
 
 Validated with `@t3-oss/env-core` in `src/lib/env.ts`.
 

@@ -194,7 +194,7 @@ export const useApiKeyStore = create<ApiKeyStore>()(
             setHasHydrated: (state) => { set({ hasHydrated: state }); return undefined; },
         }),
         {
-            name: "invinite-api-key",
+            name: "invinite-data-api-key",
             onRehydrateStorage: () => (state) => {
                 state?.setHasHydrated(true);
             },
