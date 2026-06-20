@@ -6,11 +6,9 @@ import { formatEnDateTime } from "@/lib/date";
 export function FilingItem({
     filing,
     onOpenHtml,
-    onOpenPdf,
 }: {
     filing: Filing;
     onOpenHtml: (url: string) => void;
-    onOpenPdf: (url: string) => void;
 }) {
     return (
         <>
@@ -46,19 +44,6 @@ export function FilingItem({
                                     type="button"
                                 >
                                     HTML
-                                </button>
-                            )
-                        : (
-                                <span className="w-12" />
-                            )}
-                    {filing.pdf_url
-                        ? (
-                                <button
-                                    className="text-primary cursor-pointer hover:underline inline-flex w-12 justify-start leading-none"
-                                    onClick={() => onOpenPdf(filing.pdf_url!)}
-                                    type="button"
-                                >
-                                    PDF
                                 </button>
                             )
                         : (

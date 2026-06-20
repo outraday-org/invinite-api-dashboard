@@ -213,8 +213,8 @@ export interface paths {
                                 fama_sector: string | null;
                                 /** @description Fama-French industry */
                                 fama_industry: string | null;
-                                /** @description Listing exchange */
-                                exchange: string;
+                                /** @description Listing exchange (null when unknown) */
+                                exchange: string | null;
                                 /** @description Reporting currency */
                                 currency: string;
                                 /** @description CUSIP identifier */
@@ -4336,8 +4336,6 @@ export interface paths {
                                     form_type: string;
                                     /** @description URL to the filing HTML */
                                     html_url: string | null;
-                                    /** @description URL to the filing PDF */
-                                    pdf_url: string | null;
                                     /**
                                      * Format: date
                                      * @description Period end date
@@ -4859,8 +4857,6 @@ export interface components {
             form_type: string;
             /** @description URL to the filing HTML */
             html_url: string | null;
-            /** @description URL to the filing PDF */
-            pdf_url: string | null;
             /**
              * Format: date
              * @description Period end date

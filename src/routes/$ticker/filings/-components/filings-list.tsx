@@ -14,7 +14,6 @@ export function FilingsList({
     isLoading,
     onFetchNextPage,
     onOpenHtml,
-    onOpenPdf,
     onSortToggle,
     sortDirection,
 }: {
@@ -24,7 +23,6 @@ export function FilingsList({
     isFetchingNextPage: boolean;
     onFetchNextPage: () => void;
     onOpenHtml: (filing: Filing, url: string) => void;
-    onOpenPdf: (filing: Filing, url: string) => void;
     sortDirection: "asc" | "desc";
     onSortToggle: () => void;
 }) {
@@ -39,7 +37,6 @@ export function FilingsList({
                             filing={filing}
                             key={filing.accession_number}
                             onOpenHtml={url => onOpenHtml(filing, url)}
-                            onOpenPdf={url => onOpenPdf(filing, url)}
                         />
                     ))}
                 </div>

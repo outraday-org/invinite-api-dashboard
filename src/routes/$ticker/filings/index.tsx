@@ -7,7 +7,6 @@ import { useAvailableFormTypes, useFilingsInfinite } from "@/lib/api/queries";
 import { FilingsHeader } from "./-components/filings-header";
 import { FilingsList } from "./-components/filings-list";
 import { HtmlDialog } from "./-components/html-dialog";
-import { PdfDialog } from "./-components/pdf-dialog";
 
 export const Route = createFileRoute("/$ticker/filings/")({
     component: FilingsPage,
@@ -19,16 +18,6 @@ function FilingsPage() {
     const [formTypeFilter, setFormTypeFilter] = React.useState<null | string>(null);
 
     const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("desc");
-
-    const [pdfDialog, setPdfDialog] = React.useState<null | {
-        url: string;
-        ticker: string;
-        formType: string;
-        accessionNumber: string;
-        filingDate: string;
-        fiscalQuarter: null | number;
-        fiscalYear: null | number;
-    }>(null);
 
     const [htmlDialog, setHtmlDialog] = React.useState<null | {
         url: string;
@@ -102,17 +91,6 @@ function FilingsPage() {
                         url,
                     });
                 }}
-                onOpenPdf={(filing, url) => {
-                    setPdfDialog({
-                        accessionNumber: filing.accession_number,
-                        filingDate: filing.filing_date,
-                        fiscalQuarter: filing.fiscal_quarter,
-                        fiscalYear: filing.fiscal_year,
-                        formType: filing.form_type,
-                        ticker,
-                        url,
-                    });
-                }}
                 onSortToggle={() => setSortDirection(prev => (prev === "desc" ? "asc" : "desc"))}
                 sortDirection={sortDirection}
             />
@@ -125,14 +103,6 @@ function FilingsPage() {
                 dialog={htmlDialog}
                 onOpenChange={(open) => {
                     if (!open) setHtmlDialog(null);
-                }}
-                ticker={ticker}
-            />
-
-            <PdfDialog
-                dialog={pdfDialog}
-                onOpenChange={(open) => {
-                    if (!open) setPdfDialog(null);
                 }}
                 ticker={ticker}
             />
